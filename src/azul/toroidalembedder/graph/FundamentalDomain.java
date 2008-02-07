@@ -126,4 +126,29 @@ public class FundamentalDomain {
         }
     }
 
+    public void addToAngle(double d){
+        if(angle + d <= 0 || angle + d >= Math.PI)
+            return;
+        angle += d;
+        edge = null;
+        domainHeight = verticalSide * Math.sin(angle);
+        fireFundamentalDomainChanged();
+    }
+    
+    public void addToHorizontalSide(double d){
+        if(horizontalSide + d > 0) {
+            horizontalSide += d;
+            edge = null;
+            fireFundamentalDomainChanged();
+        }
+    }
+    
+    public void addToVerticalSide(double d){
+        if(verticalSide + d > 0) {
+            verticalSide += d;
+            edge = null;
+            domainHeight = verticalSide * Math.sin(angle);
+            fireFundamentalDomainChanged();
+        }
+    }
 }
