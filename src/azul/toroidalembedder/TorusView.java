@@ -78,8 +78,6 @@ public class TorusView extends JPanel implements GraphListener{
         if(graph!=null){
             widthView = ((maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide() + (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*Math.cos(graph.getFundamentalDomain().getAngle()));
             heightView = ((maxY - minY + 1)*graph.getFundamentalDomain().getDomainHeight());
-        } else {
-            setPreferredSize(new Dimension(800, 600));
         }
     }
     
@@ -96,6 +94,8 @@ public class TorusView extends JPanel implements GraphListener{
     public void setFundamentalDomain(FundamentalDomain fundamentalDomain){
         if(fundamentalDomain!=null){
             this.fundamentalDomain = fundamentalDomain;
+            widthView = ((maxX - minX + 1)*fundamentalDomain.getHorizontalSide() + (maxY - minY + 1)*fundamentalDomain.getVerticalSide()*Math.cos(fundamentalDomain.getAngle()));
+            heightView = ((maxY - minY + 1)*fundamentalDomain.getDomainHeight());
             repaint();
         }
     }
@@ -219,6 +219,16 @@ public class TorusView extends JPanel implements GraphListener{
             }
         } catch (IOException ex) {
             Logger.getLogger(TorusView.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        if (isPreferredSizeSet() || graph==null) {
+            return super.getPreferredSize();
+        } else {
+            double scale = 600/((widthView > heightView ? heightView : widthView) - 1);
+            return new Dimension((int)(widthView*scale), (int)(heightView*scale));
         }
     }
 }
