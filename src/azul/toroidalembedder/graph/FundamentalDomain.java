@@ -48,8 +48,10 @@ public class FundamentalDomain {
         double[] coords = new double[2];
         if(angle == Math.PI)
             coords[0] = 0.5*horizontalSide*x;
-        else
-            coords[0] = 0.5*horizontalSide*x + 0.5*horizontalSide*y/Math.tan(angle);
+        else {
+            double localY = y * Math.sin(angle);
+            coords[0] = 0.5*horizontalSide*x + 0.5*horizontalSide*localY/Math.tan(angle);
+        }
         coords[1] = 0.5*domainHeight*y;
         return coords;
     }
@@ -131,5 +133,5 @@ public class FundamentalDomain {
             listener.fundamentalDomainChanged();
         }
     }
-
+    
 }
