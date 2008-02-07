@@ -66,37 +66,6 @@ public class FundamentalDomain {
         coords[1] = 2*y/domainHeight;
         return coords;
     }
-    
-    public void reduceCoordinates(CoordinateAdjustment adjustment, double x, double y){
-        adjustment.x = x;
-        adjustment.y = y;
-        adjustment.verticalTranslate = 0;
-        adjustment.horizontalTranslate = 0;
-        double horizontalShift = (angle != Math.PI/2 ? domainHeight / Math.tan(angle) : 0);
-        while(adjustment.y<=-domainHeight/2){
-            adjustment.verticalTranslate++;
-            adjustment.y += domainHeight;
-            adjustment.x += horizontalShift;
-        }
-        
-        while(adjustment.y>domainHeight/2){
-            adjustment.verticalTranslate--;
-            adjustment.y -= domainHeight;
-            adjustment.x -= horizontalShift;
-        }
-        
-        double horizontalOffset = (angle != Math.PI/2 ? adjustment.y / Math.tan(angle) : 0);
-        
-        while(adjustment.x + horizontalOffset <= -horizontalSide/2){
-            adjustment.horizontalTranslate++;
-            adjustment.x += horizontalSide;
-        }
-        
-        while(adjustment.x + horizontalOffset > horizontalSide/2){
-            adjustment.horizontalTranslate--;
-            adjustment.x -= horizontalSide;
-        }
-    }
 
     public double getAngle() {
         return angle;
@@ -163,10 +132,4 @@ public class FundamentalDomain {
         }
     }
 
-    public static class CoordinateAdjustment{
-        public int verticalTranslate;
-        public int horizontalTranslate;
-        public double x;
-        public double y;
-    }
 }
