@@ -12,6 +12,7 @@ package azul.toroidalembedder;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.FundamentalDomain;
+import azul.toroidalembedder.graph.FundamentalDomainListener;
 import azul.toroidalembedder.graph.Vertex;
 import azul.toroidalembedder.graph.GraphListener;
 import java.awt.BasicStroke;
@@ -37,7 +38,7 @@ import javax.swing.JPanel;
  *
  * @author nvcleemp
  */
-public class TorusView extends JPanel implements GraphListener{
+public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener{
 
     private Graph graph;
     private double widthView;
@@ -85,7 +86,7 @@ public class TorusView extends JPanel implements GraphListener{
         this.graph = graph;
         if(graph!=null){
             if(changeDomain)
-                fundamentalDomain = graph.getFundamentalDomain();
+                setFundamentalDomain(graph.getFundamentalDomain());
             widthView = ((maxX - minX + 1)*fundamentalDomain.getHorizontalSide() + (maxY - minY + 1)*fundamentalDomain.getVerticalSide()*Math.cos(fundamentalDomain.getAngle()));
             heightView = ((maxY - minY + 1)*fundamentalDomain.getDomainHeight());
         }
@@ -93,6 +94,9 @@ public class TorusView extends JPanel implements GraphListener{
     
     public void setFundamentalDomain(FundamentalDomain fundamentalDomain){
         if(fundamentalDomain!=null){
+            if(this.fundamentalDomain!=null)
+                this.fundamentalDomain.removeFundamentalDomainListener(this);
+            fundamentalDomain.addFundamentalDomainListener(this);
             this.fundamentalDomain = fundamentalDomain;
             widthView = ((maxX - minX + 1)*fundamentalDomain.getHorizontalSide() + (maxY - minY + 1)*fundamentalDomain.getVerticalSide()*Math.cos(fundamentalDomain.getAngle()));
             heightView = ((maxY - minY + 1)*fundamentalDomain.getDomainHeight());
@@ -204,6 +208,10 @@ public class TorusView extends JPanel implements GraphListener{
     }
     
     public void graphChanged() {
+        repaint();
+    }
+    
+    public void fundamentalDomainChanged() {
         repaint();
     }
     

@@ -11,6 +11,8 @@ package azul.toroidalembedder.graph;
 
 import azul.toroidalembedder.Polygon2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -145,7 +147,21 @@ public class FundamentalDomain {
         return (angle != Math.PI/2 ? domainHeight / Math.tan(angle) : 0);
     }
     
+    List<FundamentalDomainListener> listeners = new ArrayList<FundamentalDomainListener>();
     
+    public void addFundamentalDomainListener(FundamentalDomainListener listener){
+        listeners.add(listener);
+    }
+    
+    public void removeFundamentalDomainListener(FundamentalDomainListener listener){
+        listeners.remove(listener);
+    }
+    
+    private void fireFundamentalDomainChanged(){
+        for (FundamentalDomainListener listener : listeners) {
+            listener.fundamentalDomainChanged();
+        }
+    }
 
     public static class CoordinateAdjustment{
         public int verticalTranslate;
