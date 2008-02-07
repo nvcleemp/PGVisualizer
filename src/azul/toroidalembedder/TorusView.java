@@ -11,6 +11,7 @@ package azul.toroidalembedder;
 
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Edge;
+import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Vertex;
 import azul.toroidalembedder.graph.GraphListener;
 import java.awt.BasicStroke;
@@ -45,6 +46,7 @@ public class TorusView extends JPanel implements GraphListener{
     private int minY;
     private int maxX;
     private int maxY;
+    private FundamentalDomain fundamentalDomain;
     
     /** Creates a new instance of TorusView */
     public TorusView() {
@@ -57,8 +59,15 @@ public class TorusView extends JPanel implements GraphListener{
     
     public TorusView(Graph graph, int minX, int minY, int maxX, int maxY) {
         this(minX, minY, maxX, maxY);
-        setGraph(graph);
+        setGraph(graph, true);
         graph.addGraphListener(this);
+    }
+    
+    public TorusView(FundamentalDomain fundamentalDomain, Graph graph, int minX, int minY, int maxX, int maxY) {
+        this(minX, minY, maxX, maxY);
+        setGraph(graph, true);
+        graph.addGraphListener(this);
+        setFundamentalDomain(fundamentalDomain);
     }
     
     public TorusView(int minX, int minY, int maxX, int maxY) {
@@ -74,23 +83,32 @@ public class TorusView extends JPanel implements GraphListener{
         }
     }
     
-    public void setGraph(Graph graph){
+    public void setGraph(Graph graph, boolean changeDomain){
         this.graph = graph;
         if(graph!=null){
-            widthView = ((maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide() + (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*Math.cos(graph.getFundamentalDomain().getAngle()));
-            heightView = ((maxY - minY + 1)*graph.getFundamentalDomain().getDomainHeight());
+            if(changeDomain)
+                fundamentalDomain = graph.getFundamentalDomain();
+            widthView = ((maxX - minX + 1)*fundamentalDomain.getHorizontalSide() + (maxY - minY + 1)*fundamentalDomain.getVerticalSide()*Math.cos(fundamentalDomain.getAngle()));
+            heightView = ((maxY - minY + 1)*fundamentalDomain.getDomainHeight());
+        }
+    }
+    
+    public void setFundamentalDomain(FundamentalDomain fundamentalDomain){
+        if(fundamentalDomain!=null){
+            this.fundamentalDomain = fundamentalDomain;
+            repaint();
         }
     }
     
     private void paintGrid(Graphics g){
         g.setColor(Color.BLACK);
         
-        Polygon2D domain = graph.getFundamentalDomain().getBorder();
+        Polygon2D domain = fundamentalDomain.getBorder();
 
         for(int i = minX; i <= maxX; i++){
             for (int j = minY; j <= maxY; j++) {
                 Graphics2D gr = (Graphics2D)(g.create());
-                Point2D origin = graph.getFundamentalDomain().getOrigin(i, j);
+                Point2D origin = fundamentalDomain.getOrigin(i, j);
                 gr.translate(origin.getX(), origin.getY());
                 gr.setColor(Color.DARK_GRAY);
                 domain.draw(gr);
@@ -100,7 +118,7 @@ public class TorusView extends JPanel implements GraphListener{
     
     private void paint(Vertex vertex, Graphics2D g2, int areaX, int areaY){
         double r = 0.06;
-        Ellipse2D ell = new Ellipse2D.Double(vertex.getX(areaX, areaY, graph.getFundamentalDomain())-r,vertex.getY(areaX, areaY, graph.getFundamentalDomain())-r,2*r,2*r);
+        Ellipse2D ell = new Ellipse2D.Double(vertex.getX(areaX, areaY, fundamentalDomain)-r,vertex.getY(areaX, areaY, fundamentalDomain)-r,2*r,2*r);
         g2.setColor(Color.WHITE);
         g2.fill(ell);
         g2.setColor(Color.BLACK);
@@ -116,8 +134,8 @@ public class TorusView extends JPanel implements GraphListener{
     protected void paintComponentImpl(Graphics g, int width, int height, boolean paintGrid) {
         Graphics2D g2 = (Graphics2D)g.create();
         if(widthView==0 || heightView==0){
-            widthView = (maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide() + (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*Math.cos(graph.getFundamentalDomain().getAngle());
-            heightView = (maxY - minY + 1)*graph.getFundamentalDomain().getDomainHeight();
+            widthView = (maxX - minX + 1)*fundamentalDomain.getHorizontalSide() + (maxY - minY + 1)*fundamentalDomain.getVerticalSide()*Math.cos(fundamentalDomain.getAngle());
+            heightView = (maxY - minY + 1)*fundamentalDomain.getDomainHeight();
         }
         double scaleX = width/widthView - 1;
         double scaleY = height/heightView - 1;
@@ -147,14 +165,14 @@ public class TorusView extends JPanel implements GraphListener{
             }
         }
         for (Vertex vertex : graph.getVertices()) {
-            double x1 = vertex.getX(0, 0, graph.getFundamentalDomain());
-            double y1 = vertex.getY(0, 0, graph.getFundamentalDomain());
+            double x1 = vertex.getX(0, 0, fundamentalDomain);
+            double y1 = vertex.getY(0, 0, fundamentalDomain);
             for (Edge e : vertex.getEdges()) {
-                Line2D line = new Line2D.Double(x1,y1,e.getEnd().getX(e.getTargetX(), e.getTargetY(), graph.getFundamentalDomain()), e.getEnd().getY(e.getTargetX(), e.getTargetY(), graph.getFundamentalDomain()));
+                Line2D line = new Line2D.Double(x1,y1,e.getEnd().getX(e.getTargetX(), e.getTargetY(), fundamentalDomain), e.getEnd().getY(e.getTargetX(), e.getTargetY(), fundamentalDomain));
                 for (int i = minX + minTargetX; i <= maxX + maxTargetX; i++)
                     for (int j = minY + minTargetY; j <= maxY + maxTargetY; j++){
                         Graphics2D gr = (Graphics2D)(g2.create());
-                        Point2D origin = graph.getFundamentalDomain().getOrigin(i, j);
+                        Point2D origin = fundamentalDomain.getOrigin(i, j);
                         gr.translate(origin.getX(), origin.getY());
 
                         gr.draw(line);
@@ -165,7 +183,7 @@ public class TorusView extends JPanel implements GraphListener{
             for (int i = minX; i <= maxX; i++)
                 for (int j = minY; j <= maxY; j++){
                     Graphics2D gr = (Graphics2D)(g2.create());
-                    Point2D origin = graph.getFundamentalDomain().getOrigin(i, j);
+                    Point2D origin = fundamentalDomain.getOrigin(i, j);
                     gr.translate(origin.getX(), origin.getY());
 
                     paint(vertex, gr, 0, 0);
@@ -179,8 +197,8 @@ public class TorusView extends JPanel implements GraphListener{
         this.maxX = maxX;
         this.maxY = maxY;
         if(graph!=null){
-            widthView = ((maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide() + (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*Math.cos(graph.getFundamentalDomain().getAngle()));
-            heightView = ((maxY - minY + 1)*graph.getFundamentalDomain().getDomainHeight());
+            widthView = ((maxX - minX + 1)*fundamentalDomain.getHorizontalSide() + (maxY - minY + 1)*fundamentalDomain.getVerticalSide()*Math.cos(fundamentalDomain.getAngle()));
+            heightView = ((maxY - minY + 1)*fundamentalDomain.getDomainHeight());
         }
         repaint();
     }

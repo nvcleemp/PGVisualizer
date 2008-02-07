@@ -68,7 +68,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
     public EmbedderWindow(Graph graph) {
         super("Toroidal embedder: EmbedderWindow");
         this.graph = graph;
-        torusView.setGraph(graph);
+        torusView.setGraph(graph, true);
         graph.addGraphListener(this);
         embedder1 = new SpringEmbedder(graph);
         embedder2 = new SpringEmbedderEqualEdges(graph);

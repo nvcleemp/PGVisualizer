@@ -13,6 +13,7 @@ import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
+import azul.toroidalembedder.graph.FundamentalDomain;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;
@@ -99,7 +100,11 @@ public class TorusViewTest {
         });
         frame.setContentPane(new TorusView(graph, -2, -2, 2, 2));
         frame.pack();
+        JFrame frame2 = new JFrame("Raw view");
+        frame2.setContentPane(new TorusView(new FundamentalDomain(), graph, -2, -2, 2, 2));
+        frame2.pack();
         //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        frame2.setVisible(true);
     }    
 }
