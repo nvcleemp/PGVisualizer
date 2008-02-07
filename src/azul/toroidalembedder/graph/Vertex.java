@@ -24,8 +24,6 @@ public class Vertex {
     private double y;
     private int index = -1;
     
-    private FundamentalDomain.CoordinateAdjustment adjustment = new FundamentalDomain.CoordinateAdjustment();
-    
     /** Creates a new instance of Vertex */
     public Vertex(double x, double y) {
         this.x = x;
@@ -41,11 +39,11 @@ public class Vertex {
     }
 
     public double getX(int domainX, int domainY, FundamentalDomain fundamentalDomain){
-        return fundamentalDomain.getOrigin(domainX, domainY).getX() + x;
+        return fundamentalDomain.getOrigin(domainX, domainY).getX() + (fundamentalDomain.transform(x, y))[0];
     }
     
     public double getY(int domainX, int domainY, FundamentalDomain fundamentalDomain){
-        return fundamentalDomain.getDomainHeight()*domainY + y;
+        return fundamentalDomain.getOrigin(domainX, domainY).getY() + (fundamentalDomain.transform(x, y))[1];
     }
 
     public List<Edge> getEdges() {
@@ -66,12 +64,34 @@ public class Vertex {
     }
     
     public void translate(double dx, double dy, FundamentalDomain fundamentalDomain){
-        fundamentalDomain.reduceCoordinates(adjustment, x + dx, y + dy);
-        x = adjustment.x;
-        y = adjustment.y;
+        double[] dcoords = fundamentalDomain.inverseTransform(dx, dy);
+        x = x + dcoords[0];
+        y = y + dcoords[1];
+        
+        int horizontalTranslate = 0;
+        int verticalTranslate = 0;
+        
+        while(x<=-1){
+            horizontalTranslate++;
+            x+=2;
+        }
+        while(x>1){
+            horizontalTranslate--;
+            x-=2;
+        }
+        
+        while(y<=-1){
+            verticalTranslate++;
+            y+=2;
+        }
+        while(y>1){
+            verticalTranslate--;
+            y-=2;
+        }
+        
         for (Edge edge : edges){
-            edge.translateTartget(adjustment.horizontalTranslate,adjustment.verticalTranslate);
-            edge.getInverse().translateTartget(-adjustment.horizontalTranslate,-adjustment.verticalTranslate);
+            edge.translateTartget(horizontalTranslate,verticalTranslate);
+            edge.getInverse().translateTartget(-horizontalTranslate,-verticalTranslate);
         }
         fireVertexMoved();
     }

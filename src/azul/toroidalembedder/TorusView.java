@@ -70,7 +70,7 @@ public class TorusView extends JPanel implements GraphListener{
             widthView = ((maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide() + (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*Math.cos(graph.getFundamentalDomain().getAngle()));
             heightView = ((maxY - minY + 1)*graph.getFundamentalDomain().getDomainHeight());
         } else {
-            setPreferredSize(new Dimension(600, 600));
+            setPreferredSize(new Dimension(800, 600));
         }
     }
     
@@ -115,7 +115,6 @@ public class TorusView extends JPanel implements GraphListener{
     
     protected void paintComponentImpl(Graphics g, int width, int height, boolean paintGrid) {
         Graphics2D g2 = (Graphics2D)g.create();
-        g2.translate(width/2, height/2);
         if(widthView==0 || heightView==0){
             widthView = (maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide() + (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*Math.cos(graph.getFundamentalDomain().getAngle());
             heightView = (maxY - minY + 1)*graph.getFundamentalDomain().getDomainHeight();
@@ -123,10 +122,13 @@ public class TorusView extends JPanel implements GraphListener{
         double scaleX = width/widthView - 1;
         double scaleY = height/heightView - 1;
         double scale = Math.min(scaleX, scaleY);
+        //g2.setClip(new HorizontalParallellogram((maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide()*scale, (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*scale, graph.getFundamentalDomain().getAngle(), 0, 0));
+        g2.translate(width/2, height/2);
         g2.transform(AffineTransform.getScaleInstance(scale, scale));
-        g2.setStroke(new BasicStroke(0.02f));
+        g2.setStroke(new BasicStroke(0.01f));
         if(paintGrid)
             paintGrid(g2);
+        g2.setStroke(new BasicStroke(0.02f));
         g2.setColor(Color.BLACK);
         int minTargetX = 0;
         int maxTargetX = 0;

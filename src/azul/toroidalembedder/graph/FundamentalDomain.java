@@ -43,7 +43,12 @@ public class FundamentalDomain {
      * Transform coordinates from unit square (-1,-1) - (1,1) to coordinates inside parallellogram.
      */
     public double[] transform(double x, double y){
-        double[] coords = {0.5*horizontalSide*x + (angle != Math.PI/2 ? 0.5*horizontalSide*y/Math.tan(angle) : 0), 0.5*domainHeight*y};
+        double[] coords = new double[2];
+        if(angle == Math.PI)
+            coords[0] = 0.5*horizontalSide*x;
+        else
+            coords[0] = 0.5*horizontalSide*x + 0.5*horizontalSide*y/Math.tan(angle);
+        coords[1] = 0.5*domainHeight*y;
         return coords;
     }
     
