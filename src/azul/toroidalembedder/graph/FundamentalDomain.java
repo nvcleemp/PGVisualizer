@@ -46,12 +46,7 @@ public class FundamentalDomain {
      */
     public double[] transform(double x, double y){
         double[] coords = new double[2];
-        if(angle == Math.PI)
-            coords[0] = 0.5*horizontalSide*x;
-        else {
-            double localY = y * Math.sin(angle);
-            coords[0] = 0.5*horizontalSide*x + 0.5*horizontalSide*localY/Math.tan(angle);
-        }
+        coords[0] = 0.5*horizontalSide*x + 0.5*horizontalSide*Math.cos(angle)*y;
         coords[1] = 0.5*domainHeight*y;
         return coords;
     }
@@ -61,10 +56,7 @@ public class FundamentalDomain {
      */
     public double[] inverseTransform(double x, double y){
         double[] coords = new double[2];
-        if(angle != Math.PI/2)
-            coords[0] = 2*x/horizontalSide - 2*y/(Math.tan(angle)*domainHeight);
-        else
-            coords[0] = 2*x/horizontalSide;
+        coords[0] = 2*x/horizontalSide - 2*Math.cos(angle)*y/domainHeight;
         coords[1] = 2*y/domainHeight;
         return coords;
     }
@@ -133,5 +125,5 @@ public class FundamentalDomain {
             listener.fundamentalDomainChanged();
         }
     }
-    
+
 }
