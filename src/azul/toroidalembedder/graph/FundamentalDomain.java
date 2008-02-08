@@ -47,7 +47,7 @@ public class FundamentalDomain {
      */
     public double[] transform(double x, double y){
         double[] coords = new double[2];
-        coords[0] = 0.5*horizontalSide*x + 0.5*horizontalSide*Math.cos(angle)*y;
+        coords[0] = 0.5*horizontalSide*x + 0.25*domainHeight*domainHeight*y/Math.tan(angle);
         coords[1] = 0.5*domainHeight*y;
         return coords;
     }
@@ -57,7 +57,7 @@ public class FundamentalDomain {
      */
     public double[] inverseTransform(double x, double y){
         double[] coords = new double[2];
-        coords[0] = 2*x/horizontalSide - 2*Math.cos(angle)*y/domainHeight;
+        coords[0] = 2*x/horizontalSide - domainHeight*y/(horizontalSide*Math.tan(angle));
         coords[1] = 2*y/domainHeight;
         return coords;
     }
