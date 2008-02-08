@@ -9,8 +9,9 @@ import azul.delaney.DelaneySymbol;
 import azul.delaney.Utility;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
-import azul.toroidalembedder.EmbedderWindow;
-import azul.toroidalembedder.TorusViewTest;
+import azul.toroidalembedder.gui.EmbedderWindow;
+import azul.toroidalembedder.gui.TorusViewTest;
+
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

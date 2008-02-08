@@ -7,8 +7,10 @@
  * and open the template in the editor.
  */
 
-package azul.toroidalembedder;
+package azul.toroidalembedder.gui;
 
+
+import azul.toroidalembedder.Polygon2D;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.FundamentalDomain;

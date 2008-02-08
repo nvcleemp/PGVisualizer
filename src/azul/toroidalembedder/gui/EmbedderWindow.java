@@ -3,12 +3,15 @@
  * and open the template in the editor.
  */
 
-package azul.toroidalembedder;
+package azul.toroidalembedder.gui;
+
 
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.GraphListener;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
+import azul.toroidalembedder.SpringEmbedder;
+import azul.toroidalembedder.SpringEmbedderEqualEdges;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

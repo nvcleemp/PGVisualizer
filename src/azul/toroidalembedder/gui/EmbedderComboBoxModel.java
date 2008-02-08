@@ -3,7 +3,9 @@
  * and open the template in the editor.
  */
 
-package azul.toroidalembedder;
+package azul.toroidalembedder.gui;
+
+import azul.toroidalembedder.Embedder;
 
 import java.util.ArrayList;
 import java.util.HashMap;

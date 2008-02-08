@@ -7,12 +7,15 @@
  * and open the template in the editor.
  */
 
-package azul.toroidalembedder;
+package azul.toroidalembedder.gui;
 
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
+import azul.toroidalembedder.Embedder;
+import azul.toroidalembedder.SpringEmbedder;
+import azul.toroidalembedder.SpringEmbedderEqualEdges;
 import azul.toroidalembedder.graph.FundamentalDomain;
 
 import java.awt.event.KeyEvent;
