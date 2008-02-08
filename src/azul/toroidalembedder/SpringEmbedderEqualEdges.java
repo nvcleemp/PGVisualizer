@@ -12,6 +12,7 @@ package azul.toroidalembedder;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.Vertex;
+
 import java.util.List;
 
 /**

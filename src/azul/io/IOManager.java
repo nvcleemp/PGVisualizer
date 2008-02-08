@@ -13,7 +13,6 @@ import azul.delaney.BasicDelaney;
 import azul.delaney.Chamber;
 import azul.delaney.DelaneySymbol;
 import azul.delaney.Utility;
-import azul.toroidalembedder.EmbedderWindow;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
 

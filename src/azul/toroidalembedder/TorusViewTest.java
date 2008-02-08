@@ -14,6 +14,7 @@ import azul.toroidalembedder.graph.Vertex;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
 import azul.toroidalembedder.graph.FundamentalDomain;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JFrame;

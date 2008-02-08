@@ -10,6 +10,7 @@
 package azul.toroidalembedder.graph;
 
 import azul.toroidalembedder.Polygon2D;
+
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
