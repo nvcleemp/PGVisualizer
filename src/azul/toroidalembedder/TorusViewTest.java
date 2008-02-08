@@ -91,6 +91,18 @@ public class TorusViewTest {
                         embedder1.embed();
                     else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
                         embedder2.embed();
+                    else if(e.getKeyCode() == KeyEvent.VK_A)
+                        graph.getFundamentalDomain().addToAngle(0.1);
+                    else if(e.getKeyCode() == KeyEvent.VK_V)
+                        graph.getFundamentalDomain().addToAngle(-0.1);
+                    else if(e.getKeyCode() == KeyEvent.VK_NUMPAD6)
+                        graph.getFundamentalDomain().addToHorizontalSide(0.1);
+                    else if(e.getKeyCode() == KeyEvent.VK_NUMPAD4)
+                        graph.getFundamentalDomain().addToHorizontalSide(-0.1);
+                    else if(e.getKeyCode() == KeyEvent.VK_NUMPAD8)
+                        graph.getFundamentalDomain().addToVerticalSide(0.1);
+                    else if(e.getKeyCode() == KeyEvent.VK_NUMPAD2)
+                        graph.getFundamentalDomain().addToVerticalSide(-0.1);
                 }
             }
             public void keyReleased(KeyEvent e) {
