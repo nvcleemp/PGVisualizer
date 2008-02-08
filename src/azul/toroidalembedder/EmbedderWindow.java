@@ -70,6 +70,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         torusView.setGraph(graph, true);
         graph.addGraphListener(this);
         model.addEmbedder("Spring embedder", new SpringEmbedder(graph));
+        model.setSelectedItem("Spring embedder");
         model.addEmbedder("Spring embedder equal edges", new SpringEmbedderEqualEdges(graph));
         split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setTopComponent(torusView);
