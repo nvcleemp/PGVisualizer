@@ -21,10 +21,10 @@ import java.util.List;
  */
 public class SpringEmbedder implements Embedder{
     
-    private double edge_length = 0.3;
-    private double non_edge_length = 3*edge_length;
-    private double force = 0.01;
-    private double friction = 0.85;
+    private double edge_length;
+    private double non_edge_length;
+    private double force;
+    private double friction;
     private Graph graph;
     private double[][] changes;
     private List<Vertex> vertices;
@@ -32,6 +32,14 @@ public class SpringEmbedder implements Embedder{
     
     /** Creates a new instance of DefaultEmbedder */
     public SpringEmbedder(Graph graph) {
+        this(graph, 0.3, 3, 0.01, 0.85);
+    }
+
+    public SpringEmbedder(Graph graph, double edge_length, double non_edge_length_factor, double force, double friction) {
+        this.edge_length = edge_length;
+        this.non_edge_length = non_edge_length_factor * edge_length;
+        this.force = force;
+        this.friction = friction;
         this.graph = graph;
         vertices = graph.getVertices();
     }
