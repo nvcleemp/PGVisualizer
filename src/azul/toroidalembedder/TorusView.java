@@ -105,8 +105,6 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     }
     
     private void paintGrid(Graphics g){
-        g.setColor(Color.BLACK);
-        
         Polygon2D domain = fundamentalDomain.getBorder();
 
         for(int i = minX; i <= maxX; i++){
@@ -114,7 +112,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
                 Graphics2D gr = (Graphics2D)(g.create());
                 Point2D origin = fundamentalDomain.getOrigin(i, j);
                 gr.translate(origin.getX(), origin.getY());
-                gr.setColor(Color.DARK_GRAY);
+                gr.setColor(new Color(200,0,0));
                 domain.draw(gr);
             }
         }
@@ -145,6 +143,8 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         double scaleY = height/heightView - 1;
         double scale = Math.min(scaleX, scaleY);
         //g2.setClip(new HorizontalParallellogram((maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide()*scale, (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*scale, graph.getFundamentalDomain().getAngle(), 0, 0));
+        g2.setColor(new Color(200, 200, 255));
+        g2.fillRect(0, 0, width, height);
         g2.translate(width/2, height/2);
         g2.transform(AffineTransform.getScaleInstance(scale, scale));
         g2.setStroke(new BasicStroke(0.01f));
