@@ -20,6 +20,7 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,13 +39,12 @@ public class EmbedderWindow extends JFrame implements GraphListener {
     private int yView = 2;
     private Graph graph;
     private TorusView torusView = new TorusView(-2, -2, 2, 2);
-    private Embedder embedder;
-    private Embedder embedder1;
-    private Embedder embedder2;
+    private EmbedderComboBoxModel model = new EmbedderComboBoxModel();
     private JSplitPane split;
     private ActionListener embedAction = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-            embedder.embed();
+            if(model.getSelectedEmbedder()!=null)
+                model.getSelectedEmbedder().embed();
         }
     };
     private Timer timer = new Timer(100, embedAction);
@@ -55,11 +55,6 @@ public class EmbedderWindow extends JFrame implements GraphListener {
             if (model != null) {
                 if (model.isPressed()) {
                     if (!timer.isRunning()) {
-                        if(button.getText().endsWith("2"))
-                            embedder = embedder2;
-                        else
-                            embedder = embedder1;
-                        embedAction.actionPerformed(new ActionEvent(button, 0, null));
                         timer.start();
                     }
                 } else if (timer.isRunning()) {
@@ -74,8 +69,8 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         this.graph = graph;
         torusView.setGraph(graph, true);
         graph.addGraphListener(this);
-        embedder1 = new SpringEmbedder(graph);
-        embedder2 = new SpringEmbedderEqualEdges(graph);
+        model.addEmbedder("Spring embedder", new SpringEmbedder(graph));
+        model.addEmbedder("Spring embedder equal edges", new SpringEmbedderEqualEdges(graph));
         split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setTopComponent(torusView);
         
@@ -105,6 +100,10 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         JPanel embedderPanel = new JPanel(new GridBagLayout());
         gbc.gridx = 0;
         gbc.gridy = 0;
+        JComboBox comboBox = new JComboBox(model);
+        comboBox.setPrototypeDisplayValue("Spring embedder equal edges");
+        embedderPanel.add(comboBox, gbc);
+        gbc.gridx = 1;
         JButton runEmbedder = new JButton("Run embedder");
         runEmbedder.addChangeListener(changeListener);
         timer.setInitialDelay(0);
@@ -188,14 +187,5 @@ public class EmbedderWindow extends JFrame implements GraphListener {
             }
         }
         
-    }
-
-    private class EmbedAction implements ActionListener{
-
-        public void actionPerformed(ActionEvent e) {
-            embedder.embed();
-        }
-        
-    }
-    
+    }   
 }
