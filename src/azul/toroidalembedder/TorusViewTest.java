@@ -42,9 +42,9 @@ public class TorusViewTest {
         //graph.addEdge(v3, v2, 1, 0);
         Graph graph1 = null;
         try {
-            graph1 = IOManager.readTorGraph("3|0 0;0.5 0;0 0.5|0 1 0 0;0 2 0 0;1 2 0 0;2 0 1 -1;2 1 0 1");
-            graph1 = IOManager.readTorGraph("3|0 0;0.5 0;0 0.5|0 1 0 0;0 2 0 0;1 2 0 0;2 0 1 -1;2 1 0 1;2 1 1 0");
-            graph1 = IOManager.readTorGraph("1|0 0|0 0 1 0;0 0 0 1");
+            graph1 = IOManager.readTorGraph("3|2 2|0 0;0.5 0;0 0.5|0 1 0 0;0 2 0 0;1 2 0 0;2 0 1 -1;2 1 0 1");
+            graph1 = IOManager.readTorGraph("3|2 2|0 0;0.5 0;0 0.5|0 1 0 0;0 2 0 0;1 2 0 0;2 0 1 -1;2 1 0 1;2 1 1 0");
+            graph1 = IOManager.readTorGraph("1|2 2|0 0|0 0 1 0;0 0 0 1");
         } catch (FileFormatException fileFormatException) {
             fileFormatException.printStackTrace();
         }

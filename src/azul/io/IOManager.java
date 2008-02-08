@@ -13,6 +13,7 @@ import azul.delaney.BasicDelaney;
 import azul.delaney.Chamber;
 import azul.delaney.DelaneySymbol;
 import azul.delaney.Utility;
+import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
 
@@ -39,8 +40,8 @@ public class IOManager {
     public static Graph readTorGraph(String torGraph) throws FileFormatException {
         String[] parts = torGraph.split("\\|");
         
-        if(parts.length!=3)
-            throw new FileFormatException("Illegal number of parts in file: expected 3, found " + parts.length);
+        if(parts.length!=4)
+            throw new FileFormatException("Illegal number of parts in file: expected 4, found " + parts.length);
         int order;
         try {
             order = Integer.parseInt(parts[0]);
@@ -48,8 +49,23 @@ public class IOManager {
             throw new FileFormatException("Illegal order of graph: expected number, found " + parts[0], ex);
         }
         
-        Graph graph = new Graph();
-        Scanner coords = new Scanner(parts[1]).useDelimiter("(\\s)|(;)");
+        String[] domainParameters = parts[1].split("\\s");
+        if(domainParameters.length<2 || domainParameters.length>3)
+            throw new FileFormatException("Illegal number of parts for fundamental domain: expected 2 or 3, found " + domainParameters.length);
+        
+        FundamentalDomain domain;
+        
+        try {
+            double hs = Double.parseDouble(domainParameters[0]);
+            double vs = Double.parseDouble(domainParameters[1]);
+            double angle = domainParameters.length == 3 ? Double.parseDouble(domainParameters[2]) : Math.PI / 2;
+            domain = new FundamentalDomain(angle, hs, vs);
+        } catch (NumberFormatException ex) {
+            throw new FileFormatException("Illegal value while reading fundamental domain: expected number.", ex);
+        }
+               
+        Graph graph = new Graph(domain);
+        Scanner coords = new Scanner(parts[2]).useDelimiter("(\\s)|(;)");
         try {
             for(int i = 0; i<order; i++)
                 graph.addVertex(new Vertex(coords.nextDouble(),coords.nextDouble()));
@@ -59,7 +75,7 @@ public class IOManager {
             throw new FileFormatException("End of section while reading coordinates.", ex);
         }
         
-        Scanner edges = new Scanner(parts[2]).useDelimiter("(\\s)|(;)");
+        Scanner edges = new Scanner(parts[3]).useDelimiter("(\\s)|(;)");
         try {
             while (edges.hasNextInt())
                 graph.addEdge(edges.nextInt(), edges.nextInt(), edges.nextInt(), edges.nextInt());

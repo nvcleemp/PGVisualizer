@@ -21,10 +21,15 @@ public class Graph implements VertexListener{
     private List<Vertex> vertices = new ArrayList<Vertex>();
     private List<GraphListener> listeners = new ArrayList<GraphListener>();
     
-    private FundamentalDomain fundamentalDomain = new FundamentalDomain();
+    private FundamentalDomain fundamentalDomain;
     
     /** Creates a new instance of Graph */
     public Graph() {
+        fundamentalDomain = new FundamentalDomain();
+    }
+
+    public Graph(FundamentalDomain fundamentalDomain) {
+        this.fundamentalDomain = fundamentalDomain;
     }
     
     public List<Vertex> getVertices(){
