@@ -6,6 +6,7 @@
 package azul.toroidalembedder.gui;
 
 
+import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.GraphListener;
 import azul.io.FileFormatException;
@@ -162,6 +163,10 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         split.repaint();
     }
     
+    public void fundamentalDomainChanged(FundamentalDomain oldDomain) {
+        split.repaint();
+    }
+    
     private class XAction extends AbstractAction {
         
         private int increment;
@@ -172,7 +177,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if(xView + increment > 0){
+            if(xView + increment >= 0){
                 xView+=increment;
                 torusView.setView(-xView, -yView, xView, yView);
             }
@@ -190,11 +195,12 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if(yView + increment > 0){
+            if(yView + increment >= 0){
                 yView+=increment;
                 torusView.setView(-xView, -yView, xView, yView);
             }
         }
         
-    }   
+    }
+
 }

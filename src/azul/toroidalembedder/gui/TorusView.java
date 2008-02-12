@@ -214,6 +214,11 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         repaint();
     }
     
+    public void fundamentalDomainChanged(FundamentalDomain oldDomain) {
+        oldDomain.removeFundamentalDomainListener(this);
+        setFundamentalDomain(graph.getFundamentalDomain());
+    }
+    
     public void fundamentalDomainShapeChanged() {
         widthView = (maxX - minX + 1)*fundamentalDomain.getHorizontalSide() + (fundamentalDomain.getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*fundamentalDomain.getVerticalSide()*Math.cos(fundamentalDomain.getAngle());
         heightView = (maxY - minY + 1)*fundamentalDomain.getDomainHeight();

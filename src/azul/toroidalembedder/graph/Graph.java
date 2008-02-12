@@ -65,10 +65,24 @@ public class Graph implements VertexListener{
     public FundamentalDomain getFundamentalDomain() {
         return fundamentalDomain;
     }
+
+    public void setFundamentalDomain(FundamentalDomain fundamentalDomain) {
+        if(!this.fundamentalDomain.equals(fundamentalDomain)){
+            FundamentalDomain oldDomain = this.fundamentalDomain;
+            this.fundamentalDomain = fundamentalDomain;
+            fireFundamentalDomainChanged(oldDomain);
+        }
+    }
     
     private void fireGraphChanged(){
         for (GraphListener listener : listeners) {
             listener.graphChanged();
+        }
+    }
+    
+    private void fireFundamentalDomainChanged(FundamentalDomain oldDomain){
+        for (GraphListener listener : listeners) {
+            listener.fundamentalDomainChanged(oldDomain);
         }
     }
     

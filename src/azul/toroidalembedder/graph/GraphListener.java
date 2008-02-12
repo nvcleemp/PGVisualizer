@@ -16,5 +16,5 @@ package azul.toroidalembedder.graph;
 public interface GraphListener {
     
     public void graphChanged();
-    
+    public void fundamentalDomainChanged(FundamentalDomain oldDomain);
 }
