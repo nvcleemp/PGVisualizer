@@ -123,7 +123,7 @@ public class FundamentalDomain {
     
     private void fireFundamentalDomainChanged(){
         for (FundamentalDomainListener listener : listeners) {
-            listener.fundamentalDomainChanged();
+            listener.fundamentalDomainShapeChanged();
         }
     }
 

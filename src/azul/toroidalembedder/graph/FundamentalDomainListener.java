@@ -10,5 +10,5 @@ package azul.toroidalembedder.graph;
  * @author nvcleemp
  */
 public interface FundamentalDomainListener {
-    public void fundamentalDomainChanged();
+    public void fundamentalDomainShapeChanged();
 }
