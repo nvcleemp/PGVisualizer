@@ -75,7 +75,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
     public EmbedderWindow(Graph graph) {
         super("Toroidal embedder: EmbedderWindow");
         this.graph = graph;
-        torusView.setGraph(graph, true);
+        torusView.setGraph(graph);
         graph.addGraphListener(this);
         model.addEmbedder("Spring embedder", new SpringEmbedder(graph));
         model.setSelectedItem("Spring embedder");
@@ -167,6 +167,10 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         split.repaint();
     }
     
+    public void fundamentalDomainShapeChanged() {
+        split.repaint();
+    }
+
     private class XAction extends AbstractAction {
         
         private int increment;

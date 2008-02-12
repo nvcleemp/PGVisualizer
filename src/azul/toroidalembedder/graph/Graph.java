@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author nvcleemp
  */
-public class Graph implements VertexListener{
+public class Graph implements VertexListener, FundamentalDomainListener {
     
     private List<Vertex> vertices = new ArrayList<Vertex>();
     private List<GraphListener> listeners = new ArrayList<GraphListener>();
@@ -25,11 +25,12 @@ public class Graph implements VertexListener{
     
     /** Creates a new instance of Graph */
     public Graph() {
-        fundamentalDomain = new FundamentalDomain();
+        this(new FundamentalDomain());
     }
 
     public Graph(FundamentalDomain fundamentalDomain) {
         this.fundamentalDomain = fundamentalDomain;
+        fundamentalDomain.addFundamentalDomainListener(this);
     }
     
     public List<Vertex> getVertices(){
@@ -79,7 +80,9 @@ public class Graph implements VertexListener{
     public void setFundamentalDomain(FundamentalDomain fundamentalDomain) {
         if(!this.fundamentalDomain.equals(fundamentalDomain)){
             FundamentalDomain oldDomain = this.fundamentalDomain;
+            oldDomain.removeFundamentalDomainListener(this);
             this.fundamentalDomain = fundamentalDomain;
+            fundamentalDomain.addFundamentalDomainListener(this);
             fireFundamentalDomainChanged(oldDomain);
         }
     }
@@ -96,11 +99,21 @@ public class Graph implements VertexListener{
         }
     }
     
+    private void fireFundamentalDomainShapeChanged(){
+        for (GraphListener listener : listeners) {
+            listener.fundamentalDomainShapeChanged();
+        }
+    }
+    
     public void addGraphListener(GraphListener listener){
         listeners.add(listener);
     }
 
     public void vertexMoved() {
         fireGraphChanged();
+    }
+
+    public void fundamentalDomainShapeChanged() {
+        fireFundamentalDomainShapeChanged();
     }
 }

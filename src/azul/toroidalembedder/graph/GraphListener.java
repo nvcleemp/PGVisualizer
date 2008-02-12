@@ -13,7 +13,7 @@ package azul.toroidalembedder.graph;
  *
  * @author nvcleemp
  */
-public interface GraphListener {
+public interface GraphListener extends FundamentalDomainListener {
     
     public void graphChanged();
     public void fundamentalDomainChanged(FundamentalDomain oldDomain);
