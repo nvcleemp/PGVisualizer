@@ -59,6 +59,8 @@ public class EmbedderWindow extends JFrame implements GraphListener {
             if (model != null) {
                 if (model.isPressed()) {
                     if (!timer.isRunning()) {
+                        if(EmbedderWindow.this.model.getSelectedEmbedder()!=null)
+                            EmbedderWindow.this.model.getSelectedEmbedder().initialize();
                         timer.start();
                     }
                 } else if (timer.isRunning()) {
