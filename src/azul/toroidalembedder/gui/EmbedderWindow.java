@@ -10,6 +10,7 @@ import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.GraphListener;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
+import azul.toroidalembedder.RandomEmbedder;
 import azul.toroidalembedder.SpringEmbedder;
 import azul.toroidalembedder.SpringEmbedderEqualEdges;
 
@@ -78,6 +79,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         model.addEmbedder("Spring embedder", new SpringEmbedder(graph));
         model.setSelectedItem("Spring embedder");
         model.addEmbedder("Spring embedder equal edges", new SpringEmbedderEqualEdges(graph));
+        model.addEmbedder("Random embedder", new RandomEmbedder(graph));
         split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setTopComponent(torusView);
         
