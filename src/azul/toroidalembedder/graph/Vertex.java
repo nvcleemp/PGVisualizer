@@ -29,6 +29,14 @@ public class Vertex {
         this.x = x;
         this.y = y;
     }
+    
+    public double getRawX(){
+        return x;
+    }
+
+    public double getRawY(){
+        return y;
+    }
 
     public double getX(FundamentalDomain fundamentalDomain){
         return getX(0, 0, fundamentalDomain);
@@ -61,6 +69,16 @@ public class Vertex {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public void setRawCoordinates(double x, double y) {
+        if(x>=-1 && x<=1 && y>=-1 && y<=1){
+            this.x=x;
+            this.y=y;
+            fireVertexMoved();
+        } else {
+            throw new IllegalArgumentException("Raw coordinates should be between -1 and 1.");
+        }
     }
     
     public void translate(double dx, double dy, FundamentalDomain fundamentalDomain){
