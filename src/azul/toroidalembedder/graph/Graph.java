@@ -57,6 +57,16 @@ public class Graph implements VertexListener{
         return e;
     }
     
+    public double getEdgeLength(Edge e){
+        return getEdgeLength(e, fundamentalDomain);
+    }
+    
+    public double getEdgeLength(Edge e, FundamentalDomain domain){
+        double dx = e.getStart().getX(domain) - e.getEnd().getX(e.getTargetX(), e.getTargetY(), domain);
+        double dy = e.getStart().getY(domain) - e.getEnd().getY(e.getTargetX(), e.getTargetY(), domain);
+        return Math.hypot(dx, dy);
+    }
+    
     public void translate(double dx, double dy){
         for(Vertex vertex : vertices)
             vertex.translate(dx, dy, fundamentalDomain);
