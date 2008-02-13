@@ -11,9 +11,11 @@ import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.GraphListener;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
-import azul.toroidalembedder.RandomEmbedder;
-import azul.toroidalembedder.SpringEmbedder;
-import azul.toroidalembedder.SpringEmbedderEqualEdges;
+import azul.toroidalembedder.embedder.DomainAngleEmbedder;
+import azul.toroidalembedder.energy.MeanEdgeLengthEnergyCalculator;
+import azul.toroidalembedder.embedder.RandomEmbedder;
+import azul.toroidalembedder.embedder.SpringEmbedder;
+import azul.toroidalembedder.embedder.SpringEmbedderEqualEdges;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -81,6 +83,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         model.setSelectedItem("Spring embedder");
         model.addEmbedder("Spring embedder equal edges", new SpringEmbedderEqualEdges(graph));
         model.addEmbedder("Random embedder", new RandomEmbedder(graph));
+        model.addEmbedder("Domain angle embedder", new DomainAngleEmbedder(graph, 40, 5, Math.PI/2, new MeanEdgeLengthEnergyCalculator()));
         split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setTopComponent(torusView);
         

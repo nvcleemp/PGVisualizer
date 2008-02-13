@@ -13,9 +13,13 @@ import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
-import azul.toroidalembedder.Embedder;
-import azul.toroidalembedder.SpringEmbedder;
-import azul.toroidalembedder.SpringEmbedderEqualEdges;
+import azul.toroidalembedder.embedder.DomainAngleEmbedder;
+import azul.toroidalembedder.embedder.Embedder;
+import azul.toroidalembedder.embedder.FastDomainAngleEmbedder;
+import azul.toroidalembedder.energy.MeanEdgeLengthEnergyCalculator;
+import azul.toroidalembedder.embedder.SpringEmbedder;
+import azul.toroidalembedder.embedder.SpringEmbedderEqualEdges;
+import azul.toroidalembedder.energy.AngleEnergyCalculator;
 import azul.toroidalembedder.graph.FundamentalDomain;
 
 import java.awt.event.KeyEvent;
@@ -53,6 +57,10 @@ public class TorusViewTest {
         }
         final Embedder embedder1 = new SpringEmbedder(graph);
         final Embedder embedder2 = new SpringEmbedderEqualEdges(graph);
+        final Embedder embedder3 = new DomainAngleEmbedder(graph, 40, 5, Math.PI/2, new MeanEdgeLengthEnergyCalculator());
+        final Embedder embedder4 = new FastDomainAngleEmbedder(graph, 0.1, 1, new MeanEdgeLengthEnergyCalculator());
+        final Embedder embedder5 = new FastDomainAngleEmbedder(graph, 0.1, 1, new AngleEnergyCalculator());
+        embedder3.initialize();
         frame.addKeyListener(new KeyListener() {
             public void keyPressed(KeyEvent e) {
                 if(e.isShiftDown()){
@@ -95,6 +103,12 @@ public class TorusViewTest {
                         embedder1.embed();
                     else if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
                         embedder2.embed();
+                    else if(e.getKeyCode() == KeyEvent.VK_D)
+                        embedder3.embed();
+                    else if(e.getKeyCode() == KeyEvent.VK_F)
+                        embedder4.embed();
+                    else if(e.getKeyCode() == KeyEvent.VK_E)
+                        embedder5.embed();
                     else if(e.getKeyCode() == KeyEvent.VK_A)
                         graph.getFundamentalDomain().addToAngle(0.1);
                     else if(e.getKeyCode() == KeyEvent.VK_V)

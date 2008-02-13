@@ -5,7 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
-import azul.toroidalembedder.Embedder;
+import azul.toroidalembedder.embedder.Embedder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
