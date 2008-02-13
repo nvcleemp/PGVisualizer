@@ -58,6 +58,10 @@ public class Vertex {
         return edges;
     }
     
+    public int getDegree() {
+        return edges.size();
+    }
+    
     public void addEdge(Edge e){
         if(equals(e.getStart()))
             edges.add(e);
