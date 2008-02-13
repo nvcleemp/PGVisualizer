@@ -33,7 +33,7 @@ public class AngleEnergyCalculator implements EnergyCalculator{
                 double angle = angles[i+1] - angles[i];
                 energy += (ideal-angle)*(ideal-angle);
             }
-            double angle = angles[0] - angles[angles.length-1] - 2*Math.PI;
+            double angle = angles[0] - angles[angles.length-1] + 2*Math.PI;
             energy += (ideal-angle)*(ideal-angle);
         }
         
