@@ -24,6 +24,8 @@ import azul.toroidalembedder.graph.FundamentalDomain;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 /**
@@ -130,11 +132,18 @@ public class TorusViewTest {
         });
         frame.setContentPane(new TorusView(graph, -2, -2, 2, 2));
         frame.pack();
-        JFrame frame2 = new JFrame("Raw view");
+        final JFrame frame2 = new JFrame("Raw view");
         frame2.setContentPane(new TorusView(new FundamentalDomain(), graph, -2, -2, 2, 2));
         frame2.pack();
-        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+        frame2.setLocation(frame.getX() + frame.getWidth(), frame.getY());
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                frame2.dispose();
+            }
+        });
         frame2.setVisible(true);
+        frame.setVisible(true);
     }    
 }
