@@ -25,6 +25,137 @@ public class Utility {
         NORTH, EAST, SOUTH, WEST;
     }
     
+    public static Graph delaneyToTorGraph2(DelaneySymbol symbol){
+        //TODO: convert symbol to translation only
+        
+        
+        //create graph
+        Graph graph = new Graph();
+
+        
+        //mark the orbits that correspond with vertices
+        Map<Chamber, Vertex> vertices = new HashMap<Chamber, Vertex>();
+        for(int i = 0; i<symbol.getSize(); i++){
+            Chamber chamber = symbol.getChamber(i);
+            if(!vertices.containsKey(chamber)){
+                Vertex v = new Vertex(0,0);
+                graph.addVertex(v);
+                while(!vertices.containsKey(chamber)){
+                    vertices.put(chamber, v);
+                    vertices.put(chamber.sigma(1), v);
+                    chamber = chamber.sigma(1).sigma(2);
+                }
+            }
+        }
+        
+        //map for the edges
+        Map<Chamber, Edge> edges = new HashMap<Chamber, Edge>();       
+        
+        
+        //determine sides of quadrangle
+        Chamber start = symbol.getChamber(0);
+        int angleCorner = start.m(0)/2; //number of chambers in corner where angle is defined.
+        int oppositeCorner = start.m(0) - angleCorner; //number of chambers in corner where angle is defined.
+        
+        //arrays for corners
+        Chamber[] cornerNW = new Chamber[angleCorner];
+        Chamber[] cornerSE = new Chamber[angleCorner];
+        Chamber[] cornerNE = new Chamber[oppositeCorner];
+        Chamber[] cornerSW = new Chamber[oppositeCorner];
+        
+        //determine corners
+        Chamber next = start;
+        int[] sigmas = {0, 1};
+        int currentSigma = 0;
+        for (int i = 0; i < cornerNW.length; i++) {
+            cornerNW[i] = next;
+            currentSigma = (currentSigma + 1)%2;
+            next = next.sigma(sigmas[currentSigma]);
+        }
+        for (int i = 0; i < cornerSW.length; i++) {
+            cornerSW[i] = next;
+            currentSigma = (currentSigma + 1)%2;
+            next = next.sigma(sigmas[currentSigma]);
+        }
+        for (int i = 0; i < cornerSE.length; i++) {
+            cornerSE[i] = next;
+            currentSigma = (currentSigma + 1)%2;
+            next = next.sigma(sigmas[currentSigma]);
+        }
+        for (int i = 0; i < cornerNE.length; i++) {
+            cornerNE[i] = next;
+            currentSigma = (currentSigma + 1)%2;
+            next = next.sigma(sigmas[currentSigma]);
+        }
+
+        //arrays for sides: large enough
+        Chamber[] sideN = new Chamber[symbol.getSize()];
+        Chamber[] sideE = new Chamber[symbol.getSize()];
+        Chamber[] sideS = new Chamber[symbol.getSize()];
+        Chamber[] sideW = new Chamber[symbol.getSize()];
+        
+        //horizontal sides
+        int index = 0;
+        int lastMissing = 2; //which sigma was not present in the last orbit that was looked at
+        int lastUsed = (cornerNW.length + 1)%2; //which sigma was last used (i.e to cross the edge)
+        Chamber currentStart = cornerNW[cornerNW.length-1];
+        sideN[index] = currentStart; //currentStart is always already in the array
+        
+        while(index==0 || sideN[index-1]!=cornerNE[0]){
+            int[] localSigmas = {lastMissing, lastUsed};
+            lastMissing = getRemaining(lastMissing, lastUsed); //which sigma is missing this time?
+            int m = getM(currentStart, lastMissing); //m_ij value for current orbit
+            currentSigma = 0;
+            next = currentStart.sigma(localSigmas[currentSigma]);
+            currentSigma = 1;
+            for (int i = 1; i < m; i++) {
+                sideN[index + i] = next;
+                next = next.sigma(localSigmas[currentSigma]);
+                currentSigma = (currentSigma+1)%2;
+            }
+            lastUsed = localSigmas[(currentSigma+1)%2];
+            currentStart = sideN[index + m - 1];
+            for (int i = 0; i < m; i++) {
+                sideS[sideS.length - 1 - index - m + i] = next;
+                next = next.sigma(localSigmas[currentSigma]);
+                currentSigma = (currentSigma+1)%2;
+            }
+            index+=m;
+        }
+        
+        //vertical sides
+        index = 0;
+        lastMissing = 2; //which sigma was not present in the last orbit that was looked at
+        lastUsed = (cornerNE.length + 1)%2; //which sigma was last used (i.e to cross the edge)
+        currentStart = cornerNE[cornerNE.length-1];
+        sideN[index] = currentStart; //currentStart is always already in the array
+        
+        while(index==0 || sideE[index-1]!=cornerSE[0]){
+            int[] localSigmas = {lastMissing, lastUsed};
+            lastMissing = getRemaining(lastMissing, lastUsed); //which sigma is missing this time?
+            int m = getM(currentStart, lastMissing); //m_ij value for current orbit
+            currentSigma = 0;
+            next = currentStart.sigma(localSigmas[currentSigma]);
+            currentSigma = 1;
+            for (int i = 1; i < m; i++) {
+                sideE[index + i] = next;
+                next = next.sigma(localSigmas[currentSigma]);
+                currentSigma = (currentSigma+1)%2;
+            }
+            lastUsed = localSigmas[(currentSigma+1)%2];
+            currentStart = sideE[index + m - 1];
+            for (int i = 0; i < m; i++) {
+                sideW[sideW.length - 1 - index - m + i] = next;
+                next = next.sigma(localSigmas[currentSigma]);
+                currentSigma = (currentSigma+1)%2;
+            }
+            index+=m;
+        }
+        
+
+        return graph;
+    }
+
     public static Graph delaneyToTorGraph(DelaneySymbol symbol){
         //TODO: convert symbol to translation only
         
