@@ -6,6 +6,9 @@
 package azul.delaney;
 
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  *
@@ -16,6 +19,7 @@ public class DelaneySymbol {
     private Chamber[] chambers;
     private DelaneySymbol canonical = null;
     private DelaneySymbol minimal = null;
+    private Boolean orientable = null;
 
     public DelaneySymbol(int dimension, int size) {
         this.dimension = dimension;
@@ -154,5 +158,34 @@ public class DelaneySymbol {
     
     public boolean minimalEquals(DelaneySymbol symbol){
         return getMinimal().equals(symbol.getMinimal());
+    }
+    
+    public boolean isOrientable(){
+        if(orientable!=null)
+            return orientable;
+        
+        Map<Chamber, Boolean> orientation = new HashMap<Chamber, Boolean>();
+        Stack<Chamber> stack = new Stack<Chamber>();
+        
+        orientation.put(chambers[0], true);
+        stack.push(chambers[0]);
+        
+        while(!stack.empty()){
+            Chamber chamber = stack.pop();
+            for (int i = 0; i <= dimension; i++) {
+                if(orientation.containsKey(chamber.sigma(i))){
+                    if(orientation.get(chamber.sigma(i)).equals(orientation.get(chamber))){
+                        orientable = Boolean.FALSE;
+                        return orientable;
+                    }
+                } else {
+                    orientation.put(chamber.sigma(i), !orientation.get(chamber));
+                    stack.push(chamber.sigma(i));
+                }
+            }
+        }
+        
+        orientable = Boolean.TRUE;
+        return orientable;
     }
 }
