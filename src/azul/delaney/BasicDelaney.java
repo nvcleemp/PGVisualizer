@@ -260,4 +260,75 @@ public class BasicDelaney {
         
         return symbol;
     }
+    
+    public boolean isOrientable(){
+	int[] orientation = new int[sigma.length];
+        Stack<Integer> stack = new Stack<Integer>();
+	
+	for(int i=0;i<sigma.length;i++)
+            orientation[i]=0;
+		
+	orientation[0]=1;
+	stack.push(0);
+	
+	while(!stack.empty()){
+            int chamber = stack.pop();
+            for(int j=0; j<3; j++){
+                if(orientation[sigma[chamber][j]]==0){
+                    orientation[sigma[chamber][j]]=-orientation[chamber];
+                    stack.push(sigma[chamber][j]);
+                } else if(orientation[sigma[chamber][j]]==orientation[chamber]){
+                    return false;
+                }
+            }
+	}
+	
+	return true;
+    }
+    
+    public BasicDelaney getOrientable(){
+        if(isOrientable())
+            return this;
+        
+        int[] orientation = new int[sigma.length];
+        Stack<Integer> stack = new Stack<Integer>();
+        
+        orientation[0] = 1;
+        stack.push(0);
+        
+	while(!stack.empty()){
+            int chamber = stack.pop();
+            for(int j=0; j<3; j++){
+                if(orientation[sigma[chamber][j]]==0){
+                    orientation[sigma[chamber][j]]=-orientation[chamber];
+                    stack.push(sigma[chamber][j]);
+                }
+            }
+	}
+        
+        int[][] newSigma = new int[2*sigma.length][dimension];
+        int[][] newM = new int[2*m.length][dimension-1];
+        
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[i].length; j++) {
+                newM[i][j]=m[i][j];
+                newM[i+m.length][j]=m[i][j];
+            }
+        }
+        
+        for (int i = 0; i < sigma.length; i++) {
+            for (int j = 0; j < sigma[i].length; j++) {
+                int target = sigma[i][j];
+                if(orientation[i]==orientation[target]){
+                    newSigma[i][j] = target + sigma.length;
+                    newSigma[i + sigma.length][j] = target;
+                } else {
+                    newSigma[i][j] = target;
+                    newSigma[i + sigma.length][j] = target + sigma.length;
+                }
+            }
+        }
+        
+        return new BasicDelaney(dimension, newSigma, newM);
+    }
 }
