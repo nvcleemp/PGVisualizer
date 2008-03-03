@@ -306,8 +306,8 @@ public class BasicDelaney {
             }
 	}
         
-        int[][] newSigma = new int[2*sigma.length][dimension];
-        int[][] newM = new int[2*m.length][dimension-1];
+        int[][] newSigma = new int[2*sigma.length][dimension+1];
+        int[][] newM = new int[2*m.length][dimension];
         
         for (int i = 0; i < m.length; i++) {
             for (int j = 0; j < m[i].length; j++) {
