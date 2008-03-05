@@ -89,9 +89,11 @@ public class Path {
     public Path concat(Path secondPath){
         if(!end.equals(secondPath.start))
             throw new IllegalArgumentException("Second path should start with end of this path.");
-        int[] newPath = new int[path.length + secondPath.path.length - 1];
-        System.arraycopy(path, 0, newPath, 0, path.length - 1);
-        System.arraycopy(secondPath.path, 0, newPath, path.length - 1, secondPath.path.length);
+        int[] newPath = new int[path.length + secondPath.path.length];
+        if(path.length!=0)
+           System.arraycopy(path, 0, newPath, 0, path.length - 1);
+        if(secondPath.path.length!=0)
+           System.arraycopy(secondPath.path, 0, newPath, (path.length - 1 > 0 ? path.length - 1 : 0), secondPath.path.length);
         return new Path(start, newPath);
     }
     
@@ -135,6 +137,14 @@ public class Path {
             newPath[i] = sigmas.get(i);
         
         return new Path(newStart, newPath);
+    }
+    
+    public int getSigmaAt(int i){
+        return path[i];
+    }
+    
+    int getLength() {
+        return path.length + 1;
     }
     
     private static int getRemaining(int i, int j){
