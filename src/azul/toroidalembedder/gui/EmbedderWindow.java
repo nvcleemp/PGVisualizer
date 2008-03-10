@@ -11,12 +11,14 @@ import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.GraphListener;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
-import azul.toroidalembedder.embedder.DomainAngleEmbedder;
+import azul.toroidalembedder.embedder.FastDomainAngleEmbedder;
+import azul.toroidalembedder.embedder.FastDomainEdgeEmbedder;
 import azul.toroidalembedder.energy.MeanEdgeLengthEnergyCalculator;
 import azul.toroidalembedder.embedder.RandomEmbedder;
 import azul.toroidalembedder.embedder.SpringEmbedder;
 import azul.toroidalembedder.embedder.SpringEmbedderEqualEdges;
 
+import azul.toroidalembedder.energy.AngleEnergyCalculator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -83,7 +85,10 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         model.setSelectedItem("Spring embedder");
         model.addEmbedder("Spring embedder equal edges", new SpringEmbedderEqualEdges(graph));
         model.addEmbedder("Random embedder", new RandomEmbedder(graph));
-        model.addEmbedder("Domain angle embedder", new DomainAngleEmbedder(graph, 40, 5, Math.PI/2, new MeanEdgeLengthEnergyCalculator()));
+        model.addEmbedder("Domain angle embedder using edge length", new FastDomainAngleEmbedder(graph, 0.1, 1, new MeanEdgeLengthEnergyCalculator()));
+        model.addEmbedder("Domain angle embedder using edge angles", new FastDomainAngleEmbedder(graph, 0.1, 1, new AngleEnergyCalculator()));
+        model.addEmbedder("Domain edge embedder using edge length", new FastDomainEdgeEmbedder(graph, 0.1, 1, new MeanEdgeLengthEnergyCalculator()));
+        model.addEmbedder("Domain edge embedder using edge angles", new FastDomainEdgeEmbedder(graph, 0.1, 1, new AngleEnergyCalculator()));
         split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setTopComponent(torusView);
         
@@ -132,6 +137,13 @@ public class EmbedderWindow extends JFrame implements GraphListener {
             }
         });
         exportPanel.add(saveImage);
+        JButton saveGraph = new JButton("Save graph");
+        saveGraph.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(IOManager.writeTorGraph(EmbedderWindow.this.graph));
+            }
+        });
+        exportPanel.add(saveGraph);
         exportPanel.setBorder(BorderFactory.createTitledBorder("Export"));
         
         JPanel controls = new JPanel(new GridBagLayout());
