@@ -45,8 +45,6 @@ import javax.swing.event.ChangeListener;
  * @author nvcleemp
  */
 public class EmbedderWindow extends JFrame implements GraphListener {
-    private int xView = 2;
-    private int yView = 2;
     private Graph graph;
     private TorusView torusView = new TorusView(-2, -2, 2, 2);
     private EmbedderComboBoxModel model = new EmbedderComboBoxModel();
@@ -96,23 +94,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         gbc.fill = GridBagConstraints.BOTH;
         
         // view controls
-        JPanel viewPanel = new JPanel(new GridBagLayout());
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        viewPanel.add(new JLabel("Horizontal", JLabel.LEFT), gbc);
-        gbc.gridy = 1;
-        viewPanel.add(new JLabel("Vertical", JLabel.LEFT), gbc);
-        gbc.gridy = 0;
-        gbc.gridx = 1;
-        viewPanel.add(new JButton(new XAction(1)), gbc);
-        gbc.gridx = 2;
-        viewPanel.add(new JButton(new XAction(-1)), gbc);
-        gbc.gridy = 1;
-        gbc.gridx = 1;
-        viewPanel.add(new JButton(new YAction(1)), gbc);
-        gbc.gridx = 2;
-        viewPanel.add(new JButton(new YAction(-1)), gbc);
-        viewPanel.setBorder(BorderFactory.createTitledBorder("View"));
+        JPanel viewPanel = new ViewController(2, 2, torusView);
         
         // embedder controls
         JPanel embedderPanel = new JPanel(new GridBagLayout());
@@ -185,41 +167,4 @@ public class EmbedderWindow extends JFrame implements GraphListener {
     public void fundamentalDomainShapeChanged() {
         split.repaint();
     }
-
-    private class XAction extends AbstractAction {
-        
-        private int increment;
-
-        public XAction(int increment) {
-            super(increment>0 ? "+" : "-");
-            this.increment = increment;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            if(xView + increment >= 0){
-                xView+=increment;
-                torusView.setView(-xView, -yView, xView, yView);
-            }
-        }
-        
-    }
-
-    private class YAction extends AbstractAction {
-        
-        private int increment;
-
-        public YAction(int increment) {
-            super(increment>0 ? "+" : "-");
-            this.increment = increment;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            if(yView + increment >= 0){
-                yView+=increment;
-                torusView.setView(-xView, -yView, xView, yView);
-            }
-        }
-        
-    }
-
 }
