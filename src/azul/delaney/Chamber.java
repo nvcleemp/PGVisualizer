@@ -37,6 +37,10 @@ public class Chamber {
         m[i] = mValue;
     }
     
+    public DelaneySymbol getSymbol(){
+        return symbol;
+    }
+    
     Chamber copy(DelaneySymbol symbol){
         Chamber chamber = new Chamber(symbol);
         
