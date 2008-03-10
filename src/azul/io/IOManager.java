@@ -13,6 +13,7 @@ import azul.delaney.BasicDelaney;
 import azul.delaney.Chamber;
 import azul.delaney.DelaneySymbol;
 import azul.delaney.Utility;
+import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
@@ -86,6 +87,44 @@ public class IOManager {
         }
         
         return graph;
+    }
+    
+    public static String writeTorGraph(Graph graph){
+        List<Vertex> vertices = graph.getVertices();
+        StringBuffer buf = new StringBuffer(vertices.size()*8);
+        buf.append(vertices.size() + "|");
+        FundamentalDomain domain = graph.getFundamentalDomain();
+        buf.append(domain.getHorizontalSide());
+        buf.append(" ");
+        buf.append(domain.getVerticalSide());
+        buf.append(" ");
+        buf.append(domain.getAngle());
+        buf.append("|");
+        for (int i = 0; i < vertices.size(); i++) {
+            buf.append(vertices.get(i).getRawX());
+            buf.append(" ");
+            buf.append(vertices.get(i).getRawY());
+            buf.append(";");
+        }
+        buf.deleteCharAt(buf.length()-1);
+        buf.append("|");
+        for (int i = 0; i < vertices.size(); i++) {
+            for (Edge edge : vertices.get(i).getEdges()) {
+                int end = vertices.indexOf(edge.getEnd());
+                if(end>=i){
+                    buf.append(i);
+                    buf.append(" ");
+                    buf.append(end);
+                    buf.append(" ");
+                    buf.append(edge.getTargetX());
+                    buf.append(" ");
+                    buf.append(edge.getTargetY());
+                    buf.append(";");
+                }
+            }
+        }
+        buf.deleteCharAt(buf.length()-1);
+        return buf.toString();
     }
     
     public static String writeDS(DelaneySymbol symbol){
