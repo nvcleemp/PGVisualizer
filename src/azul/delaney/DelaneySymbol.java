@@ -76,7 +76,7 @@ public class DelaneySymbol {
         out.println();
     }
     
-    private int getIndex(Chamber chamber){
+    public int getIndex(Chamber chamber){
         int i = 0;
         while(i<chambers.length && chambers[i]!=chamber) i++;
         if(i==chambers.length)
