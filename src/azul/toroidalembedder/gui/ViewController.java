@@ -15,11 +15,11 @@ public class ViewController extends JPanel {
     private int yView;
     private TorusView torusView;
 
-    public ViewController(int xView, int yView, TorusView torusView) {
+    public ViewController(TorusView torusView) {
         super();
-        this.xView = xView;
-        this.yView = yView;
         this.torusView = torusView;
+        xView = torusView.getMaxX();
+        yView = torusView.getMaxY();
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         setLayout(new GridBagLayout());
@@ -39,10 +39,6 @@ public class ViewController extends JPanel {
         gbc.gridx = 2;
         add(new JButton(new YAction(-1)), gbc);
         setBorder(BorderFactory.createTitledBorder("View"));
-    }
-
-    public ViewController(TorusView torusView) {
-        this(2, 2, torusView);
     }
 
     private class XAction extends AbstractAction {

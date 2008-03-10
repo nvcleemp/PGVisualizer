@@ -210,6 +210,14 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         repaint();
     }
     
+    public int getMaxX(){
+        return maxX;
+    }
+    
+    public int getMaxY(){
+        return maxY;
+    }
+    
     public void graphChanged() {
         repaint();
     }

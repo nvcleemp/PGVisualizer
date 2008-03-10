@@ -94,7 +94,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         gbc.fill = GridBagConstraints.BOTH;
         
         // view controls
-        JPanel viewPanel = new ViewController(2, 2, torusView);
+        JPanel viewPanel = new ViewController(torusView);
         
         // embedder controls
         JPanel embedderPanel = new JPanel(new GridBagLayout());
