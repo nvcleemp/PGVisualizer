@@ -37,11 +37,14 @@ public class Graph implements VertexListener, FundamentalDomainListener {
         return vertices;
     }
     
-    public void addVertex(Vertex vertex){
+    public boolean addVertex(Vertex vertex){
+        if(vertex.getIndex()!=-1)
+            return false;
         vertex.addGraphListener(this);
         vertex.setIndex(vertices.size());
         vertices.add(vertex);
         fireGraphChanged();
+        return true;
     }
     
     public Edge addEdge(int start, int end, int targetX, int targetY){
@@ -107,6 +110,10 @@ public class Graph implements VertexListener, FundamentalDomainListener {
     
     public void addGraphListener(GraphListener listener){
         listeners.add(listener);
+    }
+
+    public void removeGraphListener(GraphListener listener){
+        listeners.remove(listener);
     }
 
     public void vertexMoved() {

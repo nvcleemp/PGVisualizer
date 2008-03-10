@@ -79,7 +79,10 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     }
 
     public void setGraph(Graph graph){
+        if(this.graph!=null)
+            this.graph.removeGraphListener(this);
         this.graph = graph;
+        this.graph.addGraphListener(this);
         if(graph!=null){
             widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
             heightView = ((maxY - minY + 1)*getFundamentalDomain().getDomainHeight());
@@ -119,8 +122,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         }
     }
     
-    private void paint(Vertex vertex, Graphics2D g2, int areaX, int areaY){
-        double r = 0.06;
+    private void paint(Vertex vertex, Graphics2D g2, int areaX, int areaY, double r){
         Ellipse2D ell = new Ellipse2D.Double(vertex.getX(areaX, areaY, getFundamentalDomain())-r,vertex.getY(areaX, areaY, getFundamentalDomain())-r,2*r,2*r);
         g2.setColor(Color.WHITE);
         g2.fill(ell);
@@ -191,7 +193,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
                     Point2D origin = getFundamentalDomain().getOrigin(i, j);
                     gr.translate(origin.getX(), origin.getY());
 
-                    paint(vertex, gr, 0, 0);
+                    paint(vertex, gr, 0, 0, 0.06*getFundamentalDomain().getHorizontalSide()/2);
                 }
         }
     }
