@@ -16,7 +16,6 @@ public class ViewController extends JPanel {
     private TorusView torusView;
 
     public ViewController(TorusView torusView) {
-        super();
         this.torusView = torusView;
         xView = torusView.getMaxX();
         yView = torusView.getMaxY();
