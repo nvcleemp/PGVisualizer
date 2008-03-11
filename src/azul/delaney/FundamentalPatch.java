@@ -37,11 +37,15 @@ public class FundamentalPatch {
     }
     
     public void closeOrbits(){
-        for (int i = 0; i<symbol.getSize(); i++) {
-            ChamberDelegate delegate = map.get(symbol.getChamber(i));
-            for (int j = 0; j < delegate.neighbours.length; j++)
-                if(delegate.neighbours[j]==null)
-                    tryEdge(symbol.getChamber(i), j);
+        boolean stop = false;
+        while(!stop){
+            stop = true;
+            for (int i = 0; i<symbol.getSize(); i++) {
+                ChamberDelegate delegate = map.get(symbol.getChamber(i));
+                for (int j = 0; j < delegate.neighbours.length; j++)
+                    if(delegate.neighbours[j]==null)
+                        stop = !tryEdge(symbol.getChamber(i), j) && stop;
+            }
         }
     }
     
