@@ -96,6 +96,9 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         // view controls
         JPanel viewPanel = new ViewController(torusView);
         
+        // graph controls
+        JPanel graphPanel = new GraphOperations(graph);
+        
         // embedder controls
         JPanel embedderPanel = new JPanel(new GridBagLayout());
         gbc.gridx = 0;
@@ -133,8 +136,10 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         gbc.gridy = 0;
         gbc.gridheight = 2;
         controls.add(viewPanel, gbc);
-        gbc.gridheight = 1;
         gbc.gridx = 1;
+        controls.add(graphPanel, gbc);
+        gbc.gridheight = 1;
+        gbc.gridx = 2;
         controls.add(embedderPanel, gbc);
         gbc.gridy = 1;
         controls.add(exportPanel, gbc);
