@@ -38,6 +38,25 @@ public class IOManager {
     public IOManager() {
     }
     
+    
+    public static List<Graph> readPG(File file){
+        try {
+            Scanner fileScanner = new Scanner(file);
+            List<Graph> list = new ArrayList<Graph>();
+            while(fileScanner.hasNextLine()){
+                String line = fileScanner.nextLine().trim();
+                if(!line.startsWith("#") && line.length()!=0) //ignore comments
+                    list.add(readTorGraph(line));
+            }
+            return list;
+        } catch (FileFormatException ex) {
+            Logger.getLogger(IOManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(IOManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public static Graph readTorGraph(String torGraph) throws FileFormatException {
         String[] parts = torGraph.split("\\|");
         
