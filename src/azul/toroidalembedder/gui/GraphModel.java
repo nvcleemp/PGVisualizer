@@ -19,7 +19,7 @@ import javax.swing.event.ListDataListener;
 public class GraphModel extends AbstractListModel implements ListDataListener {
 
     private TypedListModel<String> list = new ArrayListModel<String>();
-    private Map<String, Graph> map = new HashMap();
+    private Map<String, Graph> map = new HashMap<String, Graph>();
 
     public GraphModel(File file) {
         super();

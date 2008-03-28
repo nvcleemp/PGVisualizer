@@ -75,7 +75,7 @@ public class Path {
     }
     
     public Set<Chamber> getChambers(){
-        return new HashSet(chambers.keySet());
+        return new HashSet<Chamber>(chambers.keySet());
     }
     
     public Path getInversePath(){
