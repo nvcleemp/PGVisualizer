@@ -12,7 +12,6 @@ package azul.io;
 import azul.delaney.BasicDelaney;
 import azul.delaney.Chamber;
 import azul.delaney.DelaneySymbol;
-import azul.delaney.Utility;
 import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
@@ -271,17 +270,4 @@ public class IOManager {
             result += glue + parts[i].trim();
         return result;
     }
-    
-    public static void main(String[] args) {
-        //List<DelaneySymbol> list = readDS(new File("/Users/nvcleemp/doctoraat/code/azul/azul2.ds"));
-        List<DelaneySymbol> list = readDS(new File("/Users/nvcleemp/doctoraat/test.ds"));
-        for (DelaneySymbol symbol : list) {
-            //symbol.printSymbol();
-            System.out.println("OUT: " + writeDS(symbol));
-        }
-        Graph g = Utility.delaneyToTorGraph(list.get(0));
-        //new EmbedderWindow(g).setVisible(true);
-    }
-
-
 }

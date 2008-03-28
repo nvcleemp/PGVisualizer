@@ -7,7 +7,6 @@ package azul;
 
 import azul.delaney.FundamentalPatch;
 import azul.delaney.DelaneySymbol;
-import azul.delaney.Utility;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
 import azul.toroidalembedder.gui.EmbedderWindow;
@@ -80,25 +79,6 @@ public class Test {
                 } catch (FileFormatException ex) {
                     Logger.getLogger(Test.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
-        });
-        frame.add(button);
-        button = new JButton("Embed ds");
-        button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
-                if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
-                    if(chooser.getSelectedFile().exists())
-                        for(DelaneySymbol symbol: IOManager.readDS(chooser.getSelectedFile()))
-                            try {
-                                new EmbedderWindow(Utility.delaneyToTorGraph(symbol)).setVisible(true);
-                            } catch (Exception exc){
-                                symbol.printSymbol();
-                                exc.printStackTrace();
-                            } catch (Error er){
-                                symbol.printSymbol();
-                                er.printStackTrace();
-                            }
             }
         });
         frame.add(button);
