@@ -10,6 +10,7 @@ import azul.delaney.DelaneySymbol;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
 import azul.toroidalembedder.gui.EmbedderWindow;
+import azul.toroidalembedder.gui.PGVisualizer;
 import azul.toroidalembedder.gui.TorusViewTest;
 
 import java.awt.GridLayout;
@@ -104,6 +105,22 @@ public class Test {
 
                             }
                     }
+            }
+        });
+        frame.add(button);
+        button = new JButton("PGVisualizer");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
+                    if(chooser.getSelectedFile().exists()){
+                        JFrame frame = new JFrame("PGVisualizer");
+                        frame.add(new PGVisualizer(chooser.getSelectedFile()));
+                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        frame.pack();
+                        frame.setVisible(true);
+                    }
+                        
             }
         });
         frame.add(button);
