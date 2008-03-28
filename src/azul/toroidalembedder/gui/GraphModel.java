@@ -42,7 +42,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener {
         String string = list.get(index);
         try {
             if (map.get(string) == null) {
-                map.put(string, IOManager.readTorGraph(string));
+                map.put(string, IOManager.readPG(string));
             }
         } catch (FileFormatException ex) {
             Logger.getLogger(PGVisualizer.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,7 +77,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener {
             if (map.get(string) == null)
                 buf.append(string);
             else
-                buf.append(IOManager.writeTorGraph(map.get(string)));
+                buf.append(IOManager.writePG(map.get(string)));
             buf.append('\n');
         }
         return buf.toString();

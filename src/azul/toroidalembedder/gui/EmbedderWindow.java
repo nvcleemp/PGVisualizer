@@ -123,7 +123,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         JButton saveGraph = new JButton("Save graph");
         saveGraph.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(IOManager.writeTorGraph(EmbedderWindow.this.graph));
+                System.out.println(IOManager.writePG(EmbedderWindow.this.graph));
             }
         });
         exportPanel.add(saveGraph);
@@ -150,9 +150,9 @@ public class EmbedderWindow extends JFrame implements GraphListener {
     
     public static void main(String[] args) {
         try {
-            //new EmbedderWindow(IOManager.readTorGraph("3|0 0;0 0;0 0|0 1 0 0;0 2 0 0;1 2 0 0;2 0 1 -1;2 1 0 1;2 1 1 0")).setVisible(true);
-            new EmbedderWindow(IOManager.readTorGraph("10|0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0|0 8 0 0;8 1 0 0;1 2 0 0;2 3 0 0;3 9 0 0;9 4 0 0;4 5 0 0;5 6 0 0;6 7 0 0;7 0 0 0;0 5 0 -1;1 4 0 -1;2 7 1 0;3 6 1 0;8 9 0 0")).setVisible(true);
-            new EmbedderWindow(IOManager.readTorGraph("8|0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0|0 1 0 0;1 2 0 0;2 3 0 0;3 4 0 0;4 5 0 0;5 6 0 0;6 7 0 0;7 0 0 0;0 5 0 -1;1 4 0 -1;2 7 1 0;3 6 1 0")).setVisible(true);
+            //new EmbedderWindow(IOManager.readPG("3|0 0;0 0;0 0|0 1 0 0;0 2 0 0;1 2 0 0;2 0 1 -1;2 1 0 1;2 1 1 0")).setVisible(true);
+            new EmbedderWindow(IOManager.readPG("10|0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0|0 8 0 0;8 1 0 0;1 2 0 0;2 3 0 0;3 9 0 0;9 4 0 0;4 5 0 0;5 6 0 0;6 7 0 0;7 0 0 0;0 5 0 -1;1 4 0 -1;2 7 1 0;3 6 1 0;8 9 0 0")).setVisible(true);
+            new EmbedderWindow(IOManager.readPG("8|0 0;0 0;0 0;0 0;0 0;0 0;0 0;0 0|0 1 0 0;1 2 0 0;2 3 0 0;3 4 0 0;4 5 0 0;5 6 0 0;6 7 0 0;7 0 0 0;0 5 0 -1;1 4 0 -1;2 7 1 0;3 6 1 0")).setVisible(true);
             TorusViewTest.main(args);
         } catch (FileFormatException ex) {
             Logger.getLogger(EmbedderWindow.class.getName()).log(Level.SEVERE, null, ex);

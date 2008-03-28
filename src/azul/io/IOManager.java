@@ -45,7 +45,7 @@ public class IOManager {
             while(fileScanner.hasNextLine()){
                 String line = fileScanner.nextLine().trim();
                 if(!line.startsWith("#") && line.length()!=0) //ignore comments
-                    list.add(readTorGraph(line));
+                    list.add(readPG(line));
             }
             return list;
         } catch (FileFormatException ex) {
@@ -56,8 +56,8 @@ public class IOManager {
         return null;
     }
     
-    public static Graph readTorGraph(String torGraph) throws FileFormatException {
-        String[] parts = torGraph.split("\\|");
+    public static Graph readPG(String pg) throws FileFormatException {
+        String[] parts = pg.split("\\|");
         
         if(parts.length!=4)
             throw new FileFormatException("Illegal number of parts in file: expected 4, found " + parts.length);
@@ -107,7 +107,7 @@ public class IOManager {
         return graph;
     }
     
-    public static String writeTorGraph(Graph graph){
+    public static String writePG(Graph graph){
         List<Vertex> vertices = graph.getVertices();
         StringBuffer buf = new StringBuffer(vertices.size()*8);
         buf.append(vertices.size() + "|");
