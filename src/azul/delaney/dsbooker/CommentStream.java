@@ -74,12 +74,12 @@ public class CommentStream extends PrintStream {
     }
 
     @Override
-    public PrintStream printf(Locale l, String format, Object[] args) {
+    public PrintStream printf(Locale l, String format, Object... args) {
         return delegate.printf(l, format, args);
     }
 
     @Override
-    public PrintStream printf(String format, Object[] args) {
+    public PrintStream printf(String format, Object... args) {
         return delegate.printf(format, args);
     }
 
