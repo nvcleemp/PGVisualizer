@@ -3,8 +3,6 @@ package azul.toroidalembedder.gui;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
 import azul.toroidalembedder.graph.Graph;
-import be.ugent.caagt.swirl.lists.ArrayListModel;
-import be.ugent.caagt.swirl.lists.TypedListModel;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
@@ -13,12 +11,13 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 public class GraphModel extends AbstractListModel implements ListDataListener {
 
-    private TypedListModel<String> list = new ArrayListModel<String>();
+    private DefaultListModel list = new DefaultListModel();
     private Map<String, Graph> map = new HashMap<String, Graph>();
 
     public GraphModel(File file) {
@@ -29,7 +28,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener {
                 String line = fileScanner.nextLine().trim();
                 if (!line.startsWith("#") && line.length() != 0) {
                     //ignore comments
-                    list.add(line);
+                    list.addElement(line);
                 }
             }
         } catch (FileNotFoundException ex) {
@@ -39,7 +38,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener {
     }
 
     public Graph getGraph(int index) {
-        String string = list.get(index);
+        String string = (String)list.get(index);
         try {
             if (map.get(string) == null) {
                 map.put(string, IOManager.readPG(string));
@@ -73,7 +72,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener {
     public String exportUpdatedGraphs(){
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < list.getSize(); i++) {
-            String string = list.get(i);
+            String string = (String)list.get(i);
             if (map.get(string) == null)
                 buf.append(string);
             else
