@@ -15,17 +15,18 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.event.ListDataEvent;
 
 /**
  *
  * @author nvcleemp
  */
-public class GraphOperations extends JPanel {
+public class GraphOperations extends JPanel implements GraphModelListener {
     private Graph graph;
+    private GraphModel model = null;
     private GraphShiftOperations shiftOperations;
 
-    public GraphOperations(Graph graph) {
-        this.graph = graph;
+    private GraphOperations() {
         setLayout(new BorderLayout());
         JPanel north = new JPanel(new GridLayout(0, 2));
         north.add(new JButton(new FlipXAction()));
@@ -33,9 +34,21 @@ public class GraphOperations extends JPanel {
         north.add(new JButton(new FlipYAction()));
         north.add(new JButton(new RotateRightAction()));
         add(north, BorderLayout.NORTH);
-        shiftOperations = new GraphShiftOperations(graph, false);
+        shiftOperations = new GraphShiftOperations(false);
         add(shiftOperations, BorderLayout.SOUTH);
         setBorder(BorderFactory.createTitledBorder("Graph operations"));
+    }
+    
+    public GraphOperations(Graph graph) {
+        this();
+        this.graph = graph;
+        shiftOperations.setGraph(graph);
+    }
+    
+    public GraphOperations(GraphModel model) {
+        this(model.getSelectedGraph());
+        this.model = model;
+        model.addGraphModelListener(this);
     }
     
     public void setGraph(Graph graph){
@@ -101,6 +114,23 @@ public class GraphOperations extends JPanel {
                     edge.translateTartget(-edge.getTargetX() - edge.getTargetY(), edge.getTargetX() - edge.getTargetY());
             }
         }
+    }
+
+    public void selectedGraphChanged() {
+        if(model!=null)
+            setGraph(model.getSelectedGraph());
+    }
+
+    public void intervalAdded(ListDataEvent e) {
+        //
+    }
+
+    public void intervalRemoved(ListDataEvent e) {
+        //
+    }
+
+    public void contentsChanged(ListDataEvent e) {
+        //
     }
     
 }

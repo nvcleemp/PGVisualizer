@@ -36,12 +36,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ListDataEvent;
 
 /**
  *
  * @author nvcleemp
  */
-public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener{
+public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener, GraphModelListener{
 
     private Graph graph;
     private double widthView;
@@ -51,6 +52,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private int maxX;
     private int maxY;
     private FundamentalDomain fundamentalDomain;
+    private GraphModel graphListModel = null;
     
     /** Creates a new instance of TorusView */
     public TorusView() {
@@ -65,10 +67,20 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         this(graph, -1, -1, 1, 1);   
     }
     
+    public TorusView(GraphModel model) {
+        this(model, -1, -1, 1, 1);   
+    }
+    
     public TorusView(Graph graph, int minX, int minY, int maxX, int maxY) {
         setView(minX, minY, maxX, maxY);
         setGraph(graph);
-        graph.addGraphListener(this);
+    }
+    
+    public TorusView(GraphModel model, int minX, int minY, int maxX, int maxY) {
+        setView(minX, minY, maxX, maxY);
+        setGraph(model.getSelectedGraph());
+        graphListModel = model;
+        model.addGraphModelListener(this);
     }
     
     public TorusView(FundamentalDomain fundamentalDomain, Graph graph, int minX, int minY, int maxX, int maxY) {
@@ -258,5 +270,22 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
             double scale = 600/((widthView > heightView ? heightView : widthView) - 1);
             return new Dimension((int)(widthView*scale), (int)(heightView*scale));
         }
+    }
+
+    public void selectedGraphChanged() {
+        if(graphListModel!=null)
+            setGraph(graphListModel.getSelectedGraph());
+    }
+
+    public void intervalAdded(ListDataEvent e) {
+        //
+    }
+
+    public void intervalRemoved(ListDataEvent e) {
+        //
+    }
+
+    public void contentsChanged(ListDataEvent e) {
+        //
     }
 }

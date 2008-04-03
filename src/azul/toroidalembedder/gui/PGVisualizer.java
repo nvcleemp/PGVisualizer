@@ -12,10 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import javax.swing.ButtonModel;
-import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.ListSelectionModel;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -57,23 +55,18 @@ public class PGVisualizer extends JPanel{
     };
     public PGVisualizer(File file) {
         model = new GraphModel(file);
+        setLayout(new BorderLayout());
+        add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
+        view = new TorusView(model);
         model.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                view.setGraph(model.getSelectedGraph());
                 embedder = new SpringEmbedder(model.getSelectedGraph());
             }
         });
-        setLayout(new BorderLayout());
-        add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
         controls.add(new ViewController(view));
-        final GraphOperations operations = new GraphOperations(model.getSelectedGraph());
-        model.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                operations.setGraph(model.getSelectedGraph());
-            }
-        });
+        GraphOperations operations = new GraphOperations(model);
         controls.add(operations);
         JButton run = new JButton("Run");
         run.addChangeListener(changeListener);

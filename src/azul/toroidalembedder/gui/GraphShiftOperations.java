@@ -5,9 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
-import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Vertex;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -22,13 +20,8 @@ import javax.swing.JPanel;
  */
 public class GraphShiftOperations extends JPanel {
     private Graph graph;
-
-    public GraphShiftOperations(Graph graph) {
-        this(graph, true);
-    }
     
-    public GraphShiftOperations(Graph graph, boolean withBorder) {
-        this.graph = graph;
+    GraphShiftOperations(boolean withBorder) {
         setLayout(new GridLayout(3, 3));
         add(new JButton(new ShiftAction("NW", -1, -1)));
         add(new JButton(new ShiftAction("N", 0, -1)));
@@ -41,6 +34,15 @@ public class GraphShiftOperations extends JPanel {
         add(new JButton(new ShiftAction("SE", 1, 1)));
         if(withBorder)
             setBorder(BorderFactory.createTitledBorder("Graph shift operations"));
+    }
+
+    public GraphShiftOperations(Graph graph) {
+        this(graph, true);
+    }
+    
+    public GraphShiftOperations(Graph graph, boolean withBorder) {
+        this(withBorder);
+        this.graph = graph;
     }
     
     public void setGraph(Graph graph){
