@@ -45,46 +45,13 @@ import javax.swing.event.ChangeListener;
 public class EmbedderWindow extends JFrame implements GraphListener {
     private Graph graph;
     private TorusView torusView = new TorusView(-2, -2, 2, 2);
-    private EmbedderComboBoxModel model = new EmbedderComboBoxModel();
     private JSplitPane split;
-    private ActionListener embedAction = new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            if(model.getSelectedEmbedder()!=null)
-                model.getSelectedEmbedder().embed();
-        }
-    };
-    private Timer timer = new Timer(100, embedAction);
-    private ChangeListener changeListener = new ChangeListener() {
-        public void stateChanged(ChangeEvent e) {
-            JButton button = (JButton)(e.getSource());
-            ButtonModel model = button.getModel();
-            if (model != null) {
-                if (model.isPressed()) {
-                    if (!timer.isRunning()) {
-                        if(EmbedderWindow.this.model.getSelectedEmbedder()!=null)
-                            EmbedderWindow.this.model.getSelectedEmbedder().initialize();
-                        timer.start();
-                    }
-                } else if (timer.isRunning()) {
-                    timer.stop();
-                }
-            }
-        }
-    };
 
     public EmbedderWindow(Graph graph) {
         super("Toroidal embedder: EmbedderWindow");
         this.graph = graph;
         torusView.setGraph(graph);
         graph.addGraphListener(this);
-        model.addEmbedder("Spring embedder", new SpringEmbedder(graph));
-        model.setSelectedItem("Spring embedder");
-        model.addEmbedder("Spring embedder equal edges", new SpringEmbedderEqualEdges(graph));
-        model.addEmbedder("Random embedder", new RandomEmbedder(graph));
-        model.addEmbedder("Domain angle embedder using edge length", new FastDomainAngleEmbedder(graph, 0.1, 1, new MeanEdgeLengthEnergyCalculator()));
-        model.addEmbedder("Domain angle embedder using edge angles", new FastDomainAngleEmbedder(graph, 0.1, 1, new AngleEnergyCalculator()));
-        model.addEmbedder("Domain edge embedder using edge length", new FastDomainEdgeEmbedder(graph, 0.1, 1, new MeanEdgeLengthEnergyCalculator()));
-        model.addEmbedder("Domain edge embedder using edge angles", new FastDomainEdgeEmbedder(graph, 0.1, 1, new AngleEnergyCalculator()));
         split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setTopComponent(torusView);
         
@@ -98,18 +65,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         JPanel graphPanel = new GraphOperations(graph);
         
         // embedder controls
-        JPanel embedderPanel = new JPanel(new GridBagLayout());
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        JComboBox comboBox = new JComboBox(model);
-        comboBox.setPrototypeDisplayValue("Spring embedder equal edges");
-        embedderPanel.add(comboBox, gbc);
-        gbc.gridx = 1;
-        JButton runEmbedder = new JButton("Run embedder");
-        runEmbedder.addChangeListener(changeListener);
-        timer.setInitialDelay(0);
-        embedderPanel.add(runEmbedder, gbc);
-        embedderPanel.setBorder(BorderFactory.createTitledBorder("Embedder"));
+        JPanel embedderPanel = new EmbedderControl(graph);
         
         // export controls
         JPanel exportPanel = new JPanel(new GridLayout(0, 2));
