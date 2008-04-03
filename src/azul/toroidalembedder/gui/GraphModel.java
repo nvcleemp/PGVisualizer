@@ -108,7 +108,6 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
     
     protected void fireSelectedGraphChanged(){
 	Object[] listeners = listenerList.getListenerList();
-	ListDataEvent e = null;
 
 	for (int i = listeners.length - 2; i >= 0; i -= 2) {
 	    if (listeners[i] == GraphModelListener.class) {
