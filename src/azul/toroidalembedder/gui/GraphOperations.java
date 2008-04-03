@@ -8,6 +8,7 @@ package azul.toroidalembedder.gui;
 import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -21,19 +22,25 @@ import javax.swing.JPanel;
  */
 public class GraphOperations extends JPanel {
     private Graph graph;
+    private GraphShiftOperations shiftOperations;
 
     public GraphOperations(Graph graph) {
         this.graph = graph;
-        setLayout(new GridLayout(0, 2));
-        add(new JButton(new FlipXAction()));
-        add(new JButton(new RotateLeftAction()));
-        add(new JButton(new FlipYAction()));
-        add(new JButton(new RotateRightAction()));
+        setLayout(new BorderLayout());
+        JPanel north = new JPanel(new GridLayout(0, 2));
+        north.add(new JButton(new FlipXAction()));
+        north.add(new JButton(new RotateLeftAction()));
+        north.add(new JButton(new FlipYAction()));
+        north.add(new JButton(new RotateRightAction()));
+        add(north, BorderLayout.NORTH);
+        shiftOperations = new GraphShiftOperations(graph, false);
+        add(shiftOperations, BorderLayout.SOUTH);
         setBorder(BorderFactory.createTitledBorder("Graph operations"));
     }
     
     public void setGraph(Graph graph){
         this.graph = graph;
+        shiftOperations.setGraph(graph);
     }
     
     private class FlipXAction extends AbstractAction{
