@@ -6,10 +6,8 @@
 package azul.toroidalembedder.embedder;
 
 import azul.toroidalembedder.energy.EnergyCalculator;
-import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Vertex;
 
 /**
  *
