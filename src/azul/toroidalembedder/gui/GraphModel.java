@@ -12,16 +12,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-public class GraphModel extends AbstractListModel implements ListDataListener {
+public class GraphModel extends AbstractListModel implements ListDataListener, ListSelectionListener {
 
     private DefaultListModel list = new DefaultListModel();
     private Map<String, Graph> map = new HashMap<String, Graph>();
+    private ListSelectionModel selectionModel;
 
     public GraphModel(File file) {
         super();
+        selectionModel = new DefaultListSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        selectionModel.addListSelectionListener(this);
         try {
             Scanner fileScanner = new Scanner(file);
             while (fileScanner.hasNextLine()) {
@@ -81,4 +89,105 @@ public class GraphModel extends AbstractListModel implements ListDataListener {
         }
         return buf.toString();
     }
+    
+    public Graph getSelectedGraph(){
+        int selectedIndex = selectionModel.getMinSelectionIndex();
+        if(selectedIndex < 0 || selectedIndex>= list.size())
+            return null;
+        else
+            return getGraph(selectedIndex);
+    }
+    
+    public void addGraphModelListener(GraphModelListener l){
+        listenerList.add(GraphModelListener.class, l);
+    }
+    
+    public void removeGraphModelListener(GraphModelListener l){
+        listenerList.remove(GraphModelListener.class, l);
+    }
+    
+    protected void fireSelectedGraphChanged(){
+	Object[] listeners = listenerList.getListenerList();
+	ListDataEvent e = null;
+
+	for (int i = listeners.length - 2; i >= 0; i -= 2) {
+	    if (listeners[i] == GraphModelListener.class) {
+		((GraphModelListener)listeners[i+1]).selectedGraphChanged();
+	    }	       
+	}
+    }
+
+    @Override
+    protected void fireContentsChanged(Object source, int index0, int index1) {
+	Object[] listeners = listenerList.getListenerList();
+	ListDataEvent e = null;
+
+	for (int i = listeners.length - 2; i >= 0; i -= 2) {
+	    if (listeners[i] == ListDataListener.class) {
+		if (e == null) {
+		    e = new ListDataEvent(source, ListDataEvent.CONTENTS_CHANGED, index0, index1);
+		}
+		((ListDataListener)listeners[i+1]).contentsChanged(e);
+	    } else if (listeners[i] == GraphModelListener.class) {
+		if (e == null) {
+		    e = new ListDataEvent(source, ListDataEvent.CONTENTS_CHANGED, index0, index1);
+		}
+		((GraphModelListener)listeners[i+1]).contentsChanged(e);
+	    }       
+	}
+    }
+
+
+    @Override
+    protected void fireIntervalAdded(Object source, int index0, int index1) {
+	Object[] listeners = listenerList.getListenerList();
+	ListDataEvent e = null;
+
+	for (int i = listeners.length - 2; i >= 0; i -= 2) {
+	    if (listeners[i] == ListDataListener.class) {
+		if (e == null) {
+		    e = new ListDataEvent(source, ListDataEvent.INTERVAL_ADDED, index0, index1);
+		}
+		((ListDataListener)listeners[i+1]).intervalAdded(e);
+	    } else if (listeners[i] == GraphModelListener.class) {
+		if (e == null) {
+		    e = new ListDataEvent(source, ListDataEvent.INTERVAL_ADDED, index0, index1);
+		}
+		((GraphModelListener)listeners[i+1]).intervalAdded(e);
+	    }
+	}
+    }
+
+    @Override
+    protected void fireIntervalRemoved(Object source, int index0, int index1) {
+	Object[] listeners = listenerList.getListenerList();
+	ListDataEvent e = null;
+
+	for (int i = listeners.length - 2; i >= 0; i -= 2) {
+	    if (listeners[i] == ListDataListener.class) {
+		if (e == null) {
+		    e = new ListDataEvent(source, ListDataEvent.INTERVAL_REMOVED, index0, index1);
+		}
+		((ListDataListener)listeners[i+1]).intervalRemoved(e);
+	    } else if (listeners[i] == GraphModelListener.class) {
+		if (e == null) {
+		    e = new ListDataEvent(source, ListDataEvent.INTERVAL_REMOVED, index0, index1);
+		}
+		((GraphModelListener)listeners[i+1]).intervalRemoved(e);
+	    }
+	}
+    }
+
+    public void valueChanged(ListSelectionEvent e) {
+        fireSelectedGraphChanged();
+    }
+    
+    public void addListSelectionListener(ListSelectionListener l){
+        selectionModel.addListSelectionListener(l);
+    }
+
+    public void removeListSelectionListener(ListSelectionListener l){
+        selectionModel.removeListSelectionListener(l);
+    }
+
 }
