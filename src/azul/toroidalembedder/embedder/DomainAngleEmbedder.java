@@ -8,14 +8,14 @@ package azul.toroidalembedder.embedder;
 import azul.toroidalembedder.energy.EnergyCalculator;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
+import azul.toroidalembedder.gui.GraphModel;
 
 /**
  *
  * @author nvcleemp
  */
-public class DomainAngleEmbedder implements Embedder {
+public class DomainAngleEmbedder extends AbstractEmbedder{
     
-    private Graph graph;
     private int intervals;
     private int zoom;
     private double initialSearchAngle;
@@ -24,7 +24,15 @@ public class DomainAngleEmbedder implements Embedder {
     private EnergyCalculator energyCalculator;
 
     public DomainAngleEmbedder(Graph graph, int intervals, int zoom, double initialSearchAngle, EnergyCalculator energyCalculator) {
-        this.graph = graph;
+        super(graph);
+        this.intervals = intervals;
+        this.zoom = zoom;
+        this.initialSearchAngle = initialSearchAngle;
+        this.energyCalculator = energyCalculator;
+    }
+
+    public DomainAngleEmbedder(GraphModel graphModel, int intervals, int zoom, double initialSearchAngle, EnergyCalculator energyCalculator) {
+        super(graphModel);
         this.intervals = intervals;
         this.zoom = zoom;
         this.initialSearchAngle = initialSearchAngle;
@@ -61,5 +69,10 @@ public class DomainAngleEmbedder implements Embedder {
             graph.setFundamentalDomain(new FundamentalDomain(minAngle, graph.getFundamentalDomain().getHorizontalSide(), graph.getFundamentalDomain().getVerticalSide()));
         currentSearchAngle /= zoom;
         lock = false;
+    }
+
+    @Override
+    protected void resetEmbedder() {
+        currentSearchAngle = initialSearchAngle;
     }
 }

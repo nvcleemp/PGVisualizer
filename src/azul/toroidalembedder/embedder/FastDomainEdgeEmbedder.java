@@ -8,20 +8,27 @@ package azul.toroidalembedder.embedder;
 import azul.toroidalembedder.energy.EnergyCalculator;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
+import azul.toroidalembedder.gui.GraphModel;
 
 /**
  *
  * @author nvcleemp
  */
-public class FastDomainEdgeEmbedder implements Embedder {
+public class FastDomainEdgeEmbedder extends AbstractEmbedder {
     
-    private Graph graph;
     private double epsilon;
     private double k;
     private EnergyCalculator energyCalculator;
 
     public FastDomainEdgeEmbedder(Graph graph, double epsilon, double k, EnergyCalculator energyCalculator) {
-        this.graph = graph;
+        super(graph);
+        this.epsilon = epsilon;
+        this.k = k;
+        this.energyCalculator = energyCalculator;
+    }
+
+    public FastDomainEdgeEmbedder(GraphModel graphModel, double epsilon, double k, EnergyCalculator energyCalculator) {
+        super(graphModel);
         this.epsilon = epsilon;
         this.k = k;
         this.energyCalculator = energyCalculator;
@@ -42,5 +49,10 @@ public class FastDomainEdgeEmbedder implements Embedder {
         while(HS*factor<0.2)
             factor+=10;
         graph.setFundamentalDomain(new FundamentalDomain(graph.getFundamentalDomain().getAngle(), HS*factor, graph.getFundamentalDomain().getVerticalSide()*factor));
+    }
+
+    @Override
+    protected void resetEmbedder() {
+        //
     }
 }

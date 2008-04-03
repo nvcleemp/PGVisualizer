@@ -13,19 +13,19 @@ import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.Vertex;
 
+import azul.toroidalembedder.gui.GraphModel;
 import java.util.List;
 
 /**
  *
  * @author nvcleemp
  */
-public class SpringEmbedder implements Embedder{
+public class SpringEmbedder extends AbstractEmbedder {
     
     private double edge_length;
     private double non_edge_length;
     private double force;
     private double friction;
-    private Graph graph;
     private double[][] changes;
     private List<Vertex> vertices;
     
@@ -35,12 +35,25 @@ public class SpringEmbedder implements Embedder{
         this(graph, 0.3, 3, 0.01, 0.85);
     }
 
+    public SpringEmbedder(GraphModel graphModel) {
+        this(graphModel, 0.3, 3, 0.01, 0.85);
+    }
+
     public SpringEmbedder(Graph graph, double edge_length, double non_edge_length_factor, double force, double friction) {
+        super(graph);
         this.edge_length = edge_length;
         this.non_edge_length = non_edge_length_factor * edge_length;
         this.force = force;
         this.friction = friction;
-        this.graph = graph;
+        vertices = graph.getVertices();
+    }
+
+    public SpringEmbedder(GraphModel graphModel, double edge_length, double non_edge_length_factor, double force, double friction) {
+        super(graphModel);
+        this.edge_length = edge_length;
+        this.non_edge_length = non_edge_length_factor * edge_length;
+        this.force = force;
+        this.friction = friction;
         vertices = graph.getVertices();
     }
 
@@ -79,6 +92,12 @@ public class SpringEmbedder implements Embedder{
 
     public void initialize() {
         changes = new double[vertices.size()][2];
+    }
+
+    @Override
+    protected void resetEmbedder() {
+        changes = null;
+        vertices = graph.getVertices();
     }
     
 }

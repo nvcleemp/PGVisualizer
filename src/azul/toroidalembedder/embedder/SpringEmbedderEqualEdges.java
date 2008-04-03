@@ -13,26 +13,31 @@ import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.Vertex;
 
+import azul.toroidalembedder.gui.GraphModel;
 import java.util.List;
 
 /**
  *
  * @author nvcleemp
  */
-public class SpringEmbedderEqualEdges implements Embedder{
+public class SpringEmbedderEqualEdges extends AbstractEmbedder {
     
     //private double edge_length = 0.3;
     //private double non_edge_length = 3*edge_length;
     private double force = 0.01;
     private double friction = 0.85;
-    private Graph graph;
     private double[][] changes;
     private List<Vertex> vertices;
     
     
     /** Creates a new instance of DefaultEmbedder */
     public SpringEmbedderEqualEdges(Graph graph) {
-        this.graph = graph;
+        super(graph);
+        vertices = graph.getVertices();
+    }
+
+    public SpringEmbedderEqualEdges(GraphModel graphModel) {
+        super(graphModel);
         vertices = graph.getVertices();
     }
 
@@ -84,6 +89,12 @@ public class SpringEmbedderEqualEdges implements Embedder{
 
     public void initialize() {
         changes = new double[vertices.size()][2];
+    }
+
+    @Override
+    protected void resetEmbedder() {
+        changes = null;
+        vertices = graph.getVertices();
     }
     
 }

@@ -7,19 +7,23 @@ package azul.toroidalembedder.embedder;
 
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
+import azul.toroidalembedder.gui.GraphModel;
 import java.util.Random;
 
 /**
  * Gives the vertices random coordinates during initialisation and doesn't do anything after that.
  * Can be used before an embedder that requires that not all the vertices are at the same location.
  */
-public class RandomEmbedder implements Embedder {
+public class RandomEmbedder extends AbstractEmbedder {
     
-    private Graph graph;
     private static final Random RG = new Random();
 
     public RandomEmbedder(Graph graph) {
-        this.graph = graph;
+        super(graph);
+    }
+
+    public RandomEmbedder(GraphModel graphModel) {
+        super(graphModel);
     }
 
     public void initialize() {
@@ -31,4 +35,8 @@ public class RandomEmbedder implements Embedder {
         // do nothing
     }
 
+    @Override
+    protected void resetEmbedder() {
+        //
+    }
 }
