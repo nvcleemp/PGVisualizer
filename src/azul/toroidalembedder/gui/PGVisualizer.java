@@ -67,8 +67,7 @@ public class PGVisualizer extends JPanel{
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
         controls.add(new ViewController(view));
-        GraphOperations operations = new GraphOperations(model);
-        controls.add(operations);
+        controls.add(new GraphOperations(model));
         JButton run = new JButton("Run");
         run.addChangeListener(changeListener);
         controls.add(run);
