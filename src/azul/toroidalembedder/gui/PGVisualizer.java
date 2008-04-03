@@ -58,6 +58,7 @@ public class PGVisualizer extends JPanel{
         setLayout(new BorderLayout());
         add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
         view = new TorusView(model);
+        embedder = new SpringEmbedder(model.getSelectedGraph());
         model.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 embedder = new SpringEmbedder(model.getSelectedGraph());
