@@ -57,22 +57,21 @@ public class PGVisualizer extends JPanel{
     };
     public PGVisualizer(File file) {
         model = new GraphModel(file);
-        final ListSelectionModel selectionModel = new DefaultListSelectionModel();
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
+        model.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                view.setGraph(model.getGraph(selectionModel.getMinSelectionIndex()));
-                embedder = new SpringEmbedder(model.getGraph(selectionModel.getMinSelectionIndex()));
+                view.setGraph(model.getSelectedGraph());
+                embedder = new SpringEmbedder(model.getSelectedGraph());
             }
         });
         setLayout(new BorderLayout());
-        add(new ListSelectionNavigator(selectionModel, model), BorderLayout.NORTH);
+        add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
         controls.add(new ViewController(view));
-        final GraphOperations operations = new GraphOperations(model.getGraph(selectionModel.getMinSelectionIndex()));
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
+        final GraphOperations operations = new GraphOperations(model.getSelectedGraph());
+        model.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                operations.setGraph(model.getGraph(selectionModel.getMinSelectionIndex()));
+                operations.setGraph(model.getSelectedGraph());
             }
         });
         controls.add(operations);

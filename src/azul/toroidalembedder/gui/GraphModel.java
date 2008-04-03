@@ -189,5 +189,9 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
     public void removeListSelectionListener(ListSelectionListener l){
         selectionModel.removeListSelectionListener(l);
     }
+    
+    public ListSelectionModel getSelectionModel(){
+        return selectionModel;
+    }
 
 }
