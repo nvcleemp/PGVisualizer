@@ -193,4 +193,27 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
         return selectionModel;
     }
 
+    public void commitGraph(int index){
+        list.set(index, IOManager.writePG(map.get(list.get(index))));
+    }
+    
+    public void commitSelectedGraph(){
+        commitGraph(selectionModel.getMinSelectionIndex());
+    }
+    
+    public void revertGraph(int index){
+        String string = (String)list.get(index);
+        map.remove(string);
+        try {
+            map.put(string, IOManager.readPG(string));
+        } catch (FileFormatException ex) {
+            Logger.getLogger(PGVisualizer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if(index == selectionModel.getMinSelectionIndex())
+            fireSelectedGraphChanged();
+    }
+    
+    public void revertSelectedGraph(){
+        revertGraph(selectionModel.getMinSelectionIndex());
+    }
 }

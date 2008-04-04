@@ -6,10 +6,8 @@
 package azul.toroidalembedder.gui;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
-import javax.swing.JButton;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 /**
@@ -28,18 +26,12 @@ public class PGVisualizer extends JPanel{
         view = new TorusView(model);
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
+        controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
         controls.add(new ViewController(view));
         controls.add(new GraphOperations(model));
         controls.add(new EmbedderControl(model));
-        JButton output = new JButton("Output");
-        output.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(model.exportUpdatedGraphs());
-            }
-        });
-        controls.add(output);
-        add(controls, BorderLayout.SOUTH);
+        controls.add(new ExportControl(view, model));
+        add(controls, BorderLayout.EAST);
     }
     
 }
