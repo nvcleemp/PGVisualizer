@@ -206,8 +206,21 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
                     Point2D origin = getFundamentalDomain().getOrigin(i, j);
                     gr.translate(origin.getX(), origin.getY());
 
-                    paint(vertex, gr, 0, 0, 0.06*getFundamentalDomain().getHorizontalSide()/2);
+                    paint(vertex, gr, 0, 0, vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2);
                 }
+        }
+    }
+    
+    private int vertexSize = 60; //in % of HS/20
+    
+    public int getVertexSize(){
+        return vertexSize;
+    }
+    
+    public void setVertexSize(int vertexSize){
+        if(vertexSize!=this.vertexSize){
+            this.vertexSize = vertexSize;
+            repaint();
         }
     }
     

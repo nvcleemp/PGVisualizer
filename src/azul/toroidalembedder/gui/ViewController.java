@@ -8,6 +8,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 public class ViewController extends JPanel {
 
@@ -24,11 +27,14 @@ public class ViewController extends JPanel {
         setLayout(new GridBagLayout());
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(new JLabel("Horizontal", JLabel.LEFT), gbc);
+        add(new JLabel("Horizontal views", JLabel.LEFT), gbc);
         gbc.gridy = 1;
-        add(new JLabel("Vertical", JLabel.LEFT), gbc);
+        add(new JLabel("Vertical views", JLabel.LEFT), gbc);
+        gbc.gridy = 2;
+        add(new JLabel("Vertex size", JLabel.LEFT), gbc);
         gbc.gridy = 0;
         gbc.gridx = 1;
+        gbc.weightx = 1;
         add(new JButton(new XAction(1)), gbc);
         gbc.gridx = 2;
         add(new JButton(new XAction(-1)), gbc);
@@ -37,6 +43,16 @@ public class ViewController extends JPanel {
         add(new JButton(new YAction(1)), gbc);
         gbc.gridx = 2;
         add(new JButton(new YAction(-1)), gbc);
+        final JSlider slider = new JSlider(0, 100, torusView.getVertexSize());
+        slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                ViewController.this.torusView.setVertexSize(slider.getValue());
+            }
+        });
+        gbc.gridy = 2;
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        add(slider, gbc);
         setBorder(BorderFactory.createTitledBorder("View"));
     }
 
