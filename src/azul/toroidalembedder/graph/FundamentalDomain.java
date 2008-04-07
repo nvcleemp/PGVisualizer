@@ -107,6 +107,16 @@ public class FundamentalDomain {
         return new Point2D.Double(x*horizontalSide + horizontalOffset*y, domainHeight*y);
     }
     
+    public boolean inDomain(double x, double y, int domainX, int domainY){
+        Point2D origin = getOrigin(domainX, domainY);
+        x -= origin.getX();
+        y -= origin.getY();
+        double[] coords = inverseTransform(x, y);
+        x = coords[0];
+        y = coords[1];
+        return x <= 1 && x>=-1 && y<=1 && y>=-1;
+    }
+    
     public double getHorizontalShift(){
         return (angle != Math.PI/2 ? domainHeight / Math.tan(angle) : 0);
     }
