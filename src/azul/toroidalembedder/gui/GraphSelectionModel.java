@@ -21,4 +21,6 @@ public interface GraphSelectionModel {
     public void addGraphSelectionListener(GraphSelectionListener l);
     public void removeGraphSelectionListener(GraphSelectionListener l);
 
+    Vertex[] getSelectedVertices();
+
 }

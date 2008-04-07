@@ -1,11 +1,14 @@
 package azul.toroidalembedder.gui;
 
+import azul.toroidalembedder.graph.Vertex;
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -49,10 +52,14 @@ public class ViewController extends JPanel {
                 ViewController.this.torusView.setVertexSize(slider.getValue());
             }
         });
-        gbc.gridy = 2;
+        gbc.gridy++;
         gbc.gridx = 1;
         gbc.gridwidth = 2;
         add(slider, gbc);
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 3;
+        add(new JButton(new ColorAction()), gbc);
         setBorder(BorderFactory.createTitledBorder("View"));
     }
 
@@ -86,6 +93,26 @@ public class ViewController extends JPanel {
             if (yView + increment >= 0) {
                 yView += increment;
                 torusView.setView(-xView, -yView, xView, yView);
+            }
+        }
+    }
+    
+    private class ColorAction extends AbstractAction {
+        
+        public ColorAction() {
+            super("Color selected");
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if(torusView.getHighlight()==null)
+                torusView.setHighlight(new DefaultVertexHightlighter());
+
+            Color selected = JColorChooser.showDialog(torusView, "Select color", Color.WHITE);
+            if(selected != null){
+                VertexHighlighter theHighlighter = torusView.getHighlight();
+                for (Vertex v : torusView.getGraphSelectionModel().getSelectedVertices()) {
+                    theHighlighter.setColor(v, selected);
+                }
             }
         }
     }

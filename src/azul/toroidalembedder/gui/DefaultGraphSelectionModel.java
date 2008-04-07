@@ -46,6 +46,12 @@ public class DefaultGraphSelectionModel implements GraphSelectionModel {
         return selection.contains(v);
     }
     
+    public Vertex[] getSelectedVertices() {
+        Vertex[] arr = new Vertex[selection.size()];
+        selection.toArray(arr);
+        return arr;
+    }
+    
     public void addGraphSelectionListener(GraphSelectionListener l){
         listeners.add(l);
     }

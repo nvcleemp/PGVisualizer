@@ -23,6 +23,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
 
     private DefaultListModel list = new DefaultListModel();
     private Map<String, Graph> map = new HashMap<String, Graph>();
+    private Map<String, GraphGUIData> guiData = new HashMap<String, GraphGUIData>();
     private ListSelectionModel selectionModel;
 
     public GraphModel(File file) {
@@ -55,6 +56,13 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
             Logger.getLogger(PGVisualizer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return map.get(string);
+    }
+
+    public GraphGUIData getGraphGUIData(int index) {
+        String string = (String)list.get(index);
+        if (guiData.get(string) == null)
+            guiData.put(string, new GraphGUIData());
+        return guiData.get(string);
     }
 
     public int getSize() {
@@ -96,6 +104,14 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
             return null;
         else
             return getGraph(selectedIndex);
+    }
+    
+    public GraphGUIData getSelectedGraphGUIData(){
+        int selectedIndex = selectionModel.getMinSelectionIndex();
+        if(selectedIndex < 0 || selectedIndex>= list.size())
+            return null;
+        else
+            return getGraphGUIData(selectedIndex);
     }
     
     public void addGraphModelListener(GraphModelListener l){
@@ -204,6 +220,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
     public void revertGraph(int index){
         String string = (String)list.get(index);
         map.remove(string);
+        guiData.remove(string);
         try {
             map.put(string, IOManager.readPG(string));
         } catch (FileFormatException ex) {

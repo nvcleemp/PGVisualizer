@@ -45,6 +45,7 @@ import javax.swing.event.ListDataEvent;
 public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener, GraphModelListener, GraphSelectionListener {
     
     private static final Color defaultVertexEdge = Color.BLACK;
+    private static final Color defaultVertexFace = Color.WHITE;
     private static final Color defaultSelectedVertexEdge = Color.GREEN;
 
     private Graph graph;
@@ -57,6 +58,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private FundamentalDomain fundamentalDomain;
     private GraphModel graphListModel = null;
     private Color vertexEdge = defaultVertexEdge;
+    private Color vertexFace = defaultVertexFace;
     private Color selectedVertexEdge = defaultSelectedVertexEdge;
     private GraphSelectionModel selectionModel = new DefaultGraphSelectionModel();
     
@@ -141,9 +143,9 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         }
     }
     
-    private void paint(Vertex vertex, Graphics2D g2, int areaX, int areaY, double r, Color outer){
+    private void paint(Vertex vertex, Graphics2D g2, int areaX, int areaY, double r, Color outer, Color inner){
         Ellipse2D ell = new Ellipse2D.Double(vertex.getX(areaX, areaY, getFundamentalDomain())-r,vertex.getY(areaX, areaY, getFundamentalDomain())-r,2*r,2*r);
-        g2.setColor(Color.WHITE);
+        g2.setColor(inner);
         g2.fill(ell);
         g2.setColor(outer);
         g2.draw(ell);
@@ -207,14 +209,18 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         }
         for (Vertex vertex : graph.getVertices()) {
             Color outer = vertexEdge;
+            Color inner = vertexFace;
             if(selectionModel.isSelected(vertex))
                 outer = selectedVertexEdge;
+            VertexHighlighter theHighlight = getHighlight();
+            if(theHighlight!=null && theHighlight.getColorFor(vertex)!=null)
+                inner = theHighlight.getColorFor(vertex);
             for (int i = minX; i <= maxX; i++)
                 for (int j = minY; j <= maxY; j++){
                     Graphics2D gr = (Graphics2D)(g2.create());
                     Point2D origin = getFundamentalDomain().getOrigin(i, j);
                     gr.translate(origin.getX(), origin.getY());
-                    paint(vertex, gr, 0, 0, vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2, outer);
+                    paint(vertex, gr, 0, 0, vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2, outer, inner);
                 }
         }
     }
@@ -375,5 +381,21 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     
     public GraphSelectionModel getGraphSelectionModel(){
         return selectionModel;
+    }
+    
+    private VertexHighlighter highlight = null;
+    
+    public void setHighlight(VertexHighlighter highlight){
+        if(graphListModel==null)
+            this.highlight = highlight;
+        else
+            graphListModel.getSelectedGraphGUIData().setHighlighter(highlight);
+    }
+    
+    public VertexHighlighter getHighlight(){
+        if(graphListModel==null)
+            return highlight;
+        else
+            return graphListModel.getSelectedGraphGUIData().getHighlighter();
     }
 }
