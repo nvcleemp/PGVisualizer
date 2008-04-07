@@ -118,6 +118,7 @@ public class Test {
                         frame.add(new PGVisualizer(chooser.getSelectedFile()));
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         frame.pack();
+                        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                         frame.setVisible(true);
                     }
                         
