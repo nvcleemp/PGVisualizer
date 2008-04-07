@@ -42,7 +42,10 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener, GraphModelListener{
+public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener, GraphModelListener, GraphSelectionListener {
+    
+    private static final Color defaultVertexEdge = Color.BLACK;
+    private static final Color defaultSelectedVertexEdge = Color.GREEN;
 
     private Graph graph;
     private double widthView;
@@ -53,14 +56,18 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private int maxY;
     private FundamentalDomain fundamentalDomain;
     private GraphModel graphListModel = null;
+    private Color vertexEdge = defaultVertexEdge;
+    private Color selectedVertexEdge = defaultSelectedVertexEdge;
+    private GraphSelectionModel selectionModel = new DefaultGraphSelectionModel();
     
     /** Creates a new instance of TorusView */
     public TorusView() {
-        setView(-1, -1, 1, 1);
+        this(-1, -1, 1, 1);
     }
     
     public TorusView(int minX, int minY, int maxX, int maxY){
         setView(minX, minY, maxX, maxY);
+        selectionModel.addGraphSelectionListener(this);
     }
     
     public TorusView(Graph graph) {
@@ -74,23 +81,22 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     public TorusView(Graph graph, int minX, int minY, int maxX, int maxY) {
         setView(minX, minY, maxX, maxY);
         setGraph(graph);
+        selectionModel.addGraphSelectionListener(this);
     }
     
     public TorusView(GraphModel model, int minX, int minY, int maxX, int maxY) {
-        setView(minX, minY, maxX, maxY);
-        setGraph(model.getSelectedGraph());
+        this(model.getSelectedGraph(), minX, minY, maxX, maxY);
         graphListModel = model;
         model.addGraphModelListener(this);
     }
     
     public TorusView(FundamentalDomain fundamentalDomain, Graph graph, int minX, int minY, int maxX, int maxY) {
-        setView(minX, minY, maxX, maxY);
-        setGraph(graph);
-        graph.addGraphListener(this);
+        this(graph, minX, minY, maxX, maxY);
         setFundamentalDomain(fundamentalDomain);
     }
 
     public void setGraph(Graph graph){
+        selectionModel.clearSelection();
         if(this.graph!=null)
             this.graph.removeGraphListener(this);
         this.graph = graph;
@@ -135,11 +141,11 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         }
     }
     
-    private void paint(Vertex vertex, Graphics2D g2, int areaX, int areaY, double r){
+    private void paint(Vertex vertex, Graphics2D g2, int areaX, int areaY, double r, Color outer){
         Ellipse2D ell = new Ellipse2D.Double(vertex.getX(areaX, areaY, getFundamentalDomain())-r,vertex.getY(areaX, areaY, getFundamentalDomain())-r,2*r,2*r);
         g2.setColor(Color.WHITE);
         g2.fill(ell);
-        g2.setColor(Color.BLACK);
+        g2.setColor(outer);
         g2.draw(ell);
     }
 
@@ -200,13 +206,15 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
             }
         }
         for (Vertex vertex : graph.getVertices()) {
+            Color outer = vertexEdge;
+            if(selectionModel.isSelected(vertex))
+                outer = selectedVertexEdge;
             for (int i = minX; i <= maxX; i++)
                 for (int j = minY; j <= maxY; j++){
                     Graphics2D gr = (Graphics2D)(g2.create());
                     Point2D origin = getFundamentalDomain().getOrigin(i, j);
                     gr.translate(origin.getX(), origin.getY());
-
-                    paint(vertex, gr, 0, 0, vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2);
+                    paint(vertex, gr, 0, 0, vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2, outer);
                 }
         }
     }
@@ -300,5 +308,72 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
 
     public void contentsChanged(ListDataEvent e) {
         //
+    }
+    
+    public class ViewVertex {
+        public Vertex vertex;
+        public int domainX;
+        public int domainY;
+    }
+    
+    public ViewVertex getVertexAt(int x, int y){
+        if(widthView==0 || heightView==0){
+            widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
+            heightView = (maxY - minY + 1)*getFundamentalDomain().getDomainHeight();
+        }
+        double scaleX = getWidth()/widthView - 1;
+        double scaleY = getHeight()/heightView - 1;
+        double scale = Math.min(scaleX, scaleY);
+        
+        x -= getWidth()/2;
+        y -= getHeight()/2;
+        
+        double x1 = x/scale;
+        double y1 = y/scale;
+        
+        int domainX = minX - 1;
+        int domainY = minY - 1;
+        for(int i = minX; i <= maxX; i++){
+            for (int j = minY; j <= maxY; j++) {
+                if(getFundamentalDomain().inDomain(x1, y1, i, j)){
+                    domainX = i;
+                    domainY = j;
+                }
+            }
+        }
+        
+        if(domainX == minX - 1 || domainY == minY - 1)
+            return null;
+        
+        x1 -= getFundamentalDomain().getOrigin(domainX, domainY).getX();
+        y1 -= getFundamentalDomain().getOrigin(domainX, domainY).getY();
+        
+        double r2 = (vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2)*(vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2);
+        
+        ViewVertex viewVertex = null;
+        
+        int j = graph.getVertices().size() - 1;
+        
+        while(viewVertex == null && j >=0){
+            Vertex vertex = graph.getVertices().get(j);
+            double d2 = (x1 - vertex.getX(getFundamentalDomain()))*(x1 - vertex.getX(getFundamentalDomain())) + (y1 - vertex.getY(getFundamentalDomain()))*(y1 - vertex.getY(getFundamentalDomain()));
+            if(d2 <= r2){
+                viewVertex = new ViewVertex();
+                viewVertex.domainX = domainX;
+                viewVertex.domainY = domainY;
+                viewVertex.vertex = vertex;
+            }
+            j--;
+        }
+        
+        return viewVertex;
+    }
+
+    public void graphSelectionChanged() {
+        repaint();
+    }
+    
+    public GraphSelectionModel getGraphSelectionModel(){
+        return selectionModel;
     }
 }

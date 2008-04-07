@@ -6,6 +6,9 @@
 package azul.toroidalembedder.gui;
 
 import java.awt.BorderLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -24,6 +27,22 @@ public class PGVisualizer extends JPanel{
         setLayout(new BorderLayout());
         add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
         view = new TorusView(model);
+        view.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TorusView.ViewVertex vv = view.getVertexAt(e.getX(), e.getY());
+                if(e.isShiftDown()){
+                    if(vv!=null){
+                        view.getGraphSelectionModel().toggleVertex(vv.vertex);
+                    }
+                } else {
+                    view.getGraphSelectionModel().clearSelection();
+                    if(vv!=null){
+                        view.getGraphSelectionModel().addVertex(vv.vertex);
+                    }
+                }
+            }
+        });
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
