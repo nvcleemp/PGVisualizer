@@ -51,7 +51,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
         try {
             if (map.get(string) == null) {
                 if(string.indexOf('#')>=0){
-                    String comment = string.substring(string.indexOf('#'));
+                    String comment = string.substring(string.indexOf('#') + 1).trim();
                     guiData.put(string, new GraphGUIData(comment));
                 }
                 map.put(string, IOManager.readPG(string));
@@ -217,7 +217,13 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
     }
 
     public void commitGraph(int index){
-        list.set(index, IOManager.writePG(map.get(list.get(index))));
+        Graph g = map.get(list.get(index));
+        if(g==null)
+            return;
+        String out = IOManager.writePG(g);
+        if(guiData.get(list.get(index))!=null)
+            out = out + " # " + guiData.get(list.get(index)).export();
+        list.set(index, out);
     }
     
     public void commitSelectedGraph(){
@@ -228,16 +234,16 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
         String string = (String)list.get(index);
         map.remove(string);
         guiData.remove(string);
-        try {
-            map.put(string, IOManager.readPG(string));
-        } catch (FileFormatException ex) {
-            Logger.getLogger(PGVisualizer.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        getGraph(index);
         if(index == selectionModel.getMinSelectionIndex())
             fireSelectedGraphChanged();
     }
     
     public void revertSelectedGraph(){
         revertGraph(selectionModel.getMinSelectionIndex());
+    }
+    
+    public String getString(int index){
+        return (String)list.get(index);
     }
 }
