@@ -113,6 +113,7 @@ public class ViewController extends JPanel {
                 for (Vertex v : torusView.getGraphSelectionModel().getSelectedVertices()) {
                     theHighlighter.setColor(v, selected);
                 }
+                torusView.repaint();
             }
         }
     }
