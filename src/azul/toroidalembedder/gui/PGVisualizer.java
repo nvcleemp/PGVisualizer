@@ -8,7 +8,6 @@ package azul.toroidalembedder.gui;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -41,7 +40,7 @@ public class PGVisualizer extends JPanel{
                         view.getGraphSelectionModel().addVertex(vv.vertex);
                     }
                 }
-            }
+            }            
         });
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
