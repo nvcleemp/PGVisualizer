@@ -11,6 +11,15 @@ package azul.toroidalembedder.gui;
  */
 public class GraphGUIData {
     private VertexHighlighter highlighter = null;
+    private String comment;
+
+    public GraphGUIData() {
+        comment = "";
+    }
+
+    public GraphGUIData(String comment) {
+        this.comment = comment;
+    }
 
     public VertexHighlighter getHighlighter() {
         return highlighter;
