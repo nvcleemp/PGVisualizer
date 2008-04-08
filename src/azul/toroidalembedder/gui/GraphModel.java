@@ -64,6 +64,8 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
 
     public GraphGUIData getGraphGUIData(int index) {
         String string = (String)list.get(index);
+        if (map.get(string) == null)
+            getGraph(index);
         if (guiData.get(string) == null)
             guiData.put(string, new GraphGUIData());
         return guiData.get(string);
