@@ -9,6 +9,7 @@ import azul.delaney.FundamentalPatch;
 import azul.delaney.DelaneySymbol;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
+import azul.toroidalembedder.gui.EmbedderRunner;
 import azul.toroidalembedder.gui.EmbedderWindow;
 import azul.toroidalembedder.gui.PGVisualizer;
 import azul.toroidalembedder.gui.TorusViewTest;
@@ -120,6 +121,18 @@ public class Test {
                         frame.pack();
                         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                         frame.setVisible(true);
+                    }
+                        
+            }
+        });
+        frame.add(button);
+        button = new JButton("PGEmbedder");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser chooser = new JFileChooser();
+                if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
+                    if(chooser.getSelectedFile().exists()){
+                        new EmbedderRunner(chooser.getSelectedFile());
                     }
                         
             }
