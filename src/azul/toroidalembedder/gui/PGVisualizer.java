@@ -6,11 +6,20 @@
 package azul.toroidalembedder.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -45,8 +54,10 @@ public class PGVisualizer extends JPanel{
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
+        controls.add(new AzulenoidInfo(model));
         controls.add(new ViewController(view));
         controls.add(new GraphOperations(model));
+        controls.add(new DomainOperations(model));
         controls.add(new EmbedderControl(model));
         controls.add(new ExportControl(view, model));
         add(controls, BorderLayout.EAST);
