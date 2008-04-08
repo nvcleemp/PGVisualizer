@@ -28,5 +28,9 @@ public class GraphGUIData {
     public void setHighlighter(VertexHighlighter highlighter) {
         this.highlighter = highlighter;
     }
+    
+    public String export(){
+        return comment;
+    }
 
 }

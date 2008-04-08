@@ -95,8 +95,11 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
             String string = (String)list.get(i);
             if (map.get(string) == null)
                 buf.append(string);
-            else
+            else {
                 buf.append(IOManager.writePG(map.get(string)));
+                if (guiData.get(string) != null)
+                    buf.append(" # " + guiData.get(string).export());
+            }
             buf.append('\n');
         }
         return buf.toString();
