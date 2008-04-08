@@ -52,7 +52,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
             if (map.get(string) == null) {
                 if(string.indexOf('#')>=0){
                     String comment = string.substring(string.indexOf('#'));
-                    guiData.put(string, new GraphGUIData());
+                    guiData.put(string, new GraphGUIData(comment));
                 }
                 map.put(string, IOManager.readPG(string));
             }
