@@ -13,6 +13,7 @@ package azul.toroidalembedder.gui;
 import azul.toroidalembedder.Polygon2D;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Edge;
+import azul.toroidalembedder.graph.Face;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.FundamentalDomainListener;
 import azul.toroidalembedder.graph.Vertex;
@@ -23,13 +24,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -49,6 +53,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private static final Color defaultSelectedVertexEdge = Color.GREEN;
 
     private Graph graph;
+    private Shape clip;
     private double widthView;
     private double heightView;
     private int minX;
@@ -106,6 +111,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         if(graph!=null){
             widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
             heightView = ((maxY - minY + 1)*getFundamentalDomain().getDomainHeight());
+            calculateClip();
         }
         repaint();
     }
@@ -125,6 +131,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
             this.fundamentalDomain = fundamentalDomain;
             widthView = (maxX - minX + 1)*fundamentalDomain.getHorizontalSide() + (fundamentalDomain.getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*fundamentalDomain.getVerticalSide()*Math.cos(fundamentalDomain.getAngle());
             heightView = ((maxY - minY + 1)*fundamentalDomain.getDomainHeight());
+            calculateClip();
             repaint();
         }
     }
@@ -166,11 +173,12 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         double scaleX = width/widthView - 1;
         double scaleY = height/heightView - 1;
         double scale = Math.min(scaleX, scaleY);
-        //g2.setClip(new HorizontalParallellogram((maxX - minX + 1)*graph.getFundamentalDomain().getHorizontalSide()*scale, (maxY - minY + 1)*graph.getFundamentalDomain().getVerticalSide()*scale, graph.getFundamentalDomain().getAngle(), 0, 0));
         g2.setColor(new Color(200, 200, 255));
         g2.fillRect(0, 0, width, height);
         g2.translate(width/2, height/2);
         g2.transform(AffineTransform.getScaleInstance(scale, scale));
+        if(clip!=null)
+            g2.setClip(clip);
         g2.setStroke(new BasicStroke(0.01f));
         if(paintGrid)
             paintGrid(g2);
@@ -246,6 +254,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         if(graph!=null){
             widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
             heightView = ((maxY - minY + 1)*getFundamentalDomain().getDomainHeight());
+            calculateClip();
         }
         repaint();
     }
@@ -265,13 +274,41 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     public void fundamentalDomainChanged(FundamentalDomain oldDomain) {
         widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
         heightView = (maxY - minY + 1)*getFundamentalDomain().getDomainHeight();
+        calculateClip();
         repaint();
     }
     
     public void fundamentalDomainShapeChanged() {
         widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
         heightView = (maxY - minY + 1)*getFundamentalDomain().getDomainHeight();
+        calculateClip();
         repaint();
+    }
+    
+    private void calculateClip(){
+        double horizontalOffset = (getFundamentalDomain().getAngle() != Math.PI/2 ? getFundamentalDomain().getDomainHeight() / (Math.tan(getFundamentalDomain().getAngle())*2) : 0);
+        
+        double[] xpoints = new double[4];
+        double[] ypoints = new double[4];
+        
+        xpoints[0] = - getFundamentalDomain().getHorizontalSide()/2 - horizontalOffset;
+        xpoints[1] =   getFundamentalDomain().getHorizontalSide()/2 - horizontalOffset;
+        xpoints[2] =   getFundamentalDomain().getHorizontalSide()/2 + horizontalOffset;
+        xpoints[3] = - getFundamentalDomain().getHorizontalSide()/2 + horizontalOffset;
+        
+        ypoints[0] = - getFundamentalDomain().getDomainHeight()/2;
+        ypoints[1] = - getFundamentalDomain().getDomainHeight()/2;
+        ypoints[2] =   getFundamentalDomain().getDomainHeight()/2;
+        ypoints[3] =   getFundamentalDomain().getDomainHeight()/2;
+        
+        GeneralPath c = new GeneralPath();
+        c.moveTo((float)xpoints[0]*(maxX - minX + 1.1f), (float)ypoints[0]*(maxY - minY + 1.1f));
+        c.lineTo((float)xpoints[1]*(maxX - minX + 1.1f), (float)ypoints[1]*(maxY - minY + 1.1f));
+        c.lineTo((float)xpoints[2]*(maxX - minX + 1.1f), (float)ypoints[2]*(maxY - minY + 1.1f));
+        c.lineTo((float)xpoints[3]*(maxX - minX + 1.1f), (float)ypoints[3]*(maxY - minY + 1.1f));
+        c.closePath();
+        
+        clip = c;
     }
     
     public void exportImage(){
