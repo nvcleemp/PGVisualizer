@@ -13,6 +13,7 @@ import azul.delaney.BasicDelaney;
 import azul.delaney.Chamber;
 import azul.delaney.DelaneySymbol;
 import azul.toroidalembedder.graph.Edge;
+import azul.toroidalembedder.graph.Face;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
@@ -57,9 +58,14 @@ public class IOManager {
     }
     
     public static Graph readPG(String pg) throws FileFormatException {
-        String[] parts = pg.split("\\|");
+        String[] parts;
+        //split off comments
+        if(pg.indexOf('#')==-1)
+            parts = pg.split("\\|");
+        else
+            parts = pg.substring(0, pg.indexOf('#')).split("\\|");
         
-        if(parts.length!=4)
+        if(parts.length!=4 && parts.length!=5)
             throw new FileFormatException("Illegal number of parts in file: expected 4, found " + parts.length);
         int order;
         try {
@@ -102,6 +108,20 @@ public class IOManager {
             throw new FileFormatException("Illegal input while adding edge: expected integer, found " + edges.next(), ex);
         } catch (NoSuchElementException ex) {
             throw new FileFormatException("End of section while reading edges.", ex);
+        }
+        
+        if(parts.length == 4) //no face information: older format
+            return graph;
+        
+        String[] faces = parts[4].split(";");
+        for (int i = 0; i<faces.length; i++) {
+            String faceString = faces[i];
+            System.out.println("reading face : " + faceString);
+            Face face = new Face();
+            Scanner faceScanner = new Scanner(faceString);
+            while(faceScanner.hasNextInt())
+                face.add(graph.getVertex(faceScanner.nextInt()));
+            graph.addFace(face);
         }
         
         return graph;

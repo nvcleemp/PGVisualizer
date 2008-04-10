@@ -20,7 +20,7 @@ public class Graph implements VertexListener, FundamentalDomainListener {
     
     private List<Vertex> vertices = new ArrayList<Vertex>();
     private List<GraphListener> listeners = new ArrayList<GraphListener>();
-    
+    private List<Face> faces = new ArrayList<Face>();
     private FundamentalDomain fundamentalDomain;
     
     /** Creates a new instance of Graph */
@@ -35,6 +35,16 @@ public class Graph implements VertexListener, FundamentalDomainListener {
     
     public List<Vertex> getVertices(){
         return vertices;
+    }
+    
+    public Vertex getVertex(int index){
+        int i = 0;
+        while(i<vertices.size() && vertices.get(i).getIndex()!=index)
+            i++;
+        if(i==vertices.size())
+            return null;
+        else
+            return vertices.get(i);
     }
     
     public boolean addVertex(Vertex vertex){
@@ -122,5 +132,17 @@ public class Graph implements VertexListener, FundamentalDomainListener {
 
     public void fundamentalDomainShapeChanged() {
         fireFundamentalDomainShapeChanged();
+    }
+    
+    public boolean addFace(Face f){
+        if(f.getIndex()!=-1)
+            return false;
+        f.setIndex(faces.size());
+        faces.add(f);
+        return true;
+    }
+    
+    public List<Face> getFaces(){
+        return faces; //TODO: return copy of list
     }
 }
