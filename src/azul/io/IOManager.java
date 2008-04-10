@@ -116,7 +116,6 @@ public class IOManager {
         String[] faces = parts[4].split(";");
         for (int i = 0; i<faces.length; i++) {
             String faceString = faces[i];
-            System.out.println("reading face : " + faceString);
             Face face = new Face();
             Scanner faceScanner = new Scanner(faceString);
             while(faceScanner.hasNextInt())
