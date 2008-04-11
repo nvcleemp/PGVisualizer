@@ -161,6 +161,15 @@ public class IOManager {
             }
         }
         buf.deleteCharAt(buf.length()-1);
+        buf.append("|");
+        for (Face f : graph.getFaces()) {
+            for (int i = 0; i<f.getSize(); i++) {
+                    buf.append(f.getVertexAt(i).getIndex());
+                    buf.append(" ");
+            }
+            buf.append(";");
+        }
+        buf.deleteCharAt(buf.length()-1);
         return buf.toString();
     }
     

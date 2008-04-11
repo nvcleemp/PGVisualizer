@@ -23,6 +23,10 @@ public class Face {
         vertices.add(v);
     }
     
+    public Vertex getVertexAt(int i){
+        return vertices.get(i);
+    }
+    
     public Shape getShape(FundamentalDomain d){
         GeneralPath edge = new GeneralPath();
         int x = 0;
