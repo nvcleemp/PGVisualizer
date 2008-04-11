@@ -13,6 +13,7 @@ package azul.toroidalembedder.gui;
 import azul.toroidalembedder.Polygon2D;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Edge;
+import azul.toroidalembedder.graph.Face;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.FundamentalDomainListener;
 import azul.toroidalembedder.graph.Vertex;
@@ -32,6 +33,9 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -44,7 +48,7 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener, GraphModelListener, GraphSelectionListener {
+public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener, GraphModelListener, GraphSelectionListener, GraphFaceSelectionListener {
     
     private static final Color defaultVertexEdge = Color.BLACK;
     private static final Color defaultVertexFace = Color.WHITE;
@@ -64,6 +68,19 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private Color vertexFace = defaultVertexFace;
     private Color selectedVertexEdge = defaultSelectedVertexEdge;
     private GraphSelectionModel selectionModel = new DefaultGraphSelectionModel();
+    private GraphFaceSelectionModel faceSelectionModel = new DefaultGraphFaceSelectionModel();
+    private boolean paintFaces = false;
+    private boolean paintSelectedFace = true;
+    private Map<Integer, Color> faceColorMap = new HashMap<Integer, Color>();
+    {
+        faceColorMap.put(4, Color.WHITE);
+        faceColorMap.put(5, Color.GRAY);
+        faceColorMap.put(6, Color.YELLOW);
+        faceColorMap.put(7, new Color(0.6f, 0.7f, 1.0f));
+        faceColorMap.put(8, new Color(0f, 0.4f, 0f));
+        faceColorMap.put(9, new Color(0.4f, 0f, 0f));
+        faceColorMap.put(10, Color.PINK);
+    }
     
     /** Creates a new instance of TorusView */
     public TorusView() {
@@ -73,6 +90,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     public TorusView(int minX, int minY, int maxX, int maxY){
         setView(minX, minY, maxX, maxY);
         selectionModel.addGraphSelectionListener(this);
+        faceSelectionModel.addGraphFaceSelectionListener(this);
     }
     
     public TorusView(Graph graph) {
@@ -87,6 +105,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         setView(minX, minY, maxX, maxY);
         setGraph(graph);
         selectionModel.addGraphSelectionListener(this);
+        faceSelectionModel.addGraphFaceSelectionListener(this);
     }
     
     public TorusView(GraphModel model, int minX, int minY, int maxX, int maxY) {
@@ -102,6 +121,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
 
     public void setGraph(Graph graph){
         selectionModel.clearSelection();
+        faceSelectionModel.clearSelection();
         if(this.graph!=null)
             this.graph.removeGraphListener(this);
         this.graph = graph;
@@ -175,7 +195,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         g2.fillRect(0, 0, width, height);
         g2.translate(width/2, height/2);
         g2.transform(AffineTransform.getScaleInstance(scale, scale));
-        if(clip!=null)
+        if(clip!=null && viewClipped)
             g2.setClip(clip);
         g2.setStroke(new BasicStroke(0.01f));
         if(paintGrid)
@@ -198,6 +218,45 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
                     maxTargetY = e.getTargetY();
             }
         }
+        
+        if(paintFaces){
+            for(Face f : graph.getFaces()){
+                Shape s = f.getShape(getFundamentalDomain());
+                Color c = null;
+                if(getFaceHighlight()!=null)
+                    c = getFaceHighlight().getColorFor(f);
+                if(c==null)
+                    c = faceColorMap.get(f.getSize());
+                if(c==null)
+                    c = Color.DARK_GRAY;
+                c = new Color(c.getRed(), c.getGreen(), c.getBlue(), transparency);
+                for (int i = minX + minTargetX; i <= maxX + maxTargetX; i++)
+                    for (int j = minY + minTargetY; j <= maxY + maxTargetY; j++){
+                        Graphics2D gr = (Graphics2D)(g2.create());
+                        Point2D origin = getFundamentalDomain().getOrigin(i, j);
+                        gr.translate(origin.getX(), origin.getY());
+                        gr.setColor(c);
+                        gr.fill(s);
+                    }
+            }
+        }
+        
+        Face[] selectedFaces = faceSelectionModel.getSelectedFaces();
+        if(paintSelectedFace && selectedFaces.length>0){
+            Graphics2D gr = (Graphics2D)(g2.create());
+            gr.setColor(new Color(0.3f, 0.3f, 0.3f, 0.9f));
+            for(Face f : selectedFaces){
+                Shape s = f.getShape(getFundamentalDomain());
+                for (int i = minX + minTargetX; i <= maxX + maxTargetX; i++)
+                    for (int j = minY + minTargetY; j <= maxY + maxTargetY; j++){
+                        Graphics2D gr2 = (Graphics2D)(gr.create());
+                        Point2D origin = getFundamentalDomain().getOrigin(i, j);
+                        gr2.translate(origin.getX(), origin.getY());
+                        gr2.fill(s);
+                    }
+            }
+        }
+
         for (Vertex vertex : graph.getVertices()) {
             double x1 = vertex.getX(0, 0, getFundamentalDomain());
             double y1 = vertex.getY(0, 0, getFundamentalDomain());
@@ -410,6 +469,57 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         return viewVertex;
     }
 
+    public class ViewFace {
+        public Face face;
+        public int domainX;
+        public int domainY;
+    }
+    
+    public ViewFace getFaceAt(int x, int y){
+        if(widthView==0 || heightView==0){
+            widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
+            heightView = (maxY - minY + 1)*getFundamentalDomain().getDomainHeight();
+        }
+        double scaleX = getWidth()/widthView - 1;
+        double scaleY = getHeight()/heightView - 1;
+        double scale = Math.min(scaleX, scaleY);
+        
+        x -= getWidth()/2;
+        y -= getHeight()/2;
+        
+        double x1 = x/scale;
+        double y1 = y/scale;
+        
+        int domainX = minX - 1;
+        int domainY = minY - 1;
+        
+        List<Face> faces = graph.getFaces();
+        int k = 0;
+        
+        while(domainX == minX-1 && k<faces.size()) {
+            Shape face = faces.get(k).getShape(getFundamentalDomain());
+            for(int i = minX; i <= maxX; i++){
+                for (int j = minY; j <= maxY; j++) {
+                    if(face.contains(x1 - getFundamentalDomain().getOrigin(i, j).getX(), y1 - getFundamentalDomain().getOrigin(i, j).getY())){
+                        domainX = i;
+                        domainY = j;
+                    }
+                }
+            }
+            k++;
+        }
+        
+        if(domainX == minX-1)
+            return null;
+        
+        ViewFace viewFace = new ViewFace();
+        viewFace.face = faces.get(k-1);
+        viewFace.domainX = domainX;
+        viewFace.domainY = domainY;
+        
+        return viewFace;
+    }
+
     public void graphSelectionChanged() {
         repaint();
     }
@@ -432,5 +542,67 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
             return highlight;
         else
             return graphListModel.getSelectedGraphGUIData().getHighlighter();
+    }
+    
+    public ViewFace selectedFace = null;
+
+    public boolean isPaintFaces() {
+        return paintFaces;
+    }
+
+    public void setPaintFaces(boolean paintFaces) {
+        this.paintFaces = paintFaces;
+        repaint();
+    }
+
+    public void graphFaceSelectionChanged() {
+        repaint();
+    }
+
+    public GraphFaceSelectionModel getFaceSelectionModel() {
+        return faceSelectionModel;
+    }
+    
+    private FaceHighlighter faceHighlight = null;
+    
+    public void setFaceHighlight(FaceHighlighter faceHighlight){
+        if(graphListModel==null)
+            this.faceHighlight = faceHighlight;
+        else
+            graphListModel.getSelectedGraphGUIData().setFaceHighlighter(faceHighlight);
+    }
+    
+    public FaceHighlighter getFaceHighlight(){
+        if(graphListModel==null)
+            return faceHighlight;
+        else
+            return graphListModel.getSelectedGraphGUIData().getFaceHighlighter();
+    }
+    
+    private int transparency = 255;
+
+    public int getTransparency() {
+        return transparency;
+    }
+
+    public void setTransparency(int transparency) {
+        if(transparency <= 0)
+            this.transparency = 0;
+        else if(transparency >= 255)
+            this.transparency = 255;
+        else
+            this.transparency = transparency;
+        repaint();
+    }
+    
+    private boolean viewClipped = true;
+
+    public boolean isViewClipped() {
+        return viewClipped;
+    }
+
+    public void setViewClipped(boolean viewClipped) {
+        this.viewClipped = viewClipped;
+        repaint();
     }
 }

@@ -6,20 +6,11 @@
 package azul.toroidalembedder.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  *
@@ -39,22 +30,30 @@ public class PGVisualizer extends JPanel{
             @Override
             public void mouseClicked(MouseEvent e) {
                 TorusView.ViewVertex vv = view.getVertexAt(e.getX(), e.getY());
+                TorusView.ViewFace vf = view.getFaceAt(e.getX(), e.getY());
                 if(e.isShiftDown()){
                     if(vv!=null){
                         view.getGraphSelectionModel().toggleVertex(vv.vertex);
+                    } else if (vf!=null){
+                        view.getFaceSelectionModel().toggleFace(vf.face);
                     }
                 } else {
                     view.getGraphSelectionModel().clearSelection();
+                    view.getFaceSelectionModel().clearSelection();
                     if(vv!=null){
                         view.getGraphSelectionModel().addVertex(vv.vertex);
+                    } else if (vf!=null){
+                        view.getFaceSelectionModel().toggleFace(vf.face);
                     }
                 }
+                //view.selectedFace = view.getFaceAt(e.getX(), e.getY());
             }            
         });
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
         controls.add(new AzulenoidInfo(model));
+        controls.add(new FaceControl(view, model));
         controls.add(new ViewController(view));
         controls.add(new GraphOperations(model));
         controls.add(new DomainOperations(model));

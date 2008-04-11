@@ -11,6 +11,7 @@ package azul.toroidalembedder.gui;
  */
 public class GraphGUIData {
     private VertexHighlighter highlighter = null;
+    private FaceHighlighter faceHighlighter = null;
     private String comment;
 
     public GraphGUIData() {
@@ -27,6 +28,14 @@ public class GraphGUIData {
 
     public void setHighlighter(VertexHighlighter highlighter) {
         this.highlighter = highlighter;
+    }
+
+    public FaceHighlighter getFaceHighlighter() {
+        return faceHighlighter;
+    }
+
+    public void setFaceHighlighter(FaceHighlighter faceHighlighter) {
+        this.faceHighlighter = faceHighlighter;
     }
     
     public String export(){
