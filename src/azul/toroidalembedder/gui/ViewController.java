@@ -5,9 +5,12 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -59,7 +62,14 @@ public class ViewController extends JPanel {
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 3;
-        add(new JButton(new ColorAction()), gbc);
+        //add(new JButton(new ColorAction()), gbc);
+        final JCheckBox clipView = new JCheckBox("Clip view (may slow performance down)", torusView.isViewClipped());
+        clipView.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                ViewController.this.torusView.setViewClipped(clipView.isSelected());
+            }
+        });
+        add(clipView, gbc);
         setBorder(BorderFactory.createTitledBorder("View"));
     }
 
