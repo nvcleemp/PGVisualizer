@@ -10,8 +10,13 @@ import azul.toroidalembedder.graph.Graph;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 /**
@@ -62,10 +67,19 @@ public class ExportControl extends JPanel{
             }
         });
         add(revertGraph);
-        JButton saveGraphList = new JButton("Save graph list");
+        final JButton saveGraphList = new JButton("Save graph list");
         saveGraphList.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(graphModel.exportUpdatedGraphs());
+                JFileChooser chooser = new JFileChooser();
+                if(chooser.showSaveDialog(saveGraphList) == JFileChooser.APPROVE_OPTION){
+                    try {
+                        new SaveDialog(null, chooser.getSelectedFile(), graphModel).save();
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(EmbedderRunner.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(EmbedderRunner.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
         });
         add(saveGraphList);
