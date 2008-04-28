@@ -50,11 +50,11 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
         String string = (String)list.get(index);
         try {
             if (map.get(string) == null) {
-                if(string.indexOf('#')>=0){
+               map.put(string, IOManager.readPG(string));
+               if(string.indexOf('#')>=0){
                     String comment = string.substring(string.indexOf('#') + 1).trim();
-                    guiData.put(string, new GraphGUIData(comment));
+                    guiData.put(string, GraphGUIData.createGraphGUIData(comment, map.get(string)));
                 }
-                map.put(string, IOManager.readPG(string));
             }
         } catch (FileFormatException ex) {
             Logger.getLogger(PGVisualizer.class.getName()).log(Level.SEVERE, null, ex);
