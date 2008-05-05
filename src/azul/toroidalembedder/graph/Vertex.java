@@ -30,34 +30,83 @@ public class Vertex {
         this.y = y;
     }
     
+    /**
+     * returns the x coordinate of the vertex in the unit square
+     * 
+     * @return the x coordinate of the vertex in the unit square
+     */
     public double getRawX(){
         return x;
     }
 
+    /**
+     * returns the y coordinate of the vertex in the unit square
+     * 
+     * @return the y coordinate of the vertex in the unit square
+     */
     public double getRawY(){
         return y;
     }
 
+    /**
+     * returns the x coordinate of the vertex in the given fundamental domain at (0,0)
+     * 
+     * @param fundamentalDomain The fundamental domain for which the coordinate needs to be calculated
+     * @return the x coordinate of the vertex in the given fundamental domain at (0,0)
+     */
     public double getX(FundamentalDomain fundamentalDomain){
         return getX(0, 0, fundamentalDomain);
     }
     
+    /**
+     * returns the y coordinate of the vertex in the given fundamental domain at (0,0)
+     * 
+     * @param fundamentalDomain The fundamental domain for which the coordinate needs to be calculated
+     * @return the y coordinate of the vertex in the given fundamental domain at (0,0)
+     */
     public double getY(FundamentalDomain fundamentalDomain){
         return getY(0, 0, fundamentalDomain);
     }
 
+    /**
+     * returns the x coordinate of the vertex in the given fundamental domain at (domainX,domainY)
+     * 
+     * @param domainX The x coordinate of the required fundamental domain
+     * @param domainY The y coordinate of the required fundamental domain
+     * @param fundamentalDomain The fundamental domain for which the coordinate needs to be calculated
+     * @return the x coordinate of the vertex in the given fundamental domain at (domainX,domainY)
+     */
     public double getX(int domainX, int domainY, FundamentalDomain fundamentalDomain){
         return fundamentalDomain.getOrigin(domainX, domainY).getX() + (fundamentalDomain.transform(x, y))[0];
     }
     
+    /**
+     * returns the y coordinate of the vertex in the given fundamental domain at (domainX,domainY)
+     * 
+     * @param domainX The x coordinate of the required fundamental domain
+     * @param domainY The y coordinate of the required fundamental domain
+     * @param fundamentalDomain The fundamental domain for which the coordinate needs to be calculated
+     * @return the y coordinate of the vertex in the given fundamental domain at (domainX,domainY)
+     */
     public double getY(int domainX, int domainY, FundamentalDomain fundamentalDomain){
         return fundamentalDomain.getOrigin(domainX, domainY).getY() + (fundamentalDomain.transform(x, y))[1];
     }
 
+    /**
+     * returns the list of edges that are incident with this vertex. All the edges will
+     * have this vertex as start.
+     * 
+     * @return The list of edges that are incident with this vertex.
+     */
     public List<Edge> getEdges() {
         return edges;
     }
     
+    /**
+     * returns the degree of this vertex.
+     * 
+     * @return The degree of this vertex.
+     */
     public int getDegree() {
         return edges.size();
     }
@@ -85,6 +134,14 @@ public class Vertex {
         }
     }
     
+    /**
+     * Moves the vertex along the vector (<code>dx</code>, <code>dy</code>) in the coordinate system 
+     * described by the <code>fundamentalDomain</code>.
+     * 
+     * @param dx The amount to move along the X-axis.
+     * @param dy The amount to move along the Y-axis.
+     * @param fundamentalDomain The system in which the amounts are given.
+     */
     public void translate(double dx, double dy, FundamentalDomain fundamentalDomain){
         double[] dcoords = fundamentalDomain.inverseTransform(dx, dy);
         x = x + dcoords[0];
