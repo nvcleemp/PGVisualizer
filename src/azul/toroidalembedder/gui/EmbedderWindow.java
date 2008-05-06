@@ -11,14 +11,7 @@ import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.GraphListener;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
-import azul.toroidalembedder.embedder.FastDomainAngleEmbedder;
-import azul.toroidalembedder.embedder.FastDomainEdgeEmbedder;
-import azul.toroidalembedder.energy.MeanEdgeLengthEnergyCalculator;
-import azul.toroidalembedder.embedder.RandomEmbedder;
-import azul.toroidalembedder.embedder.SpringEmbedder;
-import azul.toroidalembedder.embedder.SpringEmbedderEqualEdges;
 
-import azul.toroidalembedder.energy.AngleEnergyCalculator;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -27,15 +20,10 @@ import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
-import javax.swing.ButtonModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.Timer;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 
 /**
