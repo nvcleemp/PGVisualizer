@@ -6,7 +6,7 @@
 package azul.toroidalembedder.gui;
 
 import azul.io.IOManager;
-import azul.toroidalembedder.graph.Graph;
+import azul.toroidalembedder.graph.general.Graph;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

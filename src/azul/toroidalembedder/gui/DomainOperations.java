@@ -5,7 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
-import azul.toroidalembedder.graph.Graph;
+import azul.toroidalembedder.graph.general.Graph;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;

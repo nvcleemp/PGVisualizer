@@ -12,12 +12,14 @@ package azul.io;
 import azul.delaney.BasicDelaney;
 import azul.delaney.Chamber;
 import azul.delaney.DelaneySymbol;
-import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.Face;
 import azul.toroidalembedder.graph.FundamentalDomain;
-import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Vertex;
+import azul.toroidalembedder.graph.DefaultGraph;
+import azul.toroidalembedder.graph.DefaultVertex;
 
+import azul.toroidalembedder.graph.general.Edge;
+import azul.toroidalembedder.graph.general.Graph;
+import azul.toroidalembedder.graph.general.Vertex;
 import azul.toroidalembedder.graph.triangulation.TriangulatedGraph;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -40,10 +42,10 @@ public class IOManager {
     }
     
     
-    public static List<Graph> readPG(File file){
+    public static List<DefaultGraph> readPG(File file){
         try {
             Scanner fileScanner = new Scanner(file);
-            List<Graph> list = new ArrayList<Graph>();
+            List<DefaultGraph> list = new ArrayList<DefaultGraph>();
             while(fileScanner.hasNextLine()){
                 String line = fileScanner.nextLine().trim();
                 if(!line.startsWith("#") && line.length()!=0) //ignore comments
@@ -58,7 +60,7 @@ public class IOManager {
         return null;
     }
     
-    public static Graph readPG(String pg) throws FileFormatException {
+    public static DefaultGraph readPG(String pg) throws FileFormatException {
         String[] parts;
         //split off comments
         if(pg.indexOf('#')==-1)
@@ -90,11 +92,11 @@ public class IOManager {
             throw new FileFormatException("Illegal value while reading fundamental domain: expected number.", ex);
         }
                
-        Graph graph = new Graph(domain);
+        DefaultGraph graph = new DefaultGraph(domain);
         Scanner coords = new Scanner(parts[2]).useDelimiter("(\\s)|(;)");
         try {
             for(int i = 0; i<order; i++)
-                graph.addVertex(new Vertex(coords.nextDouble(),coords.nextDouble()));
+                graph.addVertex(new DefaultVertex(coords.nextDouble(),coords.nextDouble()));
         } catch (InputMismatchException ex) {
             throw new FileFormatException("Illegal coordinate for vertex: expected number, found '" + coords.next() + "'.", ex);
         } catch (NoSuchElementException ex) {
@@ -128,7 +130,7 @@ public class IOManager {
     }
     
     public static String writePG(Graph graph){
-        List<Vertex> vertices = graph.getVertices();
+        List<? extends Vertex> vertices = graph.getVertices();
         StringBuffer buf = new StringBuffer(vertices.size()*8);
         buf.append(vertices.size() + "|");
         FundamentalDomain domain = graph.getFundamentalDomain();
@@ -162,15 +164,17 @@ public class IOManager {
             }
         }
         buf.deleteCharAt(buf.length()-1);
-        buf.append("|");
-        for (Face f : graph.getFaces()) {
-            for (int i = 0; i<f.getSize(); i++) {
-                    buf.append(f.getVertexAt(i).getIndex());
-                    buf.append(" ");
+        if(graph instanceof DefaultGraph){
+            buf.append("|");
+            for (Face f : ((DefaultGraph)graph).getFaces()) {
+                for (int i = 0; i<f.getSize(); i++) {
+                        buf.append(f.getVertexAt(i).getIndex());
+                        buf.append(" ");
+                }
+                buf.append(";");
             }
-            buf.append(";");
+            buf.deleteCharAt(buf.length()-1);
         }
-        buf.deleteCharAt(buf.length()-1);
         return buf.toString();
     }
     

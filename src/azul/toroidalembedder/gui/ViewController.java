@@ -1,6 +1,6 @@
 package azul.toroidalembedder.gui;
 
-import azul.toroidalembedder.graph.Vertex;
+import azul.toroidalembedder.graph.general.Vertex;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

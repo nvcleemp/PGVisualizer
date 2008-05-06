@@ -2,10 +2,11 @@ package azul.toroidalembedder.gui;
 
 import azul.io.FileFormatException;
 import azul.io.IOManager;
-import azul.toroidalembedder.graph.Graph;
+import azul.toroidalembedder.graph.general.Graph;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -42,6 +43,18 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(IOManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        list.addListDataListener(this);
+    }
+    
+    public GraphModel(GraphModel model, List<Integer> numberList){
+        super();
+        selectionModel = new DefaultListSelectionModel();
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        selectionModel.setSelectionInterval(0, 0);
+        selectionModel.addListSelectionListener(this);
+        for (int i = 0; i < numberList.size(); i++) {
+            list.addElement(model.getString(numberList.get(i)));
         }
         list.addListDataListener(this);
     }

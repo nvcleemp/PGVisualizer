@@ -6,8 +6,9 @@
 package azul.toroidalembedder.embedder;
 
 import azul.toroidalembedder.energy.EnergyCalculator;
+import azul.toroidalembedder.graph.DefaultGraph;
 import azul.toroidalembedder.graph.FundamentalDomain;
-import azul.toroidalembedder.graph.Graph;
+import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.gui.GraphModel;
 
 /**
@@ -39,6 +40,8 @@ public class FastDomainEdgeEmbedder extends AbstractEmbedder {
     }
 
     public void embed() {
+        if(!(graph instanceof DefaultGraph))
+            return;
         double energy = energyCalculator.calculateEnergy(graph, graph.getFundamentalDomain());
         double HSE = graph.getFundamentalDomain().getHorizontalSide() - epsilon > 0 ? graph.getFundamentalDomain().getHorizontalSide() - epsilon : epsilon;
         double energy2 = energyCalculator.calculateEnergy(graph, new FundamentalDomain(graph.getFundamentalDomain().getAngle(), HSE, graph.getFundamentalDomain().getVerticalSide()));
@@ -48,7 +51,7 @@ public class FastDomainEdgeEmbedder extends AbstractEmbedder {
         int factor = 1;
         while(HS*factor<0.2)
             factor+=10;
-        graph.setFundamentalDomain(new FundamentalDomain(graph.getFundamentalDomain().getAngle(), HS*factor, graph.getFundamentalDomain().getVerticalSide()*factor));
+        ((DefaultGraph)graph).setFundamentalDomain(new FundamentalDomain(graph.getFundamentalDomain().getAngle(), HS*factor, graph.getFundamentalDomain().getVerticalSide()*factor));
     }
 
     @Override

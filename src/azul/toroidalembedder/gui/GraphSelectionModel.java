@@ -5,7 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
-import azul.toroidalembedder.graph.Vertex;
+import azul.toroidalembedder.graph.general.Vertex;
 
 /**
  *

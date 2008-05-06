@@ -4,10 +4,10 @@
 
 package azul.toroidalembedder.energy;
 
-import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.FundamentalDomain;
-import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Vertex;
+import azul.toroidalembedder.graph.general.Edge;
+import azul.toroidalembedder.graph.general.Graph;
+import azul.toroidalembedder.graph.general.Vertex;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class AngleEnergyCalculator implements EnergyCalculator{
         double energy=0;
         for (Vertex vertex : graph.getVertices()) {
             double[] angles = new double[vertex.getDegree()];
-            List<Edge> edges = vertex.getEdges();
+            List<? extends Edge> edges = vertex.getEdges();
             for (int i = 0; i < angles.length; i++) {
                 double x = edges.get(i).getEnd().getX(edges.get(i).getTargetX(), edges.get(i).getTargetY(), domain) - vertex.getX(domain);
                 double y = edges.get(i).getEnd().getY(edges.get(i).getTargetX(), edges.get(i).getTargetY(), domain) - vertex.getY(domain);

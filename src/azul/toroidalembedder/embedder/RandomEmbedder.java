@@ -5,8 +5,8 @@
 
 package azul.toroidalembedder.embedder;
 
-import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Vertex;
+import azul.toroidalembedder.graph.general.Graph;
+import azul.toroidalembedder.graph.general.Vertex;
 import azul.toroidalembedder.gui.GraphModel;
 import java.util.Random;
 

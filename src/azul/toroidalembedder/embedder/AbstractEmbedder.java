@@ -5,7 +5,7 @@
 
 package azul.toroidalembedder.embedder;
 
-import azul.toroidalembedder.graph.Graph;
+import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.gui.GraphModel;
 import javax.swing.event.ListDataEvent;
 

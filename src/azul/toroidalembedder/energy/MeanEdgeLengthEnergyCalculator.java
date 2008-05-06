@@ -4,10 +4,10 @@
 
 package azul.toroidalembedder.energy;
 
-import azul.toroidalembedder.graph.Edge;
 import azul.toroidalembedder.graph.FundamentalDomain;
-import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Vertex;
+import azul.toroidalembedder.graph.general.Edge;
+import azul.toroidalembedder.graph.general.Graph;
+import azul.toroidalembedder.graph.general.Vertex;
 
 /**
  * Calculates an energy based on the difference of length between the edges.

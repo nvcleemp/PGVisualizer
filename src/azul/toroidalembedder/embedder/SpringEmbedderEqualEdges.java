@@ -9,10 +9,10 @@
 
 package azul.toroidalembedder.embedder;
 
-import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Edge;
-import azul.toroidalembedder.graph.Vertex;
 
+import azul.toroidalembedder.graph.general.Edge;
+import azul.toroidalembedder.graph.general.Graph;
+import azul.toroidalembedder.graph.general.Vertex;
 import azul.toroidalembedder.gui.GraphModel;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class SpringEmbedderEqualEdges extends AbstractEmbedder {
     private double force = 0.01;
     private double friction = 0.85;
     private double[][] changes;
-    private List<Vertex> vertices;
+    private List<? extends Vertex> vertices;
     
     
     /** Creates a new instance of DefaultEmbedder */

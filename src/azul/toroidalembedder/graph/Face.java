@@ -5,6 +5,8 @@
 
 package azul.toroidalembedder.graph;
 
+import azul.toroidalembedder.graph.general.Edge;
+import azul.toroidalembedder.graph.general.Vertex;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ public class Face {
         int y = 0;
         edge.moveTo((float)vertices.get(0).getX(x, y, d), (float)vertices.get(0).getY(x, y, d));
         for (int i = 1; i < vertices.size(); i++) {
-            List<Edge> edges = vertices.get(i-1).getEdges();
+            List<? extends Edge> edges = vertices.get(i-1).getEdges();
             int j = 0;
             while(j<edges.size() && !edges.get(j).getEnd().equals(vertices.get(i)))
                 j++;

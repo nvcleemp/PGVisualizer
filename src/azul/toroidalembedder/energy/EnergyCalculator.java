@@ -5,7 +5,7 @@
 package azul.toroidalembedder.energy;
 
 import azul.toroidalembedder.graph.FundamentalDomain;
-import azul.toroidalembedder.graph.Graph;
+import azul.toroidalembedder.graph.general.Graph;
 
 /**
  * Calculates an energy for a given graph embedded with a given fundamental domain

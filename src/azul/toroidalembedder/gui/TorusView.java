@@ -11,14 +11,15 @@ package azul.toroidalembedder.gui;
 
 
 import azul.toroidalembedder.Polygon2D;
-import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Edge;
+import azul.toroidalembedder.graph.DefaultGraph;
 import azul.toroidalembedder.graph.Face;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.FundamentalDomainListener;
-import azul.toroidalembedder.graph.Vertex;
 import azul.toroidalembedder.graph.GraphListener;
 
+import azul.toroidalembedder.graph.general.Edge;
+import azul.toroidalembedder.graph.general.Graph;
+import azul.toroidalembedder.graph.general.Vertex;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -122,10 +123,13 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     public void setGraph(Graph graph){
         selectionModel.clearSelection();
         faceSelectionModel.clearSelection();
-        if(this.graph!=null)
-            this.graph.removeGraphListener(this);
+        if(this.graph!=null && this.graph instanceof DefaultGraph)
+            ((DefaultGraph)this.graph).removeGraphListener(this);
+        if(graph == null)
+            return;
         this.graph = graph;
-        this.graph.addGraphListener(this);
+        if(this.graph instanceof DefaultGraph)
+            ((DefaultGraph)this.graph).addGraphListener(this);
         if(graph!=null){
             widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
             heightView = ((maxY - minY + 1)*getFundamentalDomain().getDomainHeight());
@@ -219,8 +223,8 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
             }
         }
         
-        if(paintFaces){
-            for(Face f : graph.getFaces()){
+        if(paintFaces && graph instanceof DefaultGraph){
+            for(Face f : ((DefaultGraph)graph).getFaces()){
                 Shape s = f.getShape(getFundamentalDomain());
                 Color c = null;
                 if(getFaceHighlight()!=null)
@@ -476,6 +480,8 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     }
     
     public ViewFace getFaceAt(int x, int y){
+        if(!(graph instanceof DefaultGraph))
+            return null;
         if(widthView==0 || heightView==0){
             widthView = (maxX - minX + 1)*getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*(maxY - minY + 1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
             heightView = (maxY - minY + 1)*getFundamentalDomain().getDomainHeight();
@@ -493,7 +499,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         int domainX = minX - 1;
         int domainY = minY - 1;
         
-        List<Face> faces = graph.getFaces();
+        List<Face> faces = ((DefaultGraph)graph).getFaces();
         int k = 0;
         
         while(domainX == minX-1 && k<faces.size()) {

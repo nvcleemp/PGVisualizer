@@ -5,9 +5,9 @@
 
 package azul.toroidalembedder.gui;
 
-import azul.toroidalembedder.graph.Edge;
-import azul.toroidalembedder.graph.Graph;
-import azul.toroidalembedder.graph.Vertex;
+import azul.toroidalembedder.graph.general.Edge;
+import azul.toroidalembedder.graph.general.Graph;
+import azul.toroidalembedder.graph.general.Vertex;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

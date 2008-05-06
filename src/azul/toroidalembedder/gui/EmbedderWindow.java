@@ -7,11 +7,12 @@ package azul.toroidalembedder.gui;
 
 
 import azul.toroidalembedder.graph.FundamentalDomain;
-import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.GraphListener;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
 
+import azul.toroidalembedder.graph.DefaultGraph;
+import azul.toroidalembedder.graph.general.Graph;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -39,7 +40,8 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         super("Toroidal embedder: EmbedderWindow");
         this.graph = graph;
         torusView.setGraph(graph);
-        graph.addGraphListener(this);
+        if(graph instanceof DefaultGraph)
+            ((DefaultGraph)graph).addGraphListener(this);
         split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
         split.setTopComponent(torusView);
         
