@@ -31,6 +31,7 @@ public class ListSelectionNavigator extends JPanel implements ListSelectionListe
     private JButton right = new JButton(">");
     private JFormattedTextField currentSelection = new JFormattedTextField(1);
     private JLabel total = new JLabel("/ ");
+    private JButton enter = new JButton("goto");
 
     public ListSelectionNavigator(ListSelectionModel selectionModel, ListModel model) {
         this.selectionModel = selectionModel;
@@ -56,10 +57,16 @@ public class ListSelectionNavigator extends JPanel implements ListSelectionListe
                 setSelection(ListSelectionNavigator.this.selectionModel.getMinSelectionIndex()+1);
             }
         });
-        setLayout(new GridLayout(0,4));
+        enter.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setSelection((Integer)currentSelection.getValue()-1);
+            }
+        });
+        setLayout(new GridLayout(0,5));
         add(left);
         add(currentSelection);
         add(total);
+        add(enter);
         add(right);
     }
 
