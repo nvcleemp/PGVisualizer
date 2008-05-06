@@ -15,4 +15,5 @@ import java.awt.Color;
 public interface FaceHighlighter {
     public Color getColorFor(Face f);
     public void setColor(Face f, Color c);
+    public String export();
 }

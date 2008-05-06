@@ -6,9 +6,12 @@
 package azul.toroidalembedder.gui;
 
 import azul.toroidalembedder.graph.Face;
+import azul.toroidalembedder.graph.Graph;
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  *
@@ -28,5 +31,23 @@ public class DefaultFaceHightlighter implements FaceHighlighter {
         else
             map.put(f, c);
     }
+
+    public String export() {
+        StringBuffer buf = new StringBuffer();
+        for (Face face : map.keySet()) {
+            buf.append(face.getIndex());
+            buf.append(" ");
+            buf.append(map.get(face).getRGB());
+            buf.append(" ");
+        }
+        return buf.toString();
+    }
     
+    public void importHighlighting(Graph g, String s){
+        Scanner scanner = new Scanner(s);
+        List<Face> faces = g.getFaces();
+        while(scanner.hasNextInt()){
+            map.put(faces.get(scanner.nextInt()), Color.decode(scanner.next()));
+        }
+    }
 }
