@@ -18,6 +18,7 @@ import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.Graph;
 import azul.toroidalembedder.graph.Vertex;
 
+import azul.toroidalembedder.graph.triangulation.TriangulatedGraph;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -171,6 +172,83 @@ public class IOManager {
         }
         buf.deleteCharAt(buf.length()-1);
         return buf.toString();
+    }
+    
+    public static TriangulatedGraph readTPG(String tpg) throws FileFormatException {
+        String[] parts;
+        //split off comments
+        if(tpg.indexOf('#')==-1)
+            parts = tpg.split("\\|");
+        else
+            parts = tpg.substring(0, tpg.indexOf('#')).split("\\|");
+        
+        if(parts.length!=3)
+            throw new FileFormatException("Illegal number of parts in file: expected 3, found " + parts.length);
+        
+        String[] orders = parts[0].split(":");
+        if(orders.length!=3)
+            throw new FileFormatException("Illegal number of order parts in file: expected 3, found " + orders.length);
+        
+        int vertexOrder;
+        try {
+            vertexOrder = Integer.parseInt(orders[0]);
+        } catch (NumberFormatException ex) {
+            throw new FileFormatException("Illegal number of vertices: expected number, found " + orders[0], ex);
+        }
+        int edgeOrder;
+        try {
+            edgeOrder = Integer.parseInt(orders[1]);
+        } catch (NumberFormatException ex) {
+            throw new FileFormatException("Illegal number of edges: expected number, found " + orders[1], ex);
+        }
+        int faceOrder;
+        try {
+            faceOrder = Integer.parseInt(orders[2]);
+        } catch (NumberFormatException ex) {
+            throw new FileFormatException("Illegal number of faces: expected number, found " + orders[2], ex);
+        }
+                       
+        TriangulatedGraph graph = new TriangulatedGraph();
+        String[] coords = parts[1].split(":");
+        Scanner vertexCoords = new Scanner(coords[0]).useDelimiter("(\\s)|(;)");
+        try {
+            for(int i = 0; i<vertexOrder; i++)
+                graph.addVertex(vertexCoords.nextDouble(),vertexCoords.nextDouble());
+        } catch (InputMismatchException ex) {
+            throw new FileFormatException("Illegal coordinate for vertexnode: expected number, found '" + vertexCoords.next() + "'.", ex);
+        } catch (NoSuchElementException ex) {
+            throw new FileFormatException("End of section while reading coordinates.", ex);
+        }
+        Scanner edgeCoords = new Scanner(coords[1]).useDelimiter("(\\s)|(;)");
+        try {
+            for(int i = 0; i<edgeOrder; i++)
+                graph.addEdge(edgeCoords.nextDouble(),edgeCoords.nextDouble());
+        } catch (InputMismatchException ex) {
+            throw new FileFormatException("Illegal coordinate for edgenode: expected number, found '" + edgeCoords.next() + "'.", ex);
+        } catch (NoSuchElementException ex) {
+            throw new FileFormatException("End of section while reading coordinates.", ex);
+        }
+        Scanner faceCoords = new Scanner(coords[2]).useDelimiter("(\\s)|(;)");
+        try {
+            for(int i = 0; i<faceOrder; i++)
+                graph.addFace(faceCoords.nextDouble(),faceCoords.nextDouble());
+        } catch (InputMismatchException ex) {
+            throw new FileFormatException("Illegal coordinate for facenode: expected number, found '" + faceCoords.next() + "'.", ex);
+        } catch (NoSuchElementException ex) {
+            throw new FileFormatException("End of section while reading coordinates.", ex);
+        }
+        
+        Scanner connections = new Scanner(parts[2]).useDelimiter("(\\s)|(;)");
+        try {
+            while (connections.hasNext())
+                graph.addConnection(connections.next(), connections.nextInt(), connections.next(), connections.nextInt(), connections.nextInt(), connections.nextInt());
+        } catch (InputMismatchException ex) {
+            throw new FileFormatException("Illegal input while adding edge: expected integer or type, found " + connections.next(), ex);
+        } catch (NoSuchElementException ex) {
+            throw new FileFormatException("End of section while reading edges.", ex);
+        }
+        
+        return graph;
     }
     
     public static String writeDS(DelaneySymbol symbol){
