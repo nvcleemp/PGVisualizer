@@ -40,4 +40,29 @@ public class TriangulationNode {
     public void addConnection(TriangulationConnection connection){
         connections.add(connection);
     }
+
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+    
+    public void setCoordinates(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public List<TriangulationConnection> getConnections() {
+        return connections;
+    }
 }

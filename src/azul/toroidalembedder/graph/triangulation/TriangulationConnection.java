@@ -51,6 +51,11 @@ public class TriangulationConnection {
         this.inverse = inverse;
     }
 
+    public void translateTartget(int dx, int dy) {
+        targetX += dx;
+        targetY += dy;
+    }
+    
     public static TriangulationConnection getConnection(TriangulationNode start, TriangulationNode end, int targetX, int targetY){
         TriangulationConnection connection = new TriangulationConnection(start, end, targetX, targetY);
         TriangulationConnection inverse = new TriangulationConnection(end, start, -targetX, -targetY);

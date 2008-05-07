@@ -51,4 +51,29 @@ public class TriangulatedGraph {
         map.get(type2).get(node2).addConnection(connection.getInverse());
         return connection;
     }
+    
+    public int getNumberOfVertices(){
+        return vertices.size();
+    }
+    
+    public int getNumberOfEdges(){
+        return edges.size();
+    }
+    
+    public int getNumberOfFaces(){
+        return faces.size();
+    }
+
+    public List<TriangulationNode> getVertices() {
+        return vertices;
+    }
+
+    public List<TriangulationNode> getEdges() {
+        return edges;
+    }
+
+    public List<TriangulationNode> getFaces() {
+        return faces;
+    }
+
 }
