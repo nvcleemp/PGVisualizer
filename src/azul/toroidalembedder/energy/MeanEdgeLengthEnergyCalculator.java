@@ -19,7 +19,7 @@ public class MeanEdgeLengthEnergyCalculator implements EnergyCalculator{
         int count = 0;
         for (Vertex vertex : graph.getVertices()) {
             for (Edge edge : vertex.getEdges()) {
-                mean += graph.getEdgeLength(edge, domain);
+                mean += edge.getLength(domain);
                 count++;
             }
         }
@@ -28,7 +28,7 @@ public class MeanEdgeLengthEnergyCalculator implements EnergyCalculator{
         double energy=0;
         for (Vertex vertex : graph.getVertices()) {
             for (Edge edge : vertex.getEdges()) {
-                double d = graph.getEdgeLength(edge, domain);
+                double d = edge.getLength(domain);
                 energy += (mean - d) * (mean - d);
             }
         }

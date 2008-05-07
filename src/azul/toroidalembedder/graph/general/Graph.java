@@ -16,8 +16,6 @@ public interface Graph {
 
     public double getEdgeLength(Edge e);
 
-    public double getEdgeLength(Edge e, FundamentalDomain domain);
-
     public Vertex getVertex(int index);
 
     public List<? extends Vertex> getVertices();

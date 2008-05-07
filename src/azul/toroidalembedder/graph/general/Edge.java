@@ -24,5 +24,7 @@ public interface Edge {
     public int getTargetY();
 
     public void translateTartget(int dx, int dy);
+    
+    public double getLength(FundamentalDomain fd);
 
 }

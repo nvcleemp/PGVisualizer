@@ -75,13 +75,7 @@ public class DefaultGraph implements VertexListener, FundamentalDomainListener, 
     }
     
     public double getEdgeLength(Edge e){
-        return getEdgeLength(e, fundamentalDomain);
-    }
-    
-    public double getEdgeLength(Edge e, FundamentalDomain domain){
-        double dx = e.getStart().getX(domain) - e.getEnd().getX(e.getTargetX(), e.getTargetY(), domain);
-        double dy = e.getStart().getY(domain) - e.getEnd().getY(e.getTargetX(), e.getTargetY(), domain);
-        return Math.hypot(dx, dy);
+        return e.getLength(fundamentalDomain);
     }
     
     public void translate(double dx, double dy){

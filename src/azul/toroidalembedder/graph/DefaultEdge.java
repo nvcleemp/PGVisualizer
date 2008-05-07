@@ -70,4 +70,10 @@ public class DefaultEdge implements Edge {
         inverse.setInverse(edge);
         return edge;
     }
+
+    public double getLength(FundamentalDomain fd) {
+        double dx = start.getX(fd) - end.getX(targetX, targetY, fd);
+        double dy = start.getY(fd) - end.getY(targetX, targetY, fd);
+        return Math.hypot(dx, dy);
+    }
 }
