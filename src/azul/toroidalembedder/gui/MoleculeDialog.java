@@ -97,7 +97,9 @@ public class MoleculeDialog extends JDialog{
         gbc.gridwidth = 4;
         final JCheckBox overflowCheckBox = new JCheckBox("with overflow", false);
         controls.add(overflowCheckBox, gbc);
+        gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridy++;
         JButton viewButton = new JButton("Graph Preview");
         viewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -105,9 +107,21 @@ public class MoleculeDialog extends JDialog{
                 view.setGraph(result);
             }
         });
-        gbc.gridy++;
         controls.add(viewButton, gbc);
+        gbc.gridx = 2;
+        JButton shiftButton = new JButton("Optimal shift");
+        shiftButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                double hOffset = input.getFundamentalDomain().getHorizontalShift()*(Integer)y.getValue();
+                double amount = hOffset/input.getFundamentalDomain().getHorizontalSide();
+                shiftX.setValue((int)Math.round(amount));
+                shiftY.setValue(Integer.valueOf(0));
+            }
+        });
+        controls.add(shiftButton, gbc);
+        gbc.gridx = 0;
         gbc.gridy++;
+        gbc.gridwidth = 4;
         comboBox.setRenderer(new DefaultListCellRenderer(){
 
             @Override
