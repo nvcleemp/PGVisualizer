@@ -116,7 +116,9 @@ public class Test {
                 if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
                     if(chooser.getSelectedFile().exists()){
                         JFrame frame = new JFrame("PGVisualizer");
-                        frame.add(new PGVisualizer(chooser.getSelectedFile()));
+                        PGVisualizer visualizer = new PGVisualizer(chooser.getSelectedFile());
+                        frame.add(visualizer);
+                        frame.setJMenuBar(visualizer.getMenuBar());
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         frame.pack();
                         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
