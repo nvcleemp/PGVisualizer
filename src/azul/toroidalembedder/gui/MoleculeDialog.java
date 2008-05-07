@@ -35,6 +35,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -58,37 +59,46 @@ public class MoleculeDialog extends JDialog{
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.weightx = 1;
         controls.add(new JLabel("X :"), gbc);
+        gbc.weightx = 0;
         gbc.gridx++;
         final JFormattedTextField x = new JFormattedTextField(Integer.valueOf(1));
         x.setColumns(3);
         controls.add(x, gbc);
         gbc.gridx++;
+        gbc.weightx = 1;
         controls.add(new JLabel("Shift X :"), gbc);
+        gbc.weightx = 0;
         gbc.gridx++;
         final JFormattedTextField shiftX = new JFormattedTextField(Integer.valueOf(0));
         shiftX.setColumns(3);
         controls.add(shiftX, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
+        gbc.weightx = 1;
         controls.add(new JLabel("Y :"), gbc);
         gbc.gridx++;
+        gbc.weightx = 0;
         final JFormattedTextField y = new JFormattedTextField(Integer.valueOf(1));
         y.setColumns(3);
         controls.add(y, gbc);
         gbc.gridx++;
+        gbc.weightx = 1;
         controls.add(new JLabel("Shift Y :"), gbc);
+        gbc.weightx = 0;
         gbc.gridx++;
         final JFormattedTextField shiftY = new JFormattedTextField(Integer.valueOf(0));
         shiftY.setColumns(3);
         controls.add(shiftY, gbc);
+        gbc.weightx = 1;
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 4;
-        gbc.fill = GridBagConstraints.BOTH;
         final JCheckBox overflowCheckBox = new JCheckBox("with overflow", false);
         controls.add(overflowCheckBox, gbc);
-        JButton viewButton = new JButton("View");
+        gbc.fill = GridBagConstraints.BOTH;
+        JButton viewButton = new JButton("Graph Preview");
         viewButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected());
@@ -141,7 +151,7 @@ public class MoleculeDialog extends JDialog{
         });
         controls.add(showButton, gbc);
         gbc.gridy++;
-        JButton doneButton = new JButton("Done");
+        /*JButton doneButton = new JButton("Done");
         doneButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected());
@@ -149,7 +159,7 @@ public class MoleculeDialog extends JDialog{
                 setVisible(false);
             }
         });
-        controls.add(doneButton, gbc);
+        controls.add(doneButton, gbc);*/
         add(controls, BorderLayout.NORTH);
         pack();
     }
