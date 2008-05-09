@@ -6,6 +6,7 @@
 package azul.toroidalembedder.gui;
 
 
+import azul.toroidalembedder.gui.action.ExportBitmapAction;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.GraphListener;
 import azul.io.FileFormatException;

@@ -5,6 +5,8 @@
 
 package azul.toroidalembedder.gui;
 
+import azul.toroidalembedder.gui.action.Show3DAction;
+import azul.toroidalembedder.gui.action.FilterAction;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

@@ -5,6 +5,10 @@
 
 package azul.toroidalembedder.gui;
 
+import azul.toroidalembedder.gui.action.CommitGraphAction;
+import azul.toroidalembedder.gui.action.ExportBitmapAction;
+import azul.toroidalembedder.gui.action.SaveGraphListAction;
+import azul.toroidalembedder.gui.action.RevertGraphAction;
 import azul.io.IOManager;
 import azul.toroidalembedder.graph.general.Graph;
 import java.awt.GridLayout;

@@ -5,6 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
+import azul.toroidalembedder.gui.action.Show3DAction;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.DefaultGraph;
 import azul.toroidalembedder.graph.DefaultVertex;
