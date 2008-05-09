@@ -33,16 +33,9 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ListDataEvent;
 
@@ -224,6 +217,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
             }
         }
         
+        //paint faces
         if(paintFaces && graph instanceof DefaultGraph){
             for(Face f : ((DefaultGraph)graph).getFaces()){
                 Shape s = f.getShape(getFundamentalDomain());
@@ -246,6 +240,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
             }
         }
         
+        //show selection of faces
         Face[] selectedFaces = faceSelectionModel.getSelectedFaces();
         if(paintSelectedFace && selectedFaces.length>0){
             Graphics2D gr = (Graphics2D)(g2.create());
@@ -262,6 +257,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
             }
         }
 
+        //paint edges
         for (Vertex vertex : graph.getVertices()) {
             double x1 = vertex.getX(0, 0, getFundamentalDomain());
             double y1 = vertex.getY(0, 0, getFundamentalDomain());
@@ -277,6 +273,8 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
                     }
             }
         }
+        
+        //paint vertices
         for (Vertex vertex : graph.getVertices()) {
             Color outer = vertexEdge;
             Color inner = vertexFace;
