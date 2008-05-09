@@ -64,7 +64,7 @@ public class PGVisualizer extends JPanel{
         controls.add(new GraphOperations(model));
         controls.add(new DomainOperations(model));
         controls.add(new EmbedderControl(model));
-        controls.add(new ExportControl(view, model));
+        //controls.add(ExportControl.getPanel(view, model));
         add(controls, BorderLayout.EAST);
     }
     
@@ -105,13 +105,14 @@ public class PGVisualizer extends JPanel{
         controls.add(new GraphOperations(model));
         controls.add(new DomainOperations(model));
         controls.add(new EmbedderControl(model));
-        controls.add(new ExportControl(view, model));
+        //controls.add(ExportControl.getPanel(view, model));
         add(controls, BorderLayout.EAST);
     }
     
     public JMenuBar getMenuBar(){
         if(menuBar==null){
             menuBar = new JMenuBar();
+            menuBar.add(ExportControl.getMenu(view, model));
             JMenu viewMenu = new JMenu("View");
             viewMenu.add(new JMenuItem(new Show3DAction(model)));
             menuBar.add(viewMenu);

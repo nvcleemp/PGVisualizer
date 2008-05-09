@@ -59,13 +59,7 @@ public class EmbedderWindow extends JFrame implements GraphListener {
         
         // export controls
         JPanel exportPanel = new JPanel(new GridLayout(0, 2));
-        JButton saveImage = new JButton("Save image");
-        saveImage.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                torusView.exportImage();
-            }
-        });
-        exportPanel.add(saveImage);
+        exportPanel.add(new JButton(new ExportBitmapAction(torusView)));
         JButton saveGraph = new JButton("Save graph");
         saveGraph.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

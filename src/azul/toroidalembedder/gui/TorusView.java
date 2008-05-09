@@ -32,6 +32,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -372,19 +373,10 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         clip = c;
     }
     
-    public void exportImage(){
-        try {
-            BufferedImage im = new BufferedImage((int)(widthView * 150), (int)(heightView * 150), BufferedImage.TYPE_INT_ARGB);
-            paintComponentImpl(im.getGraphics(), im.getWidth(), im.getHeight(), false);
-            JFileChooser chooser = new JFileChooser();
-            if(chooser.showSaveDialog(this)==JFileChooser.APPROVE_OPTION){
-                File file = chooser.getSelectedFile();
-                if(!file.exists() || JOptionPane.showConfirmDialog(this, "Overwrite file " + file.toString(), "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-                    ImageIO.write(im, "PNG", file);
-            }
-        } catch (IOException ex) {
-            Logger.getLogger(TorusView.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public RenderedImage getBitmap(){
+        BufferedImage im = new BufferedImage((int)(widthView * 150), (int)(heightView * 150), BufferedImage.TYPE_INT_ARGB);
+        paintComponentImpl(im.getGraphics(), im.getWidth(), im.getHeight(), false);
+        return im;
     }
 
     @Override

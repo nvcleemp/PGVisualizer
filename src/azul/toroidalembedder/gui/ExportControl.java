@@ -9,14 +9,11 @@ import azul.io.IOManager;
 import azul.toroidalembedder.graph.general.Graph;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 /**
@@ -24,68 +21,39 @@ import javax.swing.JPanel;
  * @author nvcleemp
  */
 public class ExportControl extends JPanel{
+    
+    private ExportControl(){
+        //
+    }
 
-    public ExportControl(final TorusView torusView, final Graph graph) {
-        setLayout(new GridLayout(0, 2));
-        JButton saveImage = new JButton("Save image");
-        saveImage.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                torusView.exportImage();
-            }
-        });
-        add(saveImage);
-        JButton saveGraph = new JButton("Save graph");
-        saveGraph.addActionListener(new ActionListener() {
+    public static JPanel getPanel(TorusView torusView, final Graph graph) {
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JButton(new ExportBitmapAction(torusView)));
+        panel.add(new JButton(new AbstractAction("Save graph") {
             public void actionPerformed(ActionEvent e) {
                 System.out.println(IOManager.writePG(graph));
             }
-        });
-        add(saveGraph);
-        setBorder(BorderFactory.createTitledBorder("Export"));
+        }));
+        panel.setBorder(BorderFactory.createTitledBorder("Export"));
+        return panel;
     }
     
-    public ExportControl(final TorusView torusView, final GraphModel graphModel) {
-        setLayout(new GridLayout(0, 1));
-        JButton saveImage = new JButton("Save image");
-        saveImage.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                torusView.exportImage();
-            }
-        });
-        add(saveImage);
-        JButton commitGraph = new JButton("Commit graph");
-        commitGraph.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                graphModel.commitSelectedGraph();
-            }
-        });
-        add(commitGraph);
-        JButton revertGraph = new JButton("Revert graph");
-        revertGraph.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                graphModel.revertSelectedGraph();
-            }
-        });
-        add(revertGraph);
-        final JButton saveGraphList = new JButton("Save graph list");
-        saveGraphList.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
-                if(chooser.showSaveDialog(saveGraphList) == JFileChooser.APPROVE_OPTION){
-                    try {
-                        new SaveDialog(null, chooser.getSelectedFile(), graphModel).save();
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger(EmbedderRunner.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IOException ex) {
-                        Logger.getLogger(EmbedderRunner.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        });
-        add(saveGraphList);
-        setBorder(BorderFactory.createTitledBorder("Export"));
+    public static JPanel getPanel(final TorusView torusView, final GraphModel graphModel) {
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JButton(new ExportBitmapAction(torusView)));
+        panel.add(new JButton(new CommitGraphAction(graphModel)));
+        panel.add(new JButton(new RevertGraphAction(graphModel)));
+        panel.add(new JButton(new SaveGraphListAction(graphModel)));
+        panel.setBorder(BorderFactory.createTitledBorder("Export"));
+        return panel;
     }
     
-    
-
+    public static JMenu getMenu(final TorusView torusView, final GraphModel graphModel) {
+        JMenu panel = new JMenu("Export");
+        panel.add(new JMenuItem(new ExportBitmapAction(torusView)));
+        panel.add(new JMenuItem(new CommitGraphAction(graphModel)));
+        panel.add(new JMenuItem(new RevertGraphAction(graphModel)));
+        panel.add(new JMenuItem(new SaveGraphListAction(graphModel)));
+        return panel;
+    }
 }
