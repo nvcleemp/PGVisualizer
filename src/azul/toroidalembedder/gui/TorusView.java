@@ -66,16 +66,6 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private GraphFaceSelectionModel faceSelectionModel = new DefaultGraphFaceSelectionModel();
     private boolean paintFaces = false;
     private boolean paintSelectedFace = true;
-    private Map<Integer, Color> faceColorMap = new HashMap<Integer, Color>();
-    {
-        faceColorMap.put(4, Color.WHITE);
-        faceColorMap.put(5, Color.GRAY);
-        faceColorMap.put(6, Color.YELLOW);
-        faceColorMap.put(7, new Color(0.6f, 0.7f, 1.0f));
-        faceColorMap.put(8, new Color(0f, 0.4f, 0f));
-        faceColorMap.put(9, new Color(0.4f, 0f, 0f));
-        faceColorMap.put(10, Color.PINK);
-    }
     
     /** Creates a new instance of TorusView */
     public TorusView() {
@@ -225,7 +215,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
                 if(getFaceHighlight()!=null)
                     c = getFaceHighlight().getColorFor(f);
                 if(c==null)
-                    c = faceColorMap.get(f.getSize());
+                    c = FaceColorMapping.getColorFor(f.getSize());
                 if(c==null)
                     c = Color.DARK_GRAY;
                 c = new Color(c.getRed(), c.getGreen(), c.getBlue(), transparency);
