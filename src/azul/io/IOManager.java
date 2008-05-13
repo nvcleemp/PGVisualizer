@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -93,7 +94,7 @@ public class IOManager {
         }
                
         DefaultGraph graph = new DefaultGraph(domain);
-        Scanner coords = new Scanner(parts[2]).useDelimiter("(\\s)|(;)");
+        Scanner coords = new Scanner(parts[2]).useDelimiter("(\\s)|(;)").useLocale(Locale.US);
         try {
             for(int i = 0; i<order; i++)
                 graph.addVertex(new DefaultVertex(coords.nextDouble(),coords.nextDouble()));
@@ -214,7 +215,7 @@ public class IOManager {
                        
         TriangulatedGraph graph = new TriangulatedGraph();
         String[] coords = parts[1].split(":");
-        Scanner vertexCoords = new Scanner(coords[0]).useDelimiter("(\\s)|(;)");
+        Scanner vertexCoords = new Scanner(coords[0]).useDelimiter("(\\s)|(;)").useLocale(Locale.US);
         try {
             for(int i = 0; i<vertexOrder; i++)
                 graph.addVertex(vertexCoords.nextDouble(),vertexCoords.nextDouble());
@@ -223,7 +224,7 @@ public class IOManager {
         } catch (NoSuchElementException ex) {
             throw new FileFormatException("End of section while reading coordinates.", ex);
         }
-        Scanner edgeCoords = new Scanner(coords[1]).useDelimiter("(\\s)|(;)");
+        Scanner edgeCoords = new Scanner(coords[1]).useDelimiter("(\\s)|(;)").useLocale(Locale.US);
         try {
             for(int i = 0; i<edgeOrder; i++)
                 graph.addEdge(edgeCoords.nextDouble(),edgeCoords.nextDouble());
@@ -232,7 +233,7 @@ public class IOManager {
         } catch (NoSuchElementException ex) {
             throw new FileFormatException("End of section while reading coordinates.", ex);
         }
-        Scanner faceCoords = new Scanner(coords[2]).useDelimiter("(\\s)|(;)");
+        Scanner faceCoords = new Scanner(coords[2]).useDelimiter("(\\s)|(;)").useLocale(Locale.US);
         try {
             for(int i = 0; i<faceOrder; i++)
                 graph.addFace(faceCoords.nextDouble(),faceCoords.nextDouble());
