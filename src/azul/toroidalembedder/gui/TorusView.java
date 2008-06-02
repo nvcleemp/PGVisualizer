@@ -67,7 +67,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private Color selectedVertexEdge = defaultSelectedVertexEdge;
     private GraphSelectionModel selectionModel = new DefaultGraphSelectionModel();
     private GraphFaceSelectionModel faceSelectionModel = new DefaultGraphFaceSelectionModel();
-    private boolean paintFaces = false;
+    private boolean paintFaces = true;
     private boolean paintSelectedFace = true;
     
     /** Creates a new instance of TorusView */
@@ -297,7 +297,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         }
     }
     
-    private int vertexSize = 60; //in % of HS/20
+    private int vertexSize = 0; //in % of HS/20
     
     public int getVertexSize(){
         return vertexSize;
@@ -598,7 +598,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         repaint();
     }
     
-    private boolean viewClipped = true;
+    private boolean viewClipped = false;
 
     public boolean isViewClipped() {
         return viewClipped;
