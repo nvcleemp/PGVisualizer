@@ -11,6 +11,7 @@ import azul.toroidalembedder.gui.action.SaveGraphListAction;
 import azul.toroidalembedder.gui.action.RevertGraphAction;
 import azul.io.IOManager;
 import azul.toroidalembedder.graph.general.Graph;
+import azul.toroidalembedder.gui.action.ExportSVGAction;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -48,13 +49,14 @@ public class ExportControl extends JPanel{
         panel.add(new JButton(new CommitGraphAction(graphModel)));
         panel.add(new JButton(new RevertGraphAction(graphModel)));
         panel.add(new JButton(new SaveGraphListAction(graphModel)));
-        panel.setBorder(BorderFactory.createTitledBorder("Export"));
+        panel.setName("Export");
         return panel;
     }
     
     public static JMenu getMenu(final TorusView torusView, final GraphModel graphModel) {
         JMenu panel = new JMenu("Export");
         panel.add(new JMenuItem(new ExportBitmapAction(torusView)));
+        panel.add(new JMenuItem(new ExportSVGAction(graphModel)));
         panel.add(new JMenuItem(new CommitGraphAction(graphModel)));
         panel.add(new JMenuItem(new RevertGraphAction(graphModel)));
         panel.add(new JMenuItem(new SaveGraphListAction(graphModel)));

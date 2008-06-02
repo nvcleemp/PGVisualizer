@@ -36,7 +36,7 @@ public class GraphOperations extends JPanel implements GraphModelListener {
         add(north, BorderLayout.NORTH);
         shiftOperations = new GraphShiftOperations(false);
         add(shiftOperations, BorderLayout.SOUTH);
-        setBorder(BorderFactory.createTitledBorder("Graph operations"));
+        setName("Operations");
     }
     
     public GraphOperations(Graph graph) {

@@ -195,7 +195,7 @@ public class SearchDialog extends JDialog{
                         }
                         visualizer = new PGVisualizer(searchList());
                         frame.add(visualizer);
-                        frame.setJMenuBar(visualizer.getMenuBar());
+                        frame.setJMenuBar(visualizer.getMenuBar(frame));
                         frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
                         frame.pack();
                         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

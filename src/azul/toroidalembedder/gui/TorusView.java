@@ -25,7 +25,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
@@ -46,6 +48,9 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private static final Color defaultVertexEdge = Color.BLACK;
     private static final Color defaultVertexFace = Color.WHITE;
     private static final Color defaultSelectedVertexEdge = Color.GREEN;
+    
+    public static final String FILL_FACES = "FillFaces";
+    public static final String CLIP_VIEW = "ClipView";
 
     private Graph graph;
     private Shape clip;
@@ -232,7 +237,18 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         Face[] selectedFaces = faceSelectionModel.getSelectedFaces();
         if(paintSelectedFace && selectedFaces.length>0){
             Graphics2D gr = (Graphics2D)(g2.create());
-            gr.setColor(new Color(0.3f, 0.3f, 0.3f, 0.9f));
+    BufferedImage bi = new BufferedImage(2, 2,
+        BufferedImage.TYPE_INT_ARGB);
+    Graphics2D big = bi.createGraphics();
+    big.scale(scale, scale);
+    big.setColor(Color.RED);
+    big.fillRect(0, 0, 1, 2);
+    //big.setColor(Color.lightGray);
+    //big.fillOval(0, 0, 10, 10);
+    Rectangle r = new Rectangle(0, 0, 2, 2);
+    gr.setPaint(new TexturePaint(bi, r));
+            //gr.setPaint(new LinesPaint(width, height, LinesPaint.PaintTexture.VERTICAL));
+            //gr.setColor(new Color(0.3f, 0.3f, 0.3f, 0.9f));
             for(Face f : selectedFaces){
                 Shape s = f.getShape(getFundamentalDomain());
                 for (int i = minX + minTargetX; i <= maxX + maxTargetX; i++)
@@ -535,8 +551,11 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     }
 
     public void setPaintFaces(boolean paintFaces) {
-        this.paintFaces = paintFaces;
-        repaint();
+        if(this.paintFaces != paintFaces){
+            this.paintFaces = paintFaces;
+            firePropertyChange(FILL_FACES, !paintFaces, paintFaces);
+            repaint();
+        }
     }
 
     public void graphFaceSelectionChanged() {
@@ -586,7 +605,10 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     }
 
     public void setViewClipped(boolean viewClipped) {
-        this.viewClipped = viewClipped;
-        repaint();
+        if(this.viewClipped != viewClipped){
+            this.viewClipped = viewClipped;
+            firePropertyChange(CLIP_VIEW, !viewClipped, viewClipped);
+            repaint();
+        }
     }
 }

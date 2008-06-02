@@ -1,6 +1,7 @@
 package azul.toroidalembedder.gui;
 
 import azul.toroidalembedder.graph.general.Vertex;
+import azul.toroidalembedder.gui.toggler.ClipViewToggler;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -63,14 +64,15 @@ public class ViewController extends JPanel {
         gbc.gridy++;
         gbc.gridwidth = 3;
         //add(new JButton(new ColorAction()), gbc);
-        final JCheckBox clipView = new JCheckBox("Clip view (may slow performance down)", torusView.isViewClipped());
+        final JCheckBox clipView = new ClipViewToggler(torusView).getJCheckBox(); //new JCheckBox("Clip view (may slow performance down)", torusView.isViewClipped());
         clipView.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 ViewController.this.torusView.setViewClipped(clipView.isSelected());
             }
         });
         add(clipView, gbc);
-        setBorder(BorderFactory.createTitledBorder("View"));
+        setName("View");
+        //setBorder(BorderFactory.createTitledBorder("View"));
     }
 
     private class XAction extends AbstractAction {

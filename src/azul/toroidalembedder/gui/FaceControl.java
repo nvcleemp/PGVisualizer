@@ -6,12 +6,12 @@
 package azul.toroidalembedder.gui;
 
 import azul.toroidalembedder.graph.Face;
+import azul.toroidalembedder.gui.toggler.FillFacesToggler;
+import azul.toroidalembedder.gui.toggler.Toggler;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,12 +45,13 @@ public class FaceControl extends JPanel implements ListSelectionListener{
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0;
-        final JCheckBox drawFaces = new JCheckBox("Fill faces", torusView.isPaintFaces());
-        drawFaces.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-                FaceControl.this.torusView.setPaintFaces(drawFaces.isSelected());
-            }
-        });
+        Toggler fillFaces = new FillFacesToggler(torusView);
+        final JCheckBox drawFaces = fillFaces.getJCheckBox(); //new JCheckBox("Fill faces", torusView.isPaintFaces());
+        //drawFaces.addItemListener(new ItemListener() {
+        //    public void itemStateChanged(ItemEvent e) {
+        //        FaceControl.this.torusView.setPaintFaces(drawFaces.isSelected());
+        //    }
+        //});
         add(drawFaces, gbc);
         final JSlider transparency = new JSlider(0, 255, torusView.getTransparency());
         transparency.addChangeListener(new ChangeListener() {
@@ -67,7 +68,7 @@ public class FaceControl extends JPanel implements ListSelectionListener{
         add(new JButton(new ColorAction()), gbc);
         gbc.gridy++;
         add(new JButton(new RemoveColorAction()), gbc);
-        setBorder(BorderFactory.createTitledBorder("Face"));
+        setName("Face");
     }
 
 

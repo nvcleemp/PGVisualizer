@@ -73,7 +73,7 @@ public class EmbedderControl extends JPanel{
         runEmbedder.addChangeListener(changeListener);
         timer.setInitialDelay(0);
         add(runEmbedder, gbc);
-        setBorder(BorderFactory.createTitledBorder("Embedder"));
+        setName("Embedder");
     }
     
     public EmbedderControl(Graph graph){

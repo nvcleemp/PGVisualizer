@@ -5,8 +5,11 @@
 
 package azul.toroidalembedder.gui;
 
+import azul.toroidalembedder.gui.toggler.FillFacesToggler;
 import azul.toroidalembedder.gui.action.Show3DAction;
 import azul.toroidalembedder.gui.action.FilterAction;
+import azul.toroidalembedder.gui.action.ShowWindowAction;
+import azul.toroidalembedder.gui.toggler.ClipViewToggler;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -60,12 +63,12 @@ public class PGVisualizer extends JPanel{
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
-        controls.add(new AzulenoidInfo(model));
-        controls.add(new FaceControl(view, model));
-        controls.add(new ViewController(view));
-        controls.add(new GraphOperations(model));
-        controls.add(new DomainOperations(model));
-        controls.add(new EmbedderControl(model));
+        //controls.add(ToolFactory.createEmbeddedTool(new AzulenoidInfo(model)));
+        //controls.add(ToolFactory.createEmbeddedTool(new FaceControl(view, model)));
+        //controls.add(ToolFactory.createEmbeddedTool(new ViewController(view)));
+        //controls.add(ToolFactory.createEmbeddedTool(new GraphOperations(model)));
+        //controls.add(ToolFactory.createEmbeddedTool(new DomainOperations(model)));
+        //controls.add(ToolFactory.createEmbeddedTool(new EmbedderControl(model)));
         //controls.add(ExportControl.getPanel(view, model));
         add(controls, BorderLayout.EAST);
     }
@@ -101,23 +104,38 @@ public class PGVisualizer extends JPanel{
         add(view, BorderLayout.CENTER);
         JPanel controls = new JPanel();
         controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
-        controls.add(new AzulenoidInfo(model));
-        controls.add(new FaceControl(view, model));
-        controls.add(new ViewController(view));
-        controls.add(new GraphOperations(model));
-        controls.add(new DomainOperations(model));
-        controls.add(new EmbedderControl(model));
+        //controls.add(new AzulenoidInfo(model));
+        //controls.add(new FaceControl(view, model));
+        //controls.add(ToolFactory.createEmbeddedTool(new ViewController(view)));
+        //controls.add(new GraphOperations(model));
+        //controls.add(new DomainOperations(model));
+        //controls.add(new EmbedderControl(model));
         //controls.add(ExportControl.getPanel(view, model));
         add(controls, BorderLayout.EAST);
     }
     
-    public JMenuBar getMenuBar(){
+    public JMenuBar getMenuBar(JFrame target){
         if(menuBar==null){
             menuBar = new JMenuBar();
             menuBar.add(ExportControl.getMenu(view, model));
+            JMenu editMenu = new JMenu("Edit");
+            editMenu.add(new JMenuItem(new ShowWindowAction("Operations", new ToolWindow(new GraphOperations(model), target))));
+            editMenu.add(new JMenuItem(new ShowWindowAction("Domain operations", new ToolWindow(new DomainOperations(model), target))));
+            menuBar.add(editMenu);
             JMenu viewMenu = new JMenu("View");
+            viewMenu.add(new FillFacesToggler(view).getJCheckBoxMenuItem());
+            viewMenu.add(new JMenuItem(new ShowWindowAction("Show face option", new ToolWindow(new FaceControl(view, model), target))));
+            viewMenu.addSeparator();
+            viewMenu.add(new ClipViewToggler(view).getJCheckBoxMenuItem());
+            viewMenu.add(new JMenuItem(new ShowWindowAction("Show view option", new ToolWindow(new ViewController(view), target))));
+            viewMenu.addSeparator();
             viewMenu.add(new JMenuItem(new Show3DAction(model)));
+            viewMenu.addSeparator();
+            viewMenu.add(new JMenuItem(new ShowWindowAction("Show info", new ToolWindow(new AzulenoidInfo(model), target))));
             menuBar.add(viewMenu);
+            JMenu embedderMenu = new JMenu("Embedder");
+            embedderMenu.add(new JMenuItem(new ShowWindowAction("Embedder runner", new ToolWindow(new EmbedderControl(model), target))));
+            menuBar.add(embedderMenu);
             JMenu filterMenu = new JMenu("Filter");
             filterMenu.add(new JMenuItem(new FilterAction(model)));
             menuBar.add(filterMenu);
@@ -144,7 +162,7 @@ public class PGVisualizer extends JPanel{
         JFrame frame = new JFrame("PGVisualizer");
         PGVisualizer visualizer = new PGVisualizer(f);
         frame.add(visualizer);
-        frame.setJMenuBar(visualizer.getMenuBar());
+        frame.setJMenuBar(visualizer.getMenuBar(frame));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

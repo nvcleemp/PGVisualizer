@@ -55,7 +55,7 @@ public class AzulenoidInfo extends JPanel implements ListSelectionListener{
         });
         add(symbol, gbc);
         model.addListSelectionListener(this);
-        setBorder(BorderFactory.createTitledBorder("Azulenoids info"));
+        setName("Azulenoids info");
     }
 
     public void valueChanged(ListSelectionEvent e) {

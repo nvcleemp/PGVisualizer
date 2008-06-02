@@ -44,7 +44,7 @@ public class DomainOperations extends JPanel implements GraphModelListener {
         add(new JButton(new SideAction(0.1)), gbc);
         gbc.gridx = 2;
         add(new JButton(new SideAction(-0.1)), gbc);
-        setBorder(BorderFactory.createTitledBorder("Domain operations"));
+        setName("Domain operations");
     }
     
     public DomainOperations(Graph graph) {
