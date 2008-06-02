@@ -16,10 +16,10 @@ import azul.toroidalembedder.graph.Face;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.FundamentalDomainListener;
 import azul.toroidalembedder.graph.GraphListener;
-
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
