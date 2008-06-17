@@ -124,6 +124,7 @@ public class PGVisualizer extends JPanel{
             editMenu.add(new JMenuItem(new ShowWindowAction("Domain operations", new ToolWindow(new DomainOperations(model), target))));
             editMenu.addSeparator();
             editMenu.add(new JMenuItem(new ClearFaceSelectionAction(view.getFaceSelectionModel())));
+            editMenu.add(new JMenuItem(new ShowWindowAction("Selected faces info", new ToolWindow(new SelectedFacesInfo(view.getFaceSelectionModel(), view), target))));
             menuBar.add(editMenu);
             JMenu viewMenu = new JMenu("View");
             viewMenu.add(new FillFacesToggler(view).getJCheckBoxMenuItem());
