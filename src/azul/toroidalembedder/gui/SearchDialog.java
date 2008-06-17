@@ -39,6 +39,39 @@ import javax.swing.event.ListDataListener;
  */
 public class SearchDialog extends JDialog{
     
+    private enum AcceptanceSpecifier {
+        EQUAL{
+            public boolean accept(int referenceSize, int size){
+                return referenceSize == size;
+            }
+            
+            public String getDescription(){
+                return "equal to";
+            }
+        },
+        GREATER{
+            public boolean accept(int referenceSize, int size){
+                return referenceSize < size;
+            }
+            
+            public String getDescription(){
+                return "greater than";
+            }
+        },
+        SMALLER{
+            public boolean accept(int referenceSize, int size){
+                return referenceSize > size;
+            }
+            
+            public String getDescription(){
+                return "smaller than";
+            }
+        };
+        
+        public abstract boolean accept(int referenceSize, int size);
+        public abstract String getDescription();
+    }
+    
     private enum SearchSpecifier {
 /*        NO {
             public boolean accept(FaceOverview overview, int size, int number){
@@ -50,8 +83,8 @@ public class SearchDialog extends JDialog{
             }
         },*/
         EXACT {
-            public boolean accept(FaceOverview overview, int size, int number){
-                return overview.getNumberOfFacesOfSize(size)==number;
+            public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
+                return overview.getNumberOfFaces(size, spec)==number;
             }
             
             public String getDescription(){
@@ -59,8 +92,8 @@ public class SearchDialog extends JDialog{
             }
         },
         AT_LEAST {
-            public boolean accept(FaceOverview overview, int size, int number){
-                return overview.getNumberOfFacesOfSize(size)>=number;
+            public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
+                return overview.getNumberOfFaces(size, spec)>=number;
             }
             
             public String getDescription(){
@@ -68,8 +101,8 @@ public class SearchDialog extends JDialog{
             }
         },
         AT_MOST {
-            public boolean accept(FaceOverview overview, int size, int number){
-                return overview.getNumberOfFacesOfSize(size)<=number;
+            public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
+                return overview.getNumberOfFaces(size, spec)<=number;
             }
             
             public String getDescription(){
@@ -77,7 +110,7 @@ public class SearchDialog extends JDialog{
             }
         };
         
-        public abstract boolean accept(FaceOverview overview, int size, int number);
+        public abstract boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec);
         public abstract String getDescription();
     }
     
@@ -96,33 +129,41 @@ public class SearchDialog extends JDialog{
         }
         
         public int getNumberOfFacesOfSize(int size){
-            Integer i = map.get(size);
-            if(i==null)
-                return 0;
-            else
-                return i;
+            return getNumberOfFaces(size, AcceptanceSpecifier.EQUAL);
+        }
+
+        public int getNumberOfFaces(int size, AcceptanceSpecifier spec){
+            int count = 0;
+            for (Integer integer : map.keySet()) {
+                if(spec.accept(size, integer))
+                    count += map.get(integer);
+            }
+
+            return count;
         }
     }
     
     private class SearchCriterium {
         private SearchSpecifier spec;
+        private AcceptanceSpecifier acceptanceSpec;
         private int size;
         private int number;
 
-        public SearchCriterium(SearchSpecifier spec, int size, int number) {
+        public SearchCriterium(SearchSpecifier spec, AcceptanceSpecifier acceptanceSpec, int size, int number) {
             this.spec = spec;
+            this.acceptanceSpec = acceptanceSpec;
             this.size = size;
             this.number = number;
         }
         
         public boolean accept(FaceOverview overview){
-            return spec.accept(overview, size, number);
+            return spec.accept(overview, size, number, acceptanceSpec);
         }
         
         @Override
         public String toString(){
-            return spec.getDescription() + " " + number + " faces of size " + size;
-        }
+            return spec.getDescription() + " " + number + " faces of size " + acceptanceSpec.getDescription() + " " + size;
+         }
     }
     
     private GraphModel graphListModel;
@@ -148,12 +189,21 @@ public class SearchDialog extends JDialog{
         });
         final JFormattedTextField numberField = new JFormattedTextField(Integer.valueOf(0));
         numberField.setColumns(3);
+        final JComboBox acceptanceComboBox = new JComboBox(AcceptanceSpecifier.values());
+        acceptanceComboBox.setRenderer(new DefaultListCellRenderer(){
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setText(((AcceptanceSpecifier)value).getDescription());
+                return this;
+            }
+        });
         final JFormattedTextField sizeField = new JFormattedTextField(Integer.valueOf(4));
         sizeField.setColumns(3);
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                criteria.addElement(new SearchCriterium((SearchSpecifier)comboBox.getSelectedItem(), (Integer)sizeField.getValue(), (Integer)numberField.getValue()));
+                criteria.addElement(new SearchCriterium((SearchSpecifier)comboBox.getSelectedItem(), (AcceptanceSpecifier)acceptanceComboBox.getSelectedItem(), (Integer)sizeField.getValue(), (Integer)numberField.getValue()));
             }
         });
         JPanel comboBoxPanel = new JPanel(new GridBagLayout());
@@ -161,6 +211,7 @@ public class SearchDialog extends JDialog{
         comboBoxPanel.add(comboBox, gbc);
         comboBoxPanel.add(numberField, gbc);
         comboBoxPanel.add(new JLabel("faces of size"), gbc);
+        comboBoxPanel.add(acceptanceComboBox, gbc);
         comboBoxPanel.add(sizeField, gbc);
         comboBoxPanel.add(addButton, gbc);
         setLayout(new GridBagLayout());
