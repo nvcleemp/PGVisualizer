@@ -5,6 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
+import azul.toroidalembedder.gui.action.ClearFaceSelectionAction;
 import azul.toroidalembedder.gui.toggler.FillFacesToggler;
 import azul.toroidalembedder.gui.action.Show3DAction;
 import azul.toroidalembedder.gui.action.FilterAction;
@@ -121,6 +122,8 @@ public class PGVisualizer extends JPanel{
             JMenu editMenu = new JMenu("Edit");
             editMenu.add(new JMenuItem(new ShowWindowAction("Operations", new ToolWindow(new GraphOperations(model), target))));
             editMenu.add(new JMenuItem(new ShowWindowAction("Domain operations", new ToolWindow(new DomainOperations(model), target))));
+            editMenu.addSeparator();
+            editMenu.add(new JMenuItem(new ClearFaceSelectionAction(view.getFaceSelectionModel())));
             menuBar.add(editMenu);
             JMenu viewMenu = new JMenu("View");
             viewMenu.add(new FillFacesToggler(view).getJCheckBoxMenuItem());
