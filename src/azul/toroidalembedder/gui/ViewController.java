@@ -9,13 +9,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
+import javax.swing.AbstractSpinnerModel;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -42,14 +42,66 @@ public class ViewController extends JPanel {
         gbc.gridy = 0;
         gbc.gridx = 1;
         gbc.weightx = 1;
-        add(new JButton(new XAction(1)), gbc);
-        gbc.gridx = 2;
-        add(new JButton(new XAction(-1)), gbc);
+        JSpinner spinner = new JSpinner(new AbstractSpinnerModel() {
+            public Object getValue() {
+                return Integer.valueOf(xView*2+1);
+            }
+
+            public void setValue(Object value) {
+                if(value instanceof Integer){
+                    int x = ((Integer)value).intValue();
+                    if(x < 1)
+                        xView = 0;
+                    else
+                        xView = (x-1)/2;
+                    fireStateChanged();
+                }
+            }
+
+            public Object getNextValue() {
+                return Integer.valueOf(xView*2+3);
+            }
+
+            public Object getPreviousValue() {
+                if(xView==0)
+                    return null;
+                else
+                    return Integer.valueOf(xView*2-1);
+            }
+        });
+        spinner.addChangeListener(new ViewChanged());
+        add(spinner, gbc);
         gbc.gridy = 1;
         gbc.gridx = 1;
-        add(new JButton(new YAction(1)), gbc);
-        gbc.gridx = 2;
-        add(new JButton(new YAction(-1)), gbc);
+        JSpinner spinner2 = new JSpinner(new AbstractSpinnerModel() {
+            public Object getValue() {
+                return Integer.valueOf(yView*2+1);
+            }
+
+            public void setValue(Object value) {
+                if(value instanceof Integer){
+                    int y = ((Integer)value).intValue();
+                    if(y < 1)
+                        yView = 0;
+                    else
+                        yView = (y-1)/2;
+                    fireStateChanged();
+                }
+            }
+
+            public Object getNextValue() {
+                return Integer.valueOf(yView*2+3);
+            }
+
+            public Object getPreviousValue() {
+                if(yView==0)
+                    return null;
+                else
+                    return Integer.valueOf(yView*2-1);
+            }
+        });
+        spinner2.addChangeListener(new ViewChanged());
+        add(spinner2, gbc);
         final JSlider slider = new JSlider(0, 100, torusView.getVertexSize());
         slider.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
@@ -58,11 +110,10 @@ public class ViewController extends JPanel {
         });
         gbc.gridy++;
         gbc.gridx = 1;
-        gbc.gridwidth = 2;
         add(slider, gbc);
         gbc.gridx = 0;
         gbc.gridy++;
-        gbc.gridwidth = 3;
+        gbc.gridwidth = 2;
         //add(new JButton(new ColorAction()), gbc);
         final JCheckBox clipView = new ClipViewToggler(torusView).getJCheckBox(); //new JCheckBox("Clip view (may slow performance down)", torusView.isViewClipped());
         clipView.addItemListener(new ItemListener() {
@@ -75,58 +126,10 @@ public class ViewController extends JPanel {
         //setBorder(BorderFactory.createTitledBorder("View"));
     }
 
-    private class XAction extends AbstractAction {
+    private class ViewChanged implements ChangeListener {
 
-        private int increment;
-
-        public XAction(int increment) {
-            super(increment > 0 ? "+" : "-");
-            this.increment = increment;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            if (xView + increment >= 0) {
-                xView += increment;
-                torusView.setView(-xView, -yView, xView, yView);
-            }
-        }
-    }
-
-    private class YAction extends AbstractAction {
-
-        private int increment;
-
-        public YAction(int increment) {
-            super(increment > 0 ? "+" : "-");
-            this.increment = increment;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            if (yView + increment >= 0) {
-                yView += increment;
-                torusView.setView(-xView, -yView, xView, yView);
-            }
-        }
-    }
-    
-    private class ColorAction extends AbstractAction {
-        
-        public ColorAction() {
-            super("Color selected");
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            if(torusView.getHighlight()==null)
-                torusView.setHighlight(new DefaultVertexHightlighter());
-
-            Color selected = JColorChooser.showDialog(torusView, "Select color", Color.WHITE);
-            if(selected != null){
-                VertexHighlighter theHighlighter = torusView.getHighlight();
-                for (Vertex v : torusView.getGraphSelectionModel().getSelectedVertices()) {
-                    theHighlighter.setColor(v, selected);
-                }
-                torusView.repaint();
-            }
+        public void stateChanged(ChangeEvent e) {
+            torusView.setView(-xView, -yView, xView, yView);
         }
     }
 }
