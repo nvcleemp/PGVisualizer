@@ -19,9 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import javax.swing.AbstractAction;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
@@ -29,6 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -38,13 +41,13 @@ import javax.swing.event.ListDataListener;
  * @author nvcleemp
  */
 public class SearchDialog extends JDialog{
-    
+
     private enum AcceptanceSpecifier {
         EQUAL{
             public boolean accept(int referenceSize, int size){
                 return referenceSize == size;
             }
-            
+
             public String getDescription(){
                 return "equal to";
             }
@@ -53,7 +56,7 @@ public class SearchDialog extends JDialog{
             public boolean accept(int referenceSize, int size){
                 return referenceSize < size;
             }
-            
+
             public String getDescription(){
                 return "greater than";
             }
@@ -62,31 +65,31 @@ public class SearchDialog extends JDialog{
             public boolean accept(int referenceSize, int size){
                 return referenceSize > size;
             }
-            
+
             public String getDescription(){
                 return "smaller than";
             }
         };
-        
+
         public abstract boolean accept(int referenceSize, int size);
         public abstract String getDescription();
     }
-    
+
     private enum SearchSpecifier {
-/*        NO {
-            public boolean accept(FaceOverview overview, int size, int number){
-                return overview.getNumberOfFacesOfSize(size)==0;
-            }
-            
-            public String getDescription(){
-                return "no";
-            }
+        /*        NO {
+        public boolean accept(FaceOverview overview, int size, int number){
+        return overview.getNumberOfFacesOfSize(size)==0;
+        }
+        
+        public String getDescription(){
+        return "no";
+        }
         },*/
         EXACT {
             public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
                 return overview.getNumberOfFaces(size, spec)==number;
             }
-            
+
             public String getDescription(){
                 return "exact";
             }
@@ -95,7 +98,7 @@ public class SearchDialog extends JDialog{
             public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
                 return overview.getNumberOfFaces(size, spec)>=number;
             }
-            
+
             public String getDescription(){
                 return "at least";
             }
@@ -104,20 +107,20 @@ public class SearchDialog extends JDialog{
             public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
                 return overview.getNumberOfFaces(size, spec)<=number;
             }
-            
+
             public String getDescription(){
                 return "at most";
             }
         };
-        
+
         public abstract boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec);
         public abstract String getDescription();
     }
-    
+
     private class FaceOverview {
-        
+
         private Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-        
+
         public void addFace(int size){
             Integer i = map.get(size);
             if(i==null){
@@ -127,7 +130,7 @@ public class SearchDialog extends JDialog{
                 map.put(size, i);
             }
         }
-        
+
         public int getNumberOfFacesOfSize(int size){
             return getNumberOfFaces(size, AcceptanceSpecifier.EQUAL);
         }
@@ -142,7 +145,7 @@ public class SearchDialog extends JDialog{
             return count;
         }
     }
-    
+
     private class SearchCriterium {
         private SearchSpecifier spec;
         private AcceptanceSpecifier acceptanceSpec;
@@ -155,15 +158,15 @@ public class SearchDialog extends JDialog{
             this.size = size;
             this.number = number;
         }
-        
+
         public boolean accept(FaceOverview overview){
             return spec.accept(overview, size, number, acceptanceSpec);
         }
-        
+
         @Override
         public String toString(){
             return spec.getDescription() + " " + number + " faces of size " + acceptanceSpec.getDescription() + " " + size;
-         }
+        }
     }
     
     private GraphModel graphListModel;
@@ -171,7 +174,7 @@ public class SearchDialog extends JDialog{
     private ArrayModel<SearchCriterium> criteria = new ArrayModel<SearchCriterium>();
     private JFrame frame;
     private PGVisualizer visualizer;
-    
+
     public SearchDialog(GraphModel graphListModel){
         setTitle("Search");
         this.graphListModel = graphListModel;
@@ -227,6 +230,8 @@ public class SearchDialog extends JDialog{
         JList criteriaList = new JList(criteria);
         criteriaList.setPreferredSize(new Dimension(400, 200));
         add(criteriaList, gbc);
+        criteriaList.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DELETE"), "delete_item");
+        criteriaList.getActionMap().put("delete_item", new DeleteAction(criteriaList));
         gbc.weighty = 1;
         gbc.gridwidth = 1;
         gbc.gridy++;
@@ -267,7 +272,7 @@ public class SearchDialog extends JDialog{
         add(progress, gbc);
         pack();
     }
-    
+
     private GraphModel searchList(){
         progress.setString("Filtering graphs");
         List<Integer> list = new ArrayList<Integer>();
@@ -284,16 +289,16 @@ public class SearchDialog extends JDialog{
         progress.setString("Done");
         return new GraphModel(graphListModel, list);
     }
-    
+
     private FaceOverview getFaceOverview(GraphGUIData data){
         String ds = data.getComment().trim();
         if(!ds.startsWith("<") || !ds.endsWith(ds))
             throw new RuntimeException("A .ds file should start with '<' and end with '>'");
-        
+
         String[] parts = ds.substring(1, ds.length()-1).split(":");
         if(parts.length!=4)
             throw new RuntimeException("Illegal number of sections in file: expected 4, found " + parts.length);
-
+            
         Scanner faceOrbits = new Scanner(parts[3].split(",")[0]);
         FaceOverview faces = new FaceOverview();
         while(faceOrbits.hasNextInt())
@@ -302,8 +307,8 @@ public class SearchDialog extends JDialog{
         return faces;
     }
 
-   private static class ArrayModel<E> implements ListModel {
-       
+    private static class ArrayModel<E> implements ListModel {
+
         private List<E> list = new ArrayList<E>();
         private List<ListDataListener> listeners = new ArrayList<ListDataListener>();
 
@@ -314,7 +319,7 @@ public class SearchDialog extends JDialog{
         public Object getElementAt(int index) {
             return list.get(index);
         }
-        
+
         public void addElement(E element){
             list.add(element);
             fire();
@@ -328,7 +333,7 @@ public class SearchDialog extends JDialog{
         public E getElement(int index){
             return list.get(index);
         }
-        
+
         public List<E> getList(){
             return list;
         }
@@ -340,16 +345,30 @@ public class SearchDialog extends JDialog{
         public void removeListDataListener(ListDataListener l) {
             listeners.remove(l);
         }
-       
+
         private void fire(){
             ListDataEvent e = new ListDataEvent(this, ListDataEvent.CONTENTS_CHANGED, 0, list.size()-1);
             for (ListDataListener l : listeners) {
                 l.contentsChanged(e);
             }
         }
-        
-   }
-   
+    }
+
+    private class DeleteAction extends AbstractAction {
+
+        private JList list;
+
+        public DeleteAction(JList list) {
+            this.list = list;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            for (Object object : list.getSelectedValues()) {
+                criteria.removeElement((SearchCriterium) object);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         GraphModel model = new GraphModel(new File("/Users/nvcleemp/edward/azulenoids-all.pg"));
         SearchDialog d = new SearchDialog(model);
@@ -365,5 +384,4 @@ public class SearchDialog extends JDialog{
             }
         });
     }
-
 }
