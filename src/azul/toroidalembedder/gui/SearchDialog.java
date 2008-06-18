@@ -263,7 +263,11 @@ public class SearchDialog extends JDialog{
         });
         add(filter, gbc);
         gbc.gridx++;
-        add(new JButton("Close"), gbc);
+        add(new JButton(new AbstractAction("Close") {
+            public void actionPerformed(ActionEvent e) {
+                SearchDialog.this.setVisible(false);
+            }
+        }), gbc);
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.gridwidth = 2;
