@@ -25,9 +25,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.TexturePaint;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.GeneralPath;
@@ -146,10 +144,14 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     }
     
     private void paintGrid(Graphics g){
+        paintGrid(g, minX, maxX, minY, maxY);
+    }
+    
+    private void paintGrid(Graphics g, int fromX, int toX, int fromY, int toY){
         Polygon2D domain = getFundamentalDomain().getBorder();
 
-        for(int i = minX; i <= maxX; i++){
-            for (int j = minY; j <= maxY; j++) {
+        for(int i = fromX; i <= toX; i++){
+            for (int j = fromY; j <= toY; j++) {
                 Graphics2D gr = (Graphics2D)(g.create());
                 Point2D origin = getFundamentalDomain().getOrigin(i, j);
                 gr.translate(origin.getX(), origin.getY());
@@ -188,11 +190,6 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         g2.transform(AffineTransform.getScaleInstance(scale, scale));
         if(clip!=null && viewClipped)
             g2.setClip(clip);
-        g2.setStroke(new BasicStroke(0.01f));
-        if(paintGrid)
-            paintGrid(g2);
-        g2.setStroke(new BasicStroke(0.02f));
-        g2.setColor(Color.BLACK);
         int minTargetX = 0;
         int maxTargetX = 0;
         int minTargetY = 0;
@@ -209,7 +206,27 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
                     maxTargetY = e.getTargetY();
             }
         }
+        g2.setStroke(new BasicStroke(0.01f));
+        if(paintGrid)
+            paintGrid(g2, minX + minTargetX, maxX + maxTargetX, minY + minTargetY, maxY + maxTargetY);
+        g2.setStroke(new BasicStroke(0.02f));
+        g2.setColor(Color.BLACK);
         
+        //make sure that the graph tiles the complete view when the view isn't clipped
+        if(!viewClipped){
+            int extraY = (int)(height/(getFundamentalDomain().getDomainHeight()*(scale + 1)))-(maxY + maxTargetY - (minY + minTargetY));
+            minTargetY -= extraY/2 + 1;
+            maxTargetY += extraY/2 + 1;
+            double hs = getFundamentalDomain().getHorizontalShift();
+            if(hs<0)
+                hs*=-1;
+            int extraX = (int)((width/(scale + 1.0) + (maxY + maxTargetY - (minY + minTargetY) + 1)*hs)/getFundamentalDomain().getHorizontalSide())-(maxX + maxTargetX - (minX + minTargetX));
+            //double extraXSpace = width - (scale + 1)*widthView;
+            //int extraX = (int)(extraXSpace/(widthView*scale))/2+2;
+            minTargetX -= extraX/2+1;
+            maxTargetX += extraX/2+1;
+        }
+      
         //paint faces
         if(paintFaces && graph instanceof DefaultGraph){
             for(Face f : ((DefaultGraph)graph).getFaces()){
@@ -237,18 +254,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         Face[] selectedFaces = faceSelectionModel.getSelectedFaces();
         if(paintSelectedFace && selectedFaces.length>0){
             Graphics2D gr = (Graphics2D)(g2.create());
-    BufferedImage bi = new BufferedImage(2, 2,
-        BufferedImage.TYPE_INT_ARGB);
-    Graphics2D big = bi.createGraphics();
-    big.scale(scale, scale);
-    big.setColor(Color.RED);
-    big.fillRect(0, 0, 1, 2);
-    //big.setColor(Color.lightGray);
-    //big.fillOval(0, 0, 10, 10);
-    Rectangle r = new Rectangle(0, 0, 2, 2);
-    gr.setPaint(new TexturePaint(bi, r));
-            //gr.setPaint(new LinesPaint(width, height, LinesPaint.PaintTexture.VERTICAL));
-            //gr.setColor(new Color(0.3f, 0.3f, 0.3f, 0.9f));
+            gr.setColor(new Color(0.9f, 0.9f, 0.9f, 0.9f));
             for(Face f : selectedFaces){
                 Shape s = f.getShape(getFundamentalDomain());
                 for (int i = minX + minTargetX; i <= maxX + maxTargetX; i++)
