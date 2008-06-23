@@ -29,6 +29,8 @@ public class Face {
         return vertices.get(i);
     }
     
+    
+    //TODO: use getEdges for getShape and cache the list of edges
     public Shape getShape(FundamentalDomain d){
         GeneralPath edge = new GeneralPath();
         int x = 0;
@@ -48,7 +50,42 @@ public class Face {
             }
         }
         edge.closePath();
-        return edge;
+        List<? extends Edge> edges = vertices.get(vertices.size()-1).getEdges();
+        int j = 0;
+        while(j<edges.size() && !edges.get(j).getEnd().equals(vertices.get(0)) && edges.get(j).getTargetX()!=x && edges.get(j).getTargetY()!=y)
+            j++;
+        if(j<edges.size())
+            return edge;
+        else
+            throw new RuntimeException("incorrect face");
+    }
+    
+    public List<Edge> getEdges(){
+        List<Edge> faceEdges = new ArrayList<Edge>();
+        int x = 0;
+        int y = 0;
+        for (int i = 1; i < vertices.size(); i++) {
+            List<? extends Edge> edges = vertices.get(i-1).getEdges();
+            int j = 0;
+            while(j<edges.size() && !edges.get(j).getEnd().equals(vertices.get(i)))
+                j++;
+            if(j<edges.size()){
+                x += edges.get(j).getTargetX();
+                y += edges.get(j).getTargetY();
+                faceEdges.add(edges.get(j));
+            } else {
+                throw new RuntimeException("incorrect face");
+            }
+        }
+        List<? extends Edge> edges = vertices.get(vertices.size()-1).getEdges();
+        int j = 0;
+        while(j<edges.size() && !edges.get(j).getEnd().equals(vertices.get(0)) && edges.get(j).getTargetX()!=x && edges.get(j).getTargetY()!=y)
+            j++;
+        if(j<edges.size()){
+            faceEdges.add(edges.get(j));
+            return faceEdges;
+        } else
+            throw new RuntimeException("incorrect face");
     }
     
     public int getSize(){
