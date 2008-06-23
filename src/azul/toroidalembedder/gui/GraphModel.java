@@ -261,4 +261,11 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
     public String getString(int index){
         return (String)list.get(index);
     }
+    
+    public void putGraph(Graph g, int index){
+        map.put((String)list.get(index), g);
+        fireContentsChanged(this, index, index);
+        if(selectionModel.getLeadSelectionIndex()==index)
+            fireSelectedGraphChanged();
+    }
 }
