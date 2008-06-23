@@ -9,6 +9,7 @@ import azul.toroidalembedder.gui.action.ClearFaceSelectionAction;
 import azul.toroidalembedder.gui.toggler.FillFacesToggler;
 import azul.toroidalembedder.gui.action.Show3DAction;
 import azul.toroidalembedder.gui.action.FilterAction;
+import azul.toroidalembedder.gui.action.GrowGraphAction;
 import azul.toroidalembedder.gui.action.ShowWindowAction;
 import azul.toroidalembedder.gui.toggler.ClipViewToggler;
 import java.awt.BorderLayout;
@@ -125,6 +126,8 @@ public class PGVisualizer extends JPanel{
             editMenu.addSeparator();
             editMenu.add(new JMenuItem(new ClearFaceSelectionAction(view.getFaceSelectionModel())));
             editMenu.add(new JMenuItem(new ShowWindowAction("Selected faces info", new ToolWindow(new SelectedFacesInfo(view.getFaceSelectionModel(), view), target))));
+            editMenu.addSeparator();
+            editMenu.add(new JMenuItem(new GrowGraphAction(model)));
             menuBar.add(editMenu);
             JMenu viewMenu = new JMenu("View");
             viewMenu.add(new FillFacesToggler(view).getJCheckBoxMenuItem());
