@@ -5,6 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
+import azul.toroidalembedder.graph.general.Graph;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -31,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
@@ -86,8 +88,8 @@ public class SearchDialog extends JDialog{
         }
         },*/
         EXACT {
-            public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
-                return overview.getNumberOfFaces(size, spec)==number;
+            public boolean accept(int input, int number){
+                return input==number;
             }
 
             public String getDescription(){
@@ -95,8 +97,8 @@ public class SearchDialog extends JDialog{
             }
         },
         AT_LEAST {
-            public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
-                return overview.getNumberOfFaces(size, spec)>=number;
+            public boolean accept(int input, int number){
+                return input>=number;
             }
 
             public String getDescription(){
@@ -104,8 +106,8 @@ public class SearchDialog extends JDialog{
             }
         },
         AT_MOST {
-            public boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec){
-                return overview.getNumberOfFaces(size, spec)<=number;
+            public boolean accept(int input, int number){
+                return input<=number;
             }
 
             public String getDescription(){
@@ -113,7 +115,7 @@ public class SearchDialog extends JDialog{
             }
         };
 
-        public abstract boolean accept(FaceOverview overview, int size, int number, AcceptanceSpecifier spec);
+        public abstract boolean accept(int input, int number);
         public abstract String getDescription();
     }
 
@@ -145,27 +147,50 @@ public class SearchDialog extends JDialog{
             return count;
         }
     }
+    
+    private interface SearchCriterium {
+        public boolean accept(Graph graph,FaceOverview overview);
+    }
 
-    private class SearchCriterium {
+    private class FaceSearchCriterium implements SearchCriterium {
         private SearchSpecifier spec;
         private AcceptanceSpecifier acceptanceSpec;
         private int size;
         private int number;
 
-        public SearchCriterium(SearchSpecifier spec, AcceptanceSpecifier acceptanceSpec, int size, int number) {
+        public FaceSearchCriterium(SearchSpecifier spec, AcceptanceSpecifier acceptanceSpec, int size, int number) {
             this.spec = spec;
             this.acceptanceSpec = acceptanceSpec;
             this.size = size;
             this.number = number;
         }
 
-        public boolean accept(FaceOverview overview){
-            return spec.accept(overview, size, number, acceptanceSpec);
+        public boolean accept(Graph graph,FaceOverview overview){
+            return spec.accept(overview.getNumberOfFaces(size, acceptanceSpec), number);
         }
 
         @Override
         public String toString(){
             return spec.getDescription() + " " + number + " faces of size " + acceptanceSpec.getDescription() + " " + size;
+        }
+    }
+    
+    private class VertexSearchCriterium implements SearchCriterium {
+        private SearchSpecifier spec;
+        private int number;
+
+        public VertexSearchCriterium(SearchSpecifier spec, int number) {
+            this.spec = spec;
+            this.number = number;
+        }
+
+        public boolean accept(Graph graph,FaceOverview overview){
+            return spec.accept(graph.getVertices().size(), number);
+        }
+
+        @Override
+        public String toString(){
+            return  spec.getDescription() + " " + number + " vertices";
         }
     }
     
@@ -181,53 +206,22 @@ public class SearchDialog extends JDialog{
         progress = new JProgressBar(0, graphListModel.getSize());
         progress.setStringPainted(true);
         progress.setString("");
-        final JComboBox comboBox = new JComboBox(SearchSpecifier.values());
-        comboBox.setRenderer(new DefaultListCellRenderer(){
-            @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setText(((SearchSpecifier)value).getDescription());
-                return this;
-            }
-        });
-        final JFormattedTextField numberField = new JFormattedTextField(Integer.valueOf(0));
-        numberField.setColumns(3);
-        final JComboBox acceptanceComboBox = new JComboBox(AcceptanceSpecifier.values());
-        acceptanceComboBox.setRenderer(new DefaultListCellRenderer(){
-            @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                setText(((AcceptanceSpecifier)value).getDescription());
-                return this;
-            }
-        });
-        final JFormattedTextField sizeField = new JFormattedTextField(Integer.valueOf(4));
-        sizeField.setColumns(3);
-        JButton addButton = new JButton("Add");
-        addButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                criteria.addElement(new SearchCriterium((SearchSpecifier)comboBox.getSelectedItem(), (AcceptanceSpecifier)acceptanceComboBox.getSelectedItem(), (Integer)sizeField.getValue(), (Integer)numberField.getValue()));
-            }
-        });
-        JPanel comboBoxPanel = new JPanel(new GridBagLayout());
+        JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
+        tabs.addTab("Face filters", constructFaceFilterPanel());
+        tabs.addTab("Vertex filters", constructVertexFilterPanel());
         GridBagConstraints gbc = new GridBagConstraints();
-        comboBoxPanel.add(comboBox, gbc);
-        comboBoxPanel.add(numberField, gbc);
-        comboBoxPanel.add(new JLabel("faces of size"), gbc);
-        comboBoxPanel.add(acceptanceComboBox, gbc);
-        comboBoxPanel.add(sizeField, gbc);
-        comboBoxPanel.add(addButton, gbc);
         setLayout(new GridBagLayout());
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
         gbc.weighty = 1;
         gbc.anchor = GridBagConstraints.CENTER;
-        add(comboBoxPanel, gbc);
+        add(tabs, gbc);
         gbc.gridy++;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weighty = 4;
         JList criteriaList = new JList(criteria);
+        //criteria.addElement(new VertexSearchCriterium(SearchSpecifier.EXACT, 20));
         criteriaList.setPreferredSize(new Dimension(400, 200));
         add(criteriaList, gbc);
         criteriaList.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("DELETE"), "delete_item");
@@ -284,7 +278,7 @@ public class SearchDialog extends JDialog{
             FaceOverview overview = getFaceOverview(graphListModel.getGraphGUIData(i));
             boolean allowed = true;
             for (SearchCriterium searchCriterium : criteria.getList()) {
-                allowed = allowed && searchCriterium.accept(overview);
+                allowed = allowed && searchCriterium.accept(graphListModel.getGraph(i),overview);
             }
             if(allowed)
                 list.add(i);
@@ -371,6 +365,73 @@ public class SearchDialog extends JDialog{
                 criteria.removeElement((SearchCriterium) object);
             }
         }
+    }
+    
+    private JComponent constructFaceFilterPanel(){
+        final JComboBox comboBox = new JComboBox(SearchSpecifier.values());
+        comboBox.setRenderer(new DefaultListCellRenderer(){
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setText(((SearchSpecifier)value).getDescription());
+                return this;
+            }
+        });
+        final JFormattedTextField numberField = new JFormattedTextField(Integer.valueOf(0));
+        numberField.setColumns(3);
+        final JComboBox acceptanceComboBox = new JComboBox(AcceptanceSpecifier.values());
+        acceptanceComboBox.setRenderer(new DefaultListCellRenderer(){
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setText(((AcceptanceSpecifier)value).getDescription());
+                return this;
+            }
+        });
+        final JFormattedTextField sizeField = new JFormattedTextField(Integer.valueOf(4));
+        sizeField.setColumns(3);
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                criteria.addElement(new FaceSearchCriterium((SearchSpecifier)comboBox.getSelectedItem(), (AcceptanceSpecifier)acceptanceComboBox.getSelectedItem(), (Integer)sizeField.getValue(), (Integer)numberField.getValue()));
+            }
+        });
+        JPanel comboBoxPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        comboBoxPanel.add(comboBox, gbc);
+        comboBoxPanel.add(numberField, gbc);
+        comboBoxPanel.add(new JLabel("faces of size"), gbc);
+        comboBoxPanel.add(acceptanceComboBox, gbc);
+        comboBoxPanel.add(sizeField, gbc);
+        comboBoxPanel.add(addButton, gbc);
+        return comboBoxPanel;
+    }
+
+    private JComponent constructVertexFilterPanel(){
+        final JComboBox comboBox = new JComboBox(SearchSpecifier.values());
+        comboBox.setRenderer(new DefaultListCellRenderer(){
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setText(((SearchSpecifier)value).getDescription());
+                return this;
+            }
+        });
+        final JFormattedTextField numberField = new JFormattedTextField(Integer.valueOf(0));
+        numberField.setColumns(3);
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                criteria.addElement(new VertexSearchCriterium((SearchSpecifier)comboBox.getSelectedItem(), (Integer)numberField.getValue()));
+            }
+        });
+        JPanel comboBoxPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        comboBoxPanel.add(comboBox, gbc);
+        comboBoxPanel.add(numberField, gbc);
+        comboBoxPanel.add(new JLabel("vertices"), gbc);
+        comboBoxPanel.add(addButton, gbc);
+        return comboBoxPanel;
     }
 
     public static void main(String[] args) {
