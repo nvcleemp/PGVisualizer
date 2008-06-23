@@ -11,7 +11,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -69,7 +68,7 @@ public class SaveDialog extends JDialog{
                         bar.setValue(i);
                     }
                 } catch (IOException ex){
-                    
+
                 } finally {
                     setVisible(false);
                     try {
