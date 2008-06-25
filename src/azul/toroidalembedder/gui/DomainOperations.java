@@ -5,6 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
+import azul.toroidalembedder.graph.FundamentalDomainListener;
 import azul.toroidalembedder.graph.general.Graph;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,9 +21,12 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class DomainOperations extends JPanel implements GraphModelListener {
+public class DomainOperations extends JPanel implements GraphModelListener, FundamentalDomainListener {
     private Graph graph;
     private GraphModel model = null;
+    private JLabel hsLabel = new JLabel();
+    private JLabel vsLabel = new JLabel();
+    private JLabel angleLabel = new JLabel();
 
     private DomainOperations() {
         GridBagConstraints gbc = new GridBagConstraints();
@@ -30,12 +34,12 @@ public class DomainOperations extends JPanel implements GraphModelListener {
         setLayout(new GridBagLayout());
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.weighty = 1;
         add(new JLabel("Angle", JLabel.LEFT), gbc);
         gbc.gridy = 1;
         add(new JLabel("Horizontal side", JLabel.LEFT), gbc);
         gbc.gridy = 0;
         gbc.gridx = 1;
-        gbc.weightx = 1;
         add(new JButton(new AngleAction(0.1)), gbc);
         gbc.gridx = 2;
         add(new JButton(new AngleAction(-0.1)), gbc);
@@ -44,12 +48,32 @@ public class DomainOperations extends JPanel implements GraphModelListener {
         add(new JButton(new SideAction(0.1)), gbc);
         gbc.gridx = 2;
         add(new JButton(new SideAction(-0.1)), gbc);
+        gbc.gridy = 2;
+        gbc.gridx = 0;
+        add(new JLabel("Horizontal side:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        add(hsLabel, gbc);
+        gbc.gridwidth = 1;
+        gbc.gridy = 3;
+        gbc.gridx = 0;
+        add(new JLabel("Vertical side:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        add(vsLabel, gbc);
+        gbc.gridwidth = 1;
+        gbc.gridy = 4;
+        gbc.gridx = 0;
+        add(new JLabel("angle:"), gbc);
+        gbc.gridx = 1;
+        gbc.gridwidth = 2;
+        add(angleLabel, gbc);
         setName("Domain operations");
     }
     
     public DomainOperations(Graph graph) {
         this();
-        this.graph = graph;
+        setGraph(graph);
     }
     
     public DomainOperations(GraphModel model) {
@@ -59,7 +83,17 @@ public class DomainOperations extends JPanel implements GraphModelListener {
     }
     
     public void setGraph(Graph graph){
+        if(this.graph!=null)
+            this.graph.getFundamentalDomain().removeFundamentalDomainListener(this);
         this.graph = graph;
+        setLabels();
+        graph.getFundamentalDomain().addFundamentalDomainListener(this);
+    }
+    
+    private void setLabels(){
+        hsLabel.setText(Double.toString(graph.getFundamentalDomain().getHorizontalSide()));
+        vsLabel.setText(Double.toString(graph.getFundamentalDomain().getVerticalSide()));
+        angleLabel.setText(Double.toString(graph.getFundamentalDomain().getAngle()));
     }
     
     private class AngleAction extends AbstractAction{
@@ -106,5 +140,8 @@ public class DomainOperations extends JPanel implements GraphModelListener {
     public void contentsChanged(ListDataEvent e) {
         //
     }
-    
+
+    public void fundamentalDomainShapeChanged() {
+        setLabels();
+    }
 }
