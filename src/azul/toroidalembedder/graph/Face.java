@@ -36,15 +36,17 @@ public class Face {
         int x = 0;
         int y = 0;
         edge.moveTo((float)vertices.get(0).getX(x, y, d), (float)vertices.get(0).getY(x, y, d));
+        Edge lastEdge = null;
         for (int i = 1; i < vertices.size(); i++) {
             List<? extends Edge> edges = vertices.get(i-1).getEdges();
             int j = 0;
-            while(j<edges.size() && !edges.get(j).getEnd().equals(vertices.get(i)))
+            while(j<edges.size() && !(edges.get(j).getEnd().equals(vertices.get(i)) && !edges.get(j).getInverse().equals(lastEdge)))
                 j++;
             if(j<edges.size()){
                 x += edges.get(j).getTargetX();
                 y += edges.get(j).getTargetY();
                 edge.lineTo((float)vertices.get(i).getX(x, y, d), (float)vertices.get(i).getY(x, y, d));
+                lastEdge = edges.get(j);
             } else {
                 throw new RuntimeException("incorrect face");
             }
@@ -64,15 +66,17 @@ public class Face {
         List<Edge> faceEdges = new ArrayList<Edge>();
         int x = 0;
         int y = 0;
+        Edge lastEdge = null;
         for (int i = 1; i < vertices.size(); i++) {
             List<? extends Edge> edges = vertices.get(i-1).getEdges();
             int j = 0;
-            while(j<edges.size() && !edges.get(j).getEnd().equals(vertices.get(i)))
+            while(j<edges.size() && !(edges.get(j).getEnd().equals(vertices.get(i)) && !edges.get(j).getInverse().equals(lastEdge)))
                 j++;
             if(j<edges.size()){
                 x += edges.get(j).getTargetX();
                 y += edges.get(j).getTargetY();
                 faceEdges.add(edges.get(j));
+                lastEdge = edges.get(j);
             } else {
                 throw new RuntimeException("incorrect face");
             }
