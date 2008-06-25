@@ -51,7 +51,7 @@ public class FastDomainEdgeEmbedder extends AbstractEmbedder {
         int factor = 1;
         while(HS*factor<0.2)
             factor+=10;
-        ((DefaultGraph)graph).setFundamentalDomain(new FundamentalDomain(graph.getFundamentalDomain().getAngle(), HS*factor, graph.getFundamentalDomain().getVerticalSide()*factor));
+        ((DefaultGraph)graph).getFundamentalDomain().setSides(HS*factor, graph.getFundamentalDomain().getVerticalSide()*factor);
     }
 
     @Override

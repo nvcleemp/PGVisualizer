@@ -69,7 +69,7 @@ public class DomainAngleEmbedder extends AbstractEmbedder{
             domain.addToAngle(increment);
         }
         if(graph.getFundamentalDomain().getAngle()!=minAngle)
-            ((DefaultGraph)graph).setFundamentalDomain(new FundamentalDomain(minAngle, graph.getFundamentalDomain().getHorizontalSide(), graph.getFundamentalDomain().getVerticalSide()));
+            ((DefaultGraph)graph).getFundamentalDomain().setAngle(minAngle);
         currentSearchAngle /= zoom;
         lock = false;
     }

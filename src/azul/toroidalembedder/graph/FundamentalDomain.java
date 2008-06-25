@@ -66,6 +66,14 @@ public class FundamentalDomain {
         return angle;
     }
 
+    public void setAngle(double angle){
+        if(!(angle <= 0 || angle >= Math.PI)){
+            this.angle = angle;
+            edge = null;
+            domainHeight = verticalSide * Math.sin(angle);
+            fireFundamentalDomainChanged();
+        }
+    }
     public double getDomainHeight() {
         return domainHeight;
     }
@@ -74,8 +82,46 @@ public class FundamentalDomain {
         return horizontalSide;
     }
 
+    public void setHorizontalSide(double horizontalSide) {
+        if(horizontalSide>0){
+            this.horizontalSide = horizontalSide;
+            edge = null;
+            fireFundamentalDomainChanged();
+        }
+    }
+
     public double getVerticalSide() {
         return verticalSide;
+    }
+
+    public void setVerticalSide(double verticalSide) {
+        if(verticalSide>0){
+            this.verticalSide = verticalSide;
+            edge = null;
+            domainHeight = verticalSide * Math.sin(angle);
+            fireFundamentalDomainChanged();
+        }
+    }
+
+    public void setSides(double horizontalSide, double verticalSide) {
+        if(horizontalSide>0 && verticalSide>0){
+            this.horizontalSide = horizontalSide;
+            this.verticalSide = verticalSide;
+            edge = null;
+            domainHeight = verticalSide * Math.sin(angle);
+            fireFundamentalDomainChanged();
+        }
+    }
+
+    public void setSidesAndAngle(double horizontalSide, double verticalSide, double angle) {
+        if(horizontalSide>0 && verticalSide>0 && !(angle <= 0 || angle >= Math.PI)){
+            this.horizontalSide = horizontalSide;
+            this.verticalSide = verticalSide;
+            this.angle = angle;
+            edge = null;
+            domainHeight = verticalSide * Math.sin(angle);
+            fireFundamentalDomainChanged();
+        }
     }
 
     public Polygon2D getBorder() {

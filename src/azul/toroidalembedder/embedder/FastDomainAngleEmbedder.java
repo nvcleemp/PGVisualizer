@@ -50,7 +50,7 @@ public class FastDomainAngleEmbedder extends AbstractEmbedder {
             angle = epsilon;
         else if(angle >=Math.PI)
             angle = Math.PI - epsilon;
-        ((DefaultGraph)graph).setFundamentalDomain(new FundamentalDomain(angle, graph.getFundamentalDomain().getHorizontalSide(), graph.getFundamentalDomain().getVerticalSide()));
+        ((DefaultGraph)graph).getFundamentalDomain().setAngle(angle);
     }
 
     @Override
