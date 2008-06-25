@@ -121,6 +121,8 @@ public class PGVisualizer extends JPanel{
             menuBar = new JMenuBar();
             menuBar.add(ExportControl.getMenu(view, model));
             JMenu editMenu = new JMenu("Edit");
+            editMenu.add(new JMenuItem(new ShowWindowAction("Editor", new ToolWindow(new PeriodicGraphEditor(model), target, true))));
+            editMenu.addSeparator();
             editMenu.add(new JMenuItem(new ShowWindowAction("Operations", new ToolWindow(new GraphOperations(model), target))));
             editMenu.add(new JMenuItem(new ShowWindowAction("Domain operations", new ToolWindow(new DomainOperations(model), target))));
             editMenu.addSeparator();
