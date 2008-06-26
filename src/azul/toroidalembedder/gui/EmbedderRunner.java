@@ -8,6 +8,7 @@ package azul.toroidalembedder.gui;
 import azul.toroidalembedder.embedder.FastDomainAngleEmbedder;
 import azul.toroidalembedder.embedder.FastDomainEdgeEmbedder;
 import azul.toroidalembedder.embedder.SpringEmbedder;
+import azul.toroidalembedder.embedder.SpringEmbedder2Zero;
 import azul.toroidalembedder.energy.AngleEnergyCalculator;
 import azul.toroidalembedder.energy.MeanEdgeLengthEnergyCalculator;
 import java.awt.GridBagConstraints;
@@ -38,7 +39,7 @@ public class EmbedderRunner extends JFrame {
         }
         
     };
-    private JProgressBar localBar = new JProgressBar(0, 610);
+    private JProgressBar localBar = new JProgressBar(0, 660);
     private GraphModel graphListModel;
     private boolean stopRequested;
     
@@ -100,11 +101,13 @@ public class EmbedderRunner extends JFrame {
     private class RunActionListener implements ActionListener {
 
         private SpringEmbedder spring;
+        private SpringEmbedder2Zero spring2;
         private FastDomainAngleEmbedder angle;
         private FastDomainEdgeEmbedder edge;
         
         public RunActionListener(){
             spring = new SpringEmbedder(graphListModel);
+            spring2 = new SpringEmbedder2Zero(graphListModel);
             angle = new FastDomainAngleEmbedder(graphListModel, 0.1, 1, new MeanEdgeLengthEnergyCalculator());
             edge = new FastDomainEdgeEmbedder(graphListModel, 0.1, 1, new AngleEnergyCalculator());
         }
@@ -140,6 +143,10 @@ public class EmbedderRunner extends JFrame {
                         }
                         for(int j = 0; j<500; j++){
                             spring.embed();
+                            localBar.setValue(++k);
+                        }
+                        for(int j = 0; j<50; j++){
+                            spring2.embed();
                             localBar.setValue(++k);
                         }
                         mainBar.setValue(++i);
