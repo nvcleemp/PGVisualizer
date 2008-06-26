@@ -285,7 +285,7 @@ public class SearchDialog extends JDialog{
             progress.setValue(i+1);
         }
         progress.setString("Done");
-        return new GraphListModel(graphListModel, list);
+        return new DefaultGraphListModel(graphListModel, list);
     }
 
     private FaceOverview getFaceOverview(GraphGUIData data){
@@ -435,7 +435,7 @@ public class SearchDialog extends JDialog{
     }
 
     public static void main(String[] args) {
-        GraphListModel model = new GraphListModel(new File("/Users/nvcleemp/edward/azulenoids-all.pg"));
+        DefaultGraphListModel model = new DefaultGraphListModel(new File("/Users/nvcleemp/edward/azulenoids-all.pg"));
         SearchDialog d = new SearchDialog(model);
         d.setDefaultCloseOperation(SearchDialog.HIDE_ON_CLOSE);
         d.setModal(false);

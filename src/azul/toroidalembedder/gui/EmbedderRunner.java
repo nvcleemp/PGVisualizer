@@ -45,7 +45,7 @@ public class EmbedderRunner extends JFrame {
     
     public EmbedderRunner(final File f){
         super("Embedder");
-        graphListModel = new GraphListModel(f);
+        graphListModel = new DefaultGraphListModel(f);
         graphListModel.getSelectionModel().setSelectionInterval(0, 0);
         stopRequested = false;
         mainBar.setMaximum(graphListModel.getSize());

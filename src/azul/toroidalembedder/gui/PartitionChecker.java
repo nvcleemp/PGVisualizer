@@ -20,7 +20,7 @@ public class PartitionChecker {
     private static final Color AZULENE_BLUE = new Color(0, 100, 200);
     
     public PartitionChecker(File file) {
-        model = new GraphListModel(file);
+        model = new DefaultGraphListModel(file);
     }
 
     private void checkPartitions(){

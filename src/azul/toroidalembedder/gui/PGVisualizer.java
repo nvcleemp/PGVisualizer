@@ -35,7 +35,7 @@ public class PGVisualizer extends JPanel{
     private JMenuBar menuBar = null;
 
     public PGVisualizer(File file) {
-        model = new GraphListModel(file);
+        model = new DefaultGraphListModel(file);
         setLayout(new BorderLayout());
         add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
         view = new TorusView(model);
