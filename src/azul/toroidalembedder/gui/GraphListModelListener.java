@@ -11,7 +11,7 @@ import javax.swing.event.ListDataListener;
  *
  * @author nvcleemp
  */
-public interface GraphModelListener extends ListDataListener {
+public interface GraphListModelListener extends ListDataListener {
     
     public void selectedGraphChanged();
 

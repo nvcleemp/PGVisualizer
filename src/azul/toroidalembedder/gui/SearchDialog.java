@@ -194,13 +194,13 @@ public class SearchDialog extends JDialog{
         }
     }
     
-    private GraphModel graphListModel;
+    private GraphListModel graphListModel;
     private JProgressBar progress;
     private ArrayModel<SearchCriterium> criteria = new ArrayModel<SearchCriterium>();
     private JFrame frame;
     private PGVisualizer visualizer;
 
-    public SearchDialog(GraphModel graphListModel){
+    public SearchDialog(GraphListModel graphListModel){
         setTitle("Search");
         this.graphListModel = graphListModel;
         progress = new JProgressBar(0, graphListModel.getSize());
@@ -271,7 +271,7 @@ public class SearchDialog extends JDialog{
         pack();
     }
 
-    private GraphModel searchList(){
+    private GraphListModel searchList(){
         progress.setString("Filtering graphs");
         List<Integer> list = new ArrayList<Integer>();
         for (int i = 0; i < graphListModel.getSize(); i++) {
@@ -285,7 +285,7 @@ public class SearchDialog extends JDialog{
             progress.setValue(i+1);
         }
         progress.setString("Done");
-        return new GraphModel(graphListModel, list);
+        return new GraphListModel(graphListModel, list);
     }
 
     private FaceOverview getFaceOverview(GraphGUIData data){
@@ -435,7 +435,7 @@ public class SearchDialog extends JDialog{
     }
 
     public static void main(String[] args) {
-        GraphModel model = new GraphModel(new File("/Users/nvcleemp/edward/azulenoids-all.pg"));
+        GraphListModel model = new GraphListModel(new File("/Users/nvcleemp/edward/azulenoids-all.pg"));
         SearchDialog d = new SearchDialog(model);
         d.setDefaultCloseOperation(SearchDialog.HIDE_ON_CLOSE);
         d.setModal(false);

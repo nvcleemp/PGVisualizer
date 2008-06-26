@@ -21,9 +21,9 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class GraphOperations extends JPanel implements GraphModelListener {
+public class GraphOperations extends JPanel implements GraphListModelListener {
     private Graph graph;
-    private GraphModel model = null;
+    private GraphListModel model = null;
     private GraphShiftOperations shiftOperations;
 
     private GraphOperations() {
@@ -45,7 +45,7 @@ public class GraphOperations extends JPanel implements GraphModelListener {
         shiftOperations.setGraph(graph);
     }
     
-    public GraphOperations(GraphModel model) {
+    public GraphOperations(GraphListModel model) {
         this(model.getSelectedGraph());
         this.model = model;
         model.addGraphModelListener(this);

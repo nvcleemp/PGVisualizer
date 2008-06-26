@@ -8,7 +8,7 @@ package azul.toroidalembedder.embedder;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class TutteEmbedder extends AbstractEmbedder {
         super(graph);
     }
 
-    public TutteEmbedder(GraphModel graphModel) {
+    public TutteEmbedder(GraphListModel graphModel) {
         super(graphModel);
     }
 

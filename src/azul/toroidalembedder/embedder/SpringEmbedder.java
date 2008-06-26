@@ -13,7 +13,7 @@ package azul.toroidalembedder.embedder;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public class SpringEmbedder extends AbstractEmbedder {
         this(graph, 0.3, 3, 0.01, 0.85);
     }
 
-    public SpringEmbedder(GraphModel graphModel) {
+    public SpringEmbedder(GraphListModel graphModel) {
         this(graphModel, 0.3, 3, 0.01, 0.85);
     }
 
@@ -48,7 +48,7 @@ public class SpringEmbedder extends AbstractEmbedder {
         vertices = graph.getVertices();
     }
 
-    public SpringEmbedder(GraphModel graphModel, double edge_length, double non_edge_length_factor, double force, double friction) {
+    public SpringEmbedder(GraphListModel graphModel, double edge_length, double non_edge_length_factor, double force, double friction) {
         super(graphModel);
         this.edge_length = edge_length;
         this.non_edge_length = non_edge_length_factor * edge_length;

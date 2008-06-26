@@ -21,9 +21,9 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class DomainOperations extends JPanel implements GraphModelListener, FundamentalDomainListener {
+public class DomainOperations extends JPanel implements GraphListModelListener, FundamentalDomainListener {
     private Graph graph;
-    private GraphModel model = null;
+    private GraphListModel model = null;
     private JLabel hsLabel = new JLabel();
     private JLabel vsLabel = new JLabel();
     private JLabel angleLabel = new JLabel();
@@ -76,7 +76,7 @@ public class DomainOperations extends JPanel implements GraphModelListener, Fund
         setGraph(graph);
     }
     
-    public DomainOperations(GraphModel model) {
+    public DomainOperations(GraphListModel model) {
         this(model.getSelectedGraph());
         this.model = model;
         model.addGraphModelListener(this);

@@ -30,12 +30,12 @@ import javax.swing.JPanel;
  */
 public class PGVisualizer extends JPanel{
     
-    private GraphModel model;
+    private GraphListModel model;
     private TorusView view = new TorusView();
     private JMenuBar menuBar = null;
 
     public PGVisualizer(File file) {
-        model = new GraphModel(file);
+        model = new GraphListModel(file);
         setLayout(new BorderLayout());
         add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
         view = new TorusView(model);
@@ -75,7 +75,7 @@ public class PGVisualizer extends JPanel{
         add(controls, BorderLayout.EAST);
     }
     
-    public PGVisualizer(GraphModel graphListModel) {
+    public PGVisualizer(GraphListModel graphListModel) {
         model = graphListModel;
         setLayout(new BorderLayout());
         add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);

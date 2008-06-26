@@ -10,13 +10,13 @@
 
 package azul.toroidalembedder.embedder;
 
-import azul.toroidalembedder.gui.GraphModelListener;
+import azul.toroidalembedder.gui.GraphListModelListener;
 
 /**
  *
  * @author nvcleemp
  */
-public interface Embedder extends GraphModelListener{
+public interface Embedder extends GraphListModelListener{
     
     public void initialize();
     public void embed();

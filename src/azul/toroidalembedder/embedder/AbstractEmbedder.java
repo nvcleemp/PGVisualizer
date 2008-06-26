@@ -6,7 +6,7 @@
 package azul.toroidalembedder.embedder;
 
 import azul.toroidalembedder.graph.general.Graph;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 import javax.swing.event.ListDataEvent;
 
 /**
@@ -16,13 +16,13 @@ import javax.swing.event.ListDataEvent;
 public abstract class AbstractEmbedder implements Embedder{
     
     protected Graph graph;
-    protected GraphModel graphModel = null;
+    protected GraphListModel graphModel = null;
     
     public AbstractEmbedder(Graph graph){
         this.graph = graph;
     }
 
-    public AbstractEmbedder(GraphModel graphModel){
+    public AbstractEmbedder(GraphListModel graphModel){
         this.graphModel = graphModel;
         this.graph = graphModel.getSelectedGraph();
         graphModel.addGraphModelListener(this);

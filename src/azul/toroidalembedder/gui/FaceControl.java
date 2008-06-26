@@ -33,9 +33,9 @@ public class FaceControl extends JPanel implements ListSelectionListener{
     private static final Color AZULENE_BLUE = new Color(0, 100, 200);
     
     private TorusView torusView;
-    private GraphModel graphListModel;
+    private GraphListModel graphListModel;
 
-    public FaceControl(TorusView torusView, GraphModel graphListModel) {
+    public FaceControl(TorusView torusView, GraphListModel graphListModel) {
         this.torusView = torusView;
         this.graphListModel = graphListModel;
         graphListModel.addListSelectionListener(this);

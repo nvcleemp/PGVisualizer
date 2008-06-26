@@ -20,14 +20,14 @@ import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class GraphModel extends AbstractListModel implements ListDataListener, ListSelectionListener {
+public class GraphListModel extends AbstractListModel implements ListDataListener, ListSelectionListener {
 
     private DefaultListModel list = new DefaultListModel();
     private Map<String, Graph> map = new HashMap<String, Graph>();
     private Map<String, GraphGUIData> guiData = new HashMap<String, GraphGUIData>();
     private ListSelectionModel selectionModel;
 
-    public GraphModel(File file) {
+    public GraphListModel(File file) {
         super();
         selectionModel = new DefaultListSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -47,8 +47,8 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
         list.addListDataListener(this);
     }
     
-    //TODO: use interface for GraphModel and let this new model delegate to original model
-    public GraphModel(GraphModel model, List<Integer> numberList){
+    //TODO: use interface for GraphListModel and let this new model delegate to original model
+    public GraphListModel(GraphListModel model, List<Integer> numberList){
         super();
         selectionModel = new DefaultListSelectionModel();
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -137,20 +137,20 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
             return getGraphGUIData(selectedIndex);
     }
     
-    public void addGraphModelListener(GraphModelListener l){
-        listenerList.add(GraphModelListener.class, l);
+    public void addGraphModelListener(GraphListModelListener l){
+        listenerList.add(GraphListModelListener.class, l);
     }
     
-    public void removeGraphModelListener(GraphModelListener l){
-        listenerList.remove(GraphModelListener.class, l);
+    public void removeGraphModelListener(GraphListModelListener l){
+        listenerList.remove(GraphListModelListener.class, l);
     }
     
     protected void fireSelectedGraphChanged(){
 	Object[] listeners = listenerList.getListenerList();
 
 	for (int i = listeners.length - 2; i >= 0; i -= 2) {
-	    if (listeners[i] == GraphModelListener.class) {
-		((GraphModelListener)listeners[i+1]).selectedGraphChanged();
+	    if (listeners[i] == GraphListModelListener.class) {
+		((GraphListModelListener)listeners[i+1]).selectedGraphChanged();
 	    }	       
 	}
     }
@@ -166,11 +166,11 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
 		    e = new ListDataEvent(source, ListDataEvent.CONTENTS_CHANGED, index0, index1);
 		}
 		((ListDataListener)listeners[i+1]).contentsChanged(e);
-	    } else if (listeners[i] == GraphModelListener.class) {
+	    } else if (listeners[i] == GraphListModelListener.class) {
 		if (e == null) {
 		    e = new ListDataEvent(source, ListDataEvent.CONTENTS_CHANGED, index0, index1);
 		}
-		((GraphModelListener)listeners[i+1]).contentsChanged(e);
+		((GraphListModelListener)listeners[i+1]).contentsChanged(e);
 	    }       
 	}
     }
@@ -187,11 +187,11 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
 		    e = new ListDataEvent(source, ListDataEvent.INTERVAL_ADDED, index0, index1);
 		}
 		((ListDataListener)listeners[i+1]).intervalAdded(e);
-	    } else if (listeners[i] == GraphModelListener.class) {
+	    } else if (listeners[i] == GraphListModelListener.class) {
 		if (e == null) {
 		    e = new ListDataEvent(source, ListDataEvent.INTERVAL_ADDED, index0, index1);
 		}
-		((GraphModelListener)listeners[i+1]).intervalAdded(e);
+		((GraphListModelListener)listeners[i+1]).intervalAdded(e);
 	    }
 	}
     }
@@ -207,11 +207,11 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
 		    e = new ListDataEvent(source, ListDataEvent.INTERVAL_REMOVED, index0, index1);
 		}
 		((ListDataListener)listeners[i+1]).intervalRemoved(e);
-	    } else if (listeners[i] == GraphModelListener.class) {
+	    } else if (listeners[i] == GraphListModelListener.class) {
 		if (e == null) {
 		    e = new ListDataEvent(source, ListDataEvent.INTERVAL_REMOVED, index0, index1);
 		}
-		((GraphModelListener)listeners[i+1]).intervalRemoved(e);
+		((GraphListModelListener)listeners[i+1]).intervalRemoved(e);
 	    }
 	}
     }

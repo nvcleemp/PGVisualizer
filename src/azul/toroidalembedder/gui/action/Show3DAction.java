@@ -14,15 +14,15 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class Show3DAction extends AbstractAction implements GraphModelListener{
+public class Show3DAction extends AbstractAction implements GraphListModelListener{
 
-    public Show3DAction(GraphModel graphListModel) {
+    public Show3DAction(GraphListModel graphListModel) {
         super("Show 3D model");
         this.graphListModel = graphListModel;
         
     }
     
-    private GraphModel graphListModel;
+    private GraphListModel graphListModel;
     private MoleculeDialog dialog = null;
 
     public void actionPerformed(ActionEvent e) {

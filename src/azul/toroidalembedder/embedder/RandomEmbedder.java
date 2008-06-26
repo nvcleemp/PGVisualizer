@@ -7,7 +7,7 @@ package azul.toroidalembedder.embedder;
 
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 import java.util.Random;
 
 /**
@@ -22,7 +22,7 @@ public class RandomEmbedder extends AbstractEmbedder {
         super(graph);
     }
 
-    public RandomEmbedder(GraphModel graphModel) {
+    public RandomEmbedder(GraphListModel graphModel) {
         super(graphModel);
     }
 

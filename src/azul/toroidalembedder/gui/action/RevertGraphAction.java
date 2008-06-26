@@ -15,9 +15,9 @@ import javax.swing.AbstractAction;
  */
 public class RevertGraphAction extends AbstractAction{
     
-    private GraphModel graphModel;
+    private GraphListModel graphModel;
 
-    public RevertGraphAction(GraphModel graphModel) {
+    public RevertGraphAction(GraphListModel graphModel) {
         super("Revert graph");
         this.graphModel = graphModel;
     }

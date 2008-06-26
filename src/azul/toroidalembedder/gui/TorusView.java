@@ -41,7 +41,7 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener, GraphModelListener, GraphSelectionListener, GraphFaceSelectionListener {
+public class TorusView extends JPanel implements GraphListener, FundamentalDomainListener, GraphListModelListener, GraphSelectionListener, GraphFaceSelectionListener {
     
     private static final Color defaultVertexEdge = Color.BLACK;
     private static final Color defaultVertexFace = Color.WHITE;
@@ -59,7 +59,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
     private int maxX;
     private int maxY;
     private FundamentalDomain fundamentalDomain;
-    private GraphModel graphListModel = null;
+    private GraphListModel graphListModel = null;
     private Color vertexEdge = defaultVertexEdge;
     private Color vertexFace = defaultVertexFace;
     private Color selectedVertexEdge = defaultSelectedVertexEdge;
@@ -83,7 +83,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         this(graph, -1, -1, 1, 1);   
     }
     
-    public TorusView(GraphModel model) {
+    public TorusView(GraphListModel model) {
         this(model, -1, -1, 1, 1);   
     }
     
@@ -94,7 +94,7 @@ public class TorusView extends JPanel implements GraphListener, FundamentalDomai
         faceSelectionModel.addGraphFaceSelectionListener(this);
     }
     
-    public TorusView(GraphModel model, int minX, int minY, int maxX, int maxY) {
+    public TorusView(GraphListModel model, int minX, int minY, int maxX, int maxY) {
         this(model.getSelectedGraph(), minX, minY, maxX, maxY);
         graphListModel = model;
         model.addGraphModelListener(this);

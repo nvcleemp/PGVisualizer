@@ -43,7 +43,7 @@ public class ExportControl extends JPanel{
         return panel;
     }
     
-    public static JPanel getPanel(final TorusView torusView, final GraphModel graphModel) {
+    public static JPanel getPanel(final TorusView torusView, final GraphListModel graphModel) {
         JPanel panel = new JPanel(new GridLayout(0, 1));
         panel.add(new JButton(new ExportBitmapAction(torusView)));
         panel.add(new JButton(new CommitGraphAction(graphModel)));
@@ -53,7 +53,7 @@ public class ExportControl extends JPanel{
         return panel;
     }
     
-    public static JMenu getMenu(final TorusView torusView, final GraphModel graphModel) {
+    public static JMenu getMenu(final TorusView torusView, final GraphListModel graphModel) {
         JMenu panel = new JMenu("Export");
         panel.add(new JMenuItem(new ExportBitmapAction(torusView)));
         panel.add(new JMenuItem(new ExportSVGAction(graphModel)));

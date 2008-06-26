@@ -12,7 +12,7 @@ import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
 import azul.toroidalembedder.gui.FaceColorMapping;
 import azul.toroidalembedder.gui.GraphGUIData;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 import azul.toroidalembedder.gui.TorusView;
 import java.awt.Color;
 import java.awt.Shape;
@@ -40,11 +40,11 @@ import org.jdom.output.XMLOutputter;
  */
 public class ExportSVGAction extends AbstractAction{
     
-    private GraphModel graphListModel;
+    private GraphListModel graphListModel;
     private JFileChooser chooser = new JFileChooser();
 
 
-    public ExportSVGAction(GraphModel graphListModel) {
+    public ExportSVGAction(GraphListModel graphListModel) {
         super("Export SVG");
         this.graphListModel = graphListModel;
     }

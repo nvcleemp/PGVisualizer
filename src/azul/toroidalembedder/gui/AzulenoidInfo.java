@@ -26,10 +26,10 @@ import javax.swing.event.ListSelectionListener;
  */
 public class AzulenoidInfo extends JPanel implements ListSelectionListener{
     
-    private GraphModel model;
+    private GraphListModel model;
     private JLabel numberLabel;
 
-    public AzulenoidInfo(GraphModel model) {
+    public AzulenoidInfo(GraphListModel model) {
         this.model = model;
         if(model.getSelectedGraph()==null)
             model.getSelectionModel().setSelectionInterval(0, 0);

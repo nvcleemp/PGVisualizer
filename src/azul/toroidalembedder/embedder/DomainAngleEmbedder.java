@@ -9,7 +9,7 @@ import azul.toroidalembedder.energy.EnergyCalculator;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.DefaultGraph;
 import azul.toroidalembedder.graph.general.Graph;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 
 /**
  *
@@ -32,7 +32,7 @@ public class DomainAngleEmbedder extends AbstractEmbedder{
         this.energyCalculator = energyCalculator;
     }
 
-    public DomainAngleEmbedder(GraphModel graphModel, int intervals, int zoom, double initialSearchAngle, EnergyCalculator energyCalculator) {
+    public DomainAngleEmbedder(GraphListModel graphModel, int intervals, int zoom, double initialSearchAngle, EnergyCalculator energyCalculator) {
         super(graphModel);
         this.intervals = intervals;
         this.zoom = zoom;

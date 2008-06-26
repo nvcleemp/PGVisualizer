@@ -16,7 +16,7 @@ import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ public class SpringEmbedderContractFaces extends AbstractEmbedder {
         this(graph, 0.3, 2, 0.01, 0.85);
     }
 
-    public SpringEmbedderContractFaces(GraphModel graphModel) {
+    public SpringEmbedderContractFaces(GraphListModel graphModel) {
         this(graphModel, 0.3, 2, 0.01, 0.85);
     }
 
@@ -51,7 +51,7 @@ public class SpringEmbedderContractFaces extends AbstractEmbedder {
         vertices = graph.getVertices();
     }
 
-    public SpringEmbedderContractFaces(GraphModel graphModel, double edge_length, double non_edge_length_factor, double force, double friction) {
+    public SpringEmbedderContractFaces(GraphListModel graphModel, double edge_length, double non_edge_length_factor, double force, double friction) {
         super(graphModel);
         this.edge_length = edge_length;
         this.non_edge_length = non_edge_length_factor * edge_length;

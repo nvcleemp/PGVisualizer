@@ -15,14 +15,14 @@ import javax.swing.AbstractAction;
  */
 public class FilterAction extends AbstractAction{
     
-    public FilterAction(GraphModel graphListModel) {
+    public FilterAction(GraphListModel graphListModel) {
         super("Filter list");
         this.graphListModel = graphListModel;
         dialog = new SearchDialog(graphListModel);
         dialog.setDefaultCloseOperation(SearchDialog.HIDE_ON_CLOSE);
     }
     
-    private GraphModel graphListModel;
+    private GraphListModel graphListModel;
     private SearchDialog dialog;
 
     public void actionPerformed(ActionEvent e) {

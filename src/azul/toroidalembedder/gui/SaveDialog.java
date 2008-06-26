@@ -26,11 +26,11 @@ import javax.swing.JProgressBar;
 public class SaveDialog extends JDialog{
     
     private File file;
-    private GraphModel model;
+    private GraphListModel model;
     private JProgressBar bar;
     private JLabel label;
 
-    public SaveDialog(Frame owner, File file, GraphModel model) {
+    public SaveDialog(Frame owner, File file, GraphListModel model) {
         super(owner, "Save", false);
         this.file = file;
         this.model = model;

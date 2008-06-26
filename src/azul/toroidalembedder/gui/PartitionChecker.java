@@ -16,11 +16,11 @@ import javax.swing.JFileChooser;
  * @author nvcleemp
  */
 public class PartitionChecker {
-    private GraphModel model;
+    private GraphListModel model;
     private static final Color AZULENE_BLUE = new Color(0, 100, 200);
     
     public PartitionChecker(File file) {
-        model = new GraphModel(file);
+        model = new GraphListModel(file);
     }
 
     private void checkPartitions(){

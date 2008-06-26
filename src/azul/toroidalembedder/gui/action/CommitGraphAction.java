@@ -15,9 +15,9 @@ import javax.swing.AbstractAction;
  */
 public class CommitGraphAction extends AbstractAction{
     
-    private GraphModel graphModel;
+    private GraphListModel graphModel;
 
-    public CommitGraphAction(GraphModel graphModel) {
+    public CommitGraphAction(GraphListModel graphModel) {
         super("Commit graph");
         this.graphModel = graphModel;
     }

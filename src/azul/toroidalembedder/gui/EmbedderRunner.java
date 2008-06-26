@@ -40,12 +40,12 @@ public class EmbedderRunner extends JFrame {
         
     };
     private JProgressBar localBar = new JProgressBar(0, 660);
-    private GraphModel graphListModel;
+    private GraphListModel graphListModel;
     private boolean stopRequested;
     
     public EmbedderRunner(final File f){
         super("Embedder");
-        graphListModel = new GraphModel(f);
+        graphListModel = new GraphListModel(f);
         graphListModel.getSelectionModel().setSelectionInterval(0, 0);
         stopRequested = false;
         mainBar.setMaximum(graphListModel.getSize());

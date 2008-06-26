@@ -92,7 +92,7 @@ public class EmbedderControl extends JPanel{
         model.addEmbedder("Domain edge embedder using edge angles", new FastDomainEdgeEmbedder(graph, 0.1, 1, new AngleEnergyCalculator()));
     }
 
-    public EmbedderControl(GraphModel graphModel){
+    public EmbedderControl(GraphListModel graphModel){
         this();
         model.addEmbedder("Spring embedder", new SpringEmbedder(graphModel));
         model.setSelectedItem("Spring embedder");

@@ -19,9 +19,9 @@ import javax.swing.JFileChooser;
  */
 public class SaveGraphListAction extends AbstractAction {
 
-    private GraphModel graphListModel;
+    private GraphListModel graphListModel;
 
-    public SaveGraphListAction(GraphModel graphListModel) {
+    public SaveGraphListAction(GraphListModel graphListModel) {
         super("Save graph list");
         this.graphListModel = graphListModel;
     }

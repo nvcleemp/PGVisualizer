@@ -8,7 +8,7 @@ package azul.toroidalembedder.embedder;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
@@ -22,7 +22,7 @@ public abstract class AbstractTemperedEmbedder extends AbstractEmbedder{
         super(graph);
     }
 
-    public AbstractTemperedEmbedder(GraphModel graphModel) {
+    public AbstractTemperedEmbedder(GraphListModel graphModel) {
         super(graphModel);
     }
     

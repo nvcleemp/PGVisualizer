@@ -12,7 +12,7 @@ import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
-import azul.toroidalembedder.gui.GraphModel;
+import azul.toroidalembedder.gui.GraphListModel;
 import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -29,10 +29,10 @@ import javax.swing.SpinnerNumberModel;
  */
 public class GrowGraphAction extends AbstractAction{
     
-    private GraphModel graphModel;
+    private GraphListModel graphModel;
     private GrowDialog dialog = new GrowDialog();
 
-    public GrowGraphAction(GraphModel graphModel) {
+    public GrowGraphAction(GraphListModel graphModel) {
         super("Grow graph");
         this.graphModel = graphModel;
     }

@@ -45,7 +45,7 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class PeriodicGraphEditor extends JPanel implements GraphListener, FundamentalDomainListener, GraphModelListener, GraphSelectionListener, GraphFaceSelectionListener {
+public class PeriodicGraphEditor extends JPanel implements GraphListener, FundamentalDomainListener, GraphListModelListener, GraphSelectionListener, GraphFaceSelectionListener {
     
     private static final Color defaultVertexEdge = Color.BLACK;
     private static final Color defaultVertexFace = Color.WHITE;
@@ -55,7 +55,7 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
     private double widthView;
     private double heightView;
     private FundamentalDomain fundamentalDomain;
-    private GraphModel graphListModel = null;
+    private GraphListModel graphListModel = null;
     private Color vertexEdge = defaultVertexEdge;
     private Color vertexFace = defaultVertexFace;
     private Color selectedVertexEdge = defaultSelectedVertexEdge;
@@ -67,7 +67,7 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
     private int lastX = 0;
     private int lastY = 0;
     
-    public PeriodicGraphEditor(GraphModel model) {
+    public PeriodicGraphEditor(GraphListModel model) {
         setGraph(model.getSelectedGraph());
         graphListModel = model;
         model.addGraphModelListener(this);
