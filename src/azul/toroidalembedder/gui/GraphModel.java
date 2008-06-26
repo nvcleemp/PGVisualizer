@@ -47,6 +47,7 @@ public class GraphModel extends AbstractListModel implements ListDataListener, L
         list.addListDataListener(this);
     }
     
+    //TODO: use interface for GraphModel and let this new model delegate to original model
     public GraphModel(GraphModel model, List<Integer> numberList){
         super();
         selectionModel = new DefaultListSelectionModel();
