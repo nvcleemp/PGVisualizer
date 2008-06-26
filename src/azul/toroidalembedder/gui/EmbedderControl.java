@@ -10,6 +10,8 @@ import azul.toroidalembedder.embedder.FastDomainEdgeEmbedder;
 import azul.toroidalembedder.embedder.RandomEmbedder;
 import azul.toroidalembedder.embedder.SpringEmbedder;
 import azul.toroidalembedder.embedder.SpringEmbedder2Zero;
+import azul.toroidalembedder.embedder.SpringEmbedder2ZeroContractFaces;
+import azul.toroidalembedder.embedder.SpringEmbedderContractFaces;
 import azul.toroidalembedder.embedder.SpringEmbedderEqualEdges;
 import azul.toroidalembedder.embedder.TemperedSpringEmbedder;
 import azul.toroidalembedder.embedder.TutteEmbedder;
@@ -97,6 +99,8 @@ public class EmbedderControl extends JPanel{
         model.addEmbedder("Spring embedder equal edges", new SpringEmbedderEqualEdges(graphModel));
         model.addEmbedder("Spring embedder minimal equal edges", new SpringEmbedderEqualEdges(graphModel));
         model.addEmbedder("Spring embedder to zero", new SpringEmbedder2Zero(graphModel));
+        model.addEmbedder("Spring embedder (contract faces)", new SpringEmbedderContractFaces(graphModel));
+        model.addEmbedder("Spring embedder to zero (contract faces)", new SpringEmbedder2ZeroContractFaces(graphModel));
         model.addEmbedder("Random embedder", new RandomEmbedder(graphModel));
         model.addEmbedder("Tutte embedder", new TutteEmbedder(graphModel));
         model.addEmbedder("Domain angle embedder using edge length", new FastDomainAngleEmbedder(graphModel, 0.1, 1, new MeanEdgeLengthEnergyCalculator()));
