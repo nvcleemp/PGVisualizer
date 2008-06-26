@@ -47,19 +47,6 @@ public class DefaultGraphListModel extends AbstractListModel implements ListData
         list.addListDataListener(this);
     }
     
-    //TODO: use interface for GraphListModel and let this new model delegate to original model
-    public DefaultGraphListModel(GraphListModel model, List<Integer> numberList){
-        super();
-        selectionModel = new DefaultListSelectionModel();
-        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        selectionModel.setSelectionInterval(0, 0);
-        selectionModel.addListSelectionListener(this);
-        for (int i = 0; i < numberList.size(); i++) {
-            list.addElement(model.getString(numberList.get(i)));
-        }
-        list.addListDataListener(this);
-    }
-
     public Graph getGraph(int index) {
         String string = (String)list.get(index);
         try {

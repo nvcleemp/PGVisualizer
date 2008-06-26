@@ -285,7 +285,7 @@ public class SearchDialog extends JDialog{
             progress.setValue(i+1);
         }
         progress.setString("Done");
-        return new DefaultGraphListModel(graphListModel, list);
+        return new DelegateGraphListModel(graphListModel, list);
     }
 
     private FaceOverview getFaceOverview(GraphGUIData data){
