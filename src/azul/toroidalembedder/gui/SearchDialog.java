@@ -433,20 +433,4 @@ public class SearchDialog extends JDialog{
         comboBoxPanel.add(addButton, gbc);
         return comboBoxPanel;
     }
-
-    public static void main(String[] args) {
-        DefaultGraphListModel model = new DefaultGraphListModel(new File("/Users/nvcleemp/edward/azulenoids-all.pg"));
-        SearchDialog d = new SearchDialog(model);
-        d.setDefaultCloseOperation(SearchDialog.HIDE_ON_CLOSE);
-        d.setModal(false);
-        d.setVisible(true);
-        //System.exit(0);
-        d.addWindowListener(new WindowAdapter() {
-
-            @Override
-            public void windowClosed(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-    }
 }
