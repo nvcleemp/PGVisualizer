@@ -118,7 +118,7 @@ public class Test {
                         JFrame frame = new JFrame("PGVisualizer");
                         PGVisualizer visualizer = new PGVisualizer(chooser.getSelectedFile());
                         frame.add(visualizer);
-                        frame.setJMenuBar(visualizer.getMenuBar());
+                        frame.setJMenuBar(visualizer.getMenuBar(frame));
                         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                         frame.pack();
                         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
