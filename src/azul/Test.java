@@ -134,7 +134,12 @@ public class Test {
                 JFileChooser chooser = new JFileChooser();
                 if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
                     if(chooser.getSelectedFile().exists()){
-                        new EmbedderRunner(chooser.getSelectedFile());
+                        JFrame frame = new JFrame("PGVisualizer");
+                        EmbedderRunner embedder = new EmbedderRunner(chooser.getSelectedFile(), frame);
+                        frame.add(embedder);
+                        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                        frame.pack();
+                        frame.setVisible(true);
                     }
                         
             }

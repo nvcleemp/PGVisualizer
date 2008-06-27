@@ -11,6 +11,7 @@ import azul.toroidalembedder.embedder.SpringEmbedder;
 import azul.toroidalembedder.embedder.SpringEmbedder2Zero;
 import azul.toroidalembedder.energy.AngleEnergyCalculator;
 import azul.toroidalembedder.energy.MeanEdgeLengthEnergyCalculator;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -22,14 +23,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 /**
  *
  * @author nvcleemp
  */
-public class EmbedderRunner extends JFrame {
+public class EmbedderRunner extends JPanel {
 
     private JProgressBar mainBar = new JProgressBar(){
 
@@ -43,8 +44,7 @@ public class EmbedderRunner extends JFrame {
     private GraphListModel graphListModel;
     private boolean stopRequested;
     
-    public EmbedderRunner(final File f){
-        super("Embedder");
+    public EmbedderRunner(final File f, final Frame frame){
         graphListModel = new DefaultGraphListModel(f);
         graphListModel.getSelectionModel().setSelectionInterval(0, 0);
         stopRequested = false;
@@ -75,7 +75,7 @@ public class EmbedderRunner extends JFrame {
                 JFileChooser chooser = new JFileChooser(f.getParentFile());
                 if(chooser.showSaveDialog(saveButton) == JFileChooser.APPROVE_OPTION){
                     try {
-                        new SaveDialog(EmbedderRunner.this, chooser.getSelectedFile(), graphListModel).save();
+                        new SaveDialog(frame, chooser.getSelectedFile(), graphListModel).save();
                     } catch (FileNotFoundException ex) {
                         Logger.getLogger(EmbedderRunner.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -94,8 +94,6 @@ public class EmbedderRunner extends JFrame {
         gbc.gridy = 2;
         localBar.setStringPainted(true);
         add(localBar, gbc);
-        pack();
-        setVisible(true);
     }
     
     private class RunActionListener implements ActionListener {
