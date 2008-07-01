@@ -5,18 +5,9 @@
 
 package azul.toroidalembedder.molecule;
 
-import azul.toroidalembedder.graph.DefaultEdge;
-import azul.toroidalembedder.graph.DefaultGraph;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.util.ArrayList;
-import javax.swing.JPanel;
-import org.jmol.adapter.smarter.SmarterJmolAdapter;
-import org.jmol.api.JmolAdapter;
-import org.jmol.api.JmolSimpleViewer;
 
 /**
  *
@@ -25,7 +16,9 @@ import org.jmol.api.JmolSimpleViewer;
 public class Molecule {
     
     private int size;
+    private int edgeSize;
     private int[][] adjacencyList;
+    private int[][] edges;
     private float[][] coordinate;
     private String[] atomType;
     
@@ -78,6 +71,25 @@ public class Molecule {
             doTorusXEmbedding(graph);
         else if(Embedding.TORUS_Y.equals(embedding))
             doTorusYEmbedding(graph);
+        edgeSize = 0;
+        for (int[] is : adjacencyList)
+            edgeSize += is.length;
+        edgeSize /= 2;
+        doEdges();
+    }
+    
+    private void doEdges(){
+        edges = new int[edgeSize][2];
+        int i = 0;
+        for (int j = 0; j < adjacencyList.length; j++) {
+            for (int k = 0; k < adjacencyList[j].length; k++) {
+                if(adjacencyList[j][k]>j){
+                    edges[i][0] = j;
+                    edges[i][1] = adjacencyList[j][k];
+                    i++;
+                }
+            }
+        }
     }
     
     private void doPlanarEmbedding(Graph graph){
@@ -254,28 +266,32 @@ public class Molecule {
         buffer.append("</molecule>\n");
         return buffer.toString();
     }
+
+    public int getSize() {
+        return size;
+    }
     
-    static class JmolPanel extends JPanel {
-        JmolSimpleViewer viewer;
-        JmolAdapter adapter;
-        JmolPanel() {
-          adapter = new SmarterJmolAdapter();
-          viewer = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
-        }
-
-        public JmolSimpleViewer getViewer() {
-          return viewer;
-        }
-
-        final Dimension currentSize = new Dimension();
-        final Rectangle rectClip = new Rectangle();
-
-        @Override
-        public void paint(Graphics g) {
-          getSize(currentSize);
-          g.getClipBounds(rectClip);
-          viewer.renderScreenImage(g, currentSize, rectClip);
-        }
+    public int getEdgeSize() {
+        return edgeSize;
+    }
+    
+    public float getX(int index){
+        return coordinate[index][0];
     }
 
+    public float getY(int index){
+        return coordinate[index][1];
+    }
+    
+    public float getZ(int index){
+        return coordinate[index][2];
+    }
+    
+    public int edgeFrom(int edgeIndex){
+        return edges[edgeIndex][0];
+    }
+    
+    public int edgeTo(int edgeIndex){
+        return edges[edgeIndex][1];
+    }
 }

@@ -5,6 +5,7 @@
 
 package azul.toroidalembedder.gui;
 
+import azul.preferences.PGPreferences;
 import azul.toroidalembedder.gui.action.Show3DAction;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.DefaultGraph;
@@ -12,13 +13,14 @@ import azul.toroidalembedder.graph.DefaultVertex;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
+import azul.toroidalembedder.molecule.JmolFrame;
+import azul.toroidalembedder.molecule.JmolPanel;
 import azul.toroidalembedder.molecule.Molecule;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -32,11 +34,13 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 /**
  *
@@ -47,10 +51,8 @@ public class MoleculeDialog extends JDialog{
     private TorusView view = new TorusView(0, 0, 0, 0);
     private DefaultGraph result = null;
     private Graph input;
-    private boolean done = false;
     private JComboBox comboBox = new JComboBox(Molecule.Embedding.values());
-    private JmolViewer viewer = null;
-
+    private JmolFrame frame = new JmolFrame();
 
     public MoleculeDialog() {
         setLayout(new BorderLayout());
@@ -139,42 +141,46 @@ public class MoleculeDialog extends JDialog{
         showButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected());
+
+                Molecule mol = new Molecule(result, (Molecule.Embedding) comboBox.getSelectedItem());
+                if (mol == null) {
+                    return;
+                }
+                frame.display(mol);
+            }
+        });
+        controls.add(showButton, gbc);
+        gbc.gridy++;
+        JButton saveButton = new JButton("Save CML file");
+        saveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected());
                 try {
-                    Rectangle bounds = null;
-                    if(viewer != null){
-                        bounds = viewer.getBounds();
-                        viewer.destroy();
-                    }
                     Molecule mol = new Molecule(result, (Molecule.Embedding) comboBox.getSelectedItem());
                     if (mol == null) {
                         return;
                     }
-                    File temp = File.createTempFile("PGCML", ".cml");
-                    temp.deleteOnExit();
-                    Writer out = new FileWriter(temp);
-                    out.write(mol.writeCML());
-                    out.close();
-                    viewer = new JmolViewer();
-                    viewer.setBounds(bounds);
-                    viewer.setParameter("FORMAT", "CML");
-                    viewer.setParameter("MODEL", temp.toString());
-                    viewer.show();
+                    JFileChooser chooser;
+                    String dir = PGPreferences.getInstance().getStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY);
+                    if(dir==null)
+                        chooser = new JFileChooser();
+                    else
+                        chooser = new JFileChooser(new File(dir));
+                    if(chooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
+                        File file = chooser.getSelectedFile();
+                        PGPreferences.getInstance().setStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY, file.getParent());
+                        if(!file.exists() || JOptionPane.showConfirmDialog(null, "Overwrite file " + file.toString(), "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+                            Writer out = new FileWriter(file);
+                            out.write(mol.writeCML());
+                            out.close();
+                        }
+                    }
                 } catch (IOException ex) {
                     Logger.getLogger(Show3DAction.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
-        controls.add(showButton, gbc);
-        gbc.gridy++;
-        /*JButton doneButton = new JButton("Done");
-        doneButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected());
-                done = true;
-                setVisible(false);
-            }
-        });
-        controls.add(doneButton, gbc);*/
+        controls.add(saveButton, gbc);
         add(controls, BorderLayout.NORTH);
         pack();
     }
