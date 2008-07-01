@@ -9,6 +9,7 @@ import azul.delaney.FundamentalPatch;
 import azul.delaney.DelaneySymbol;
 import azul.io.FileFormatException;
 import azul.io.IOManager;
+import azul.preferences.PGPreferences;
 import azul.toroidalembedder.gui.EmbedderRunner;
 import azul.toroidalembedder.gui.EmbedderWindow;
 import azul.toroidalembedder.gui.PGVisualizer;
@@ -17,6 +18,7 @@ import azul.toroidalembedder.gui.TorusViewTest;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -112,9 +114,15 @@ public class Test {
         button = new JButton("PGVisualizer");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
+                JFileChooser chooser;
+                String dir = PGPreferences.getInstance().getStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY);
+                if(dir==null)
+                    chooser = new JFileChooser();
+                else
+                    chooser = new JFileChooser(new File(dir));
                 if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
                     if(chooser.getSelectedFile().exists()){
+                        PGPreferences.getInstance().setStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY, chooser.getSelectedFile().getParent());
                         JFrame frame = new JFrame("PGVisualizer");
                         PGVisualizer visualizer = new PGVisualizer(chooser.getSelectedFile());
                         frame.add(visualizer);
@@ -131,9 +139,15 @@ public class Test {
         button = new JButton("PGEmbedder");
         button.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser chooser = new JFileChooser();
+                JFileChooser chooser;
+                String dir = PGPreferences.getInstance().getStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY);
+                if(dir==null)
+                    chooser = new JFileChooser();
+                else
+                    chooser = new JFileChooser(new File(dir));
                 if(chooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION)
                     if(chooser.getSelectedFile().exists()){
+                        PGPreferences.getInstance().setStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY, chooser.getSelectedFile().getParent());
                         JFrame frame = new JFrame("PGVisualizer");
                         EmbedderRunner embedder = new EmbedderRunner(chooser.getSelectedFile(), frame);
                         frame.add(embedder);

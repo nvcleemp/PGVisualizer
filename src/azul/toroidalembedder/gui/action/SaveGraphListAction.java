@@ -4,8 +4,10 @@
  */
 package azul.toroidalembedder.gui.action;
 
+import azul.preferences.PGPreferences;
 import azul.toroidalembedder.gui.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -27,8 +29,14 @@ public class SaveGraphListAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        JFileChooser chooser = new JFileChooser();
+        JFileChooser chooser;
+        String dir = PGPreferences.getInstance().getStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY);
+        if(dir==null)
+            chooser = new JFileChooser();
+        else
+            chooser = new JFileChooser(new File(dir));
         if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+            PGPreferences.getInstance().setStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY, chooser.getSelectedFile().getParent());
             try {
                 new SaveDialog(null, chooser.getSelectedFile(), graphListModel).save();
             } catch (FileNotFoundException ex) {

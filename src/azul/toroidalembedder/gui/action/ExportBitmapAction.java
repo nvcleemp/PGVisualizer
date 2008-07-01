@@ -5,6 +5,7 @@
 
 package azul.toroidalembedder.gui.action;
 
+import azul.preferences.PGPreferences;
 import azul.toroidalembedder.gui.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -32,9 +33,15 @@ public class ExportBitmapAction extends AbstractAction{
     
     public void actionPerformed(ActionEvent e) {
         try {
-            JFileChooser chooser = new JFileChooser();
+            JFileChooser chooser;
+            String dir = PGPreferences.getInstance().getStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY);
+            if(dir==null)
+                chooser = new JFileChooser();
+            else
+                chooser = new JFileChooser(new File(dir));
             if(chooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION){
                 File file = chooser.getSelectedFile();
+                PGPreferences.getInstance().setStringPreference(PGPreferences.Preference.CURRENT_DIRECTORY, file.getParent());
                 if(!file.exists() || JOptionPane.showConfirmDialog(null, "Overwrite file " + file.toString(), "Confirm", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
                     ImageIO.write(torusView.getBitmap(), "PNG", file);
             }
