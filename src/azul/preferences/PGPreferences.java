@@ -36,10 +36,7 @@ public class PGPreferences {
     
     //
     private final Preferences userPreferences = Preferences.userRoot().node(OUR_NODE_NAME);
-    
-    //
-    private Preferences systemPreferences;
-        
+            
     //
     private List<PGPreferencesListener> listeners;
         
