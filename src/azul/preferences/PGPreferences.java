@@ -32,7 +32,7 @@ public class PGPreferences {
     }
     
     //
-    private static final String OUR_NODE_NAME = "/be/ugent/twi/pg";
+    private static final String OUR_NODE_NAME = "/be/ugent/twi/pg/preferences";
     
     //
     private final Preferences userPreferences = Preferences.userRoot().node(OUR_NODE_NAME);
