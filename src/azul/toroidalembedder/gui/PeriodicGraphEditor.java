@@ -31,6 +31,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -63,6 +64,7 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
     private GraphFaceSelectionModel faceSelectionModel = new DefaultGraphFaceSelectionModel();
     private boolean paintFaces = false;
     private boolean paintSelectedFace = true;
+    private Shape clip;
     
     private int lastX = 0;
     private int lastY = 0;
@@ -156,6 +158,7 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
             widthView = getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
             heightView = getFundamentalDomain().getDomainHeight();
         }
+        clip = null;
         repaint();
     }
 
@@ -214,6 +217,10 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
         g2.fillRect(0, 0, width, height);
         g2.translate(width/2, height/2);
         g2.transform(AffineTransform.getScaleInstance(scale, scale));
+        if(clip==null)
+            calculateClip();
+        if(clip!=null)
+            g2.setClip(clip);
         int minTargetX = 0;
         int maxTargetX = 0;
         int minTargetY = 0;
@@ -279,10 +286,14 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
             double y1 = vertex.getY(0, 0, getFundamentalDomain());
             for (Edge e : vertex.getEdges()) {
                 Line2D line = new Line2D.Double(x1,y1,e.getEnd().getX(e.getTargetX(), e.getTargetY(), getFundamentalDomain()), e.getEnd().getY(e.getTargetX(), e.getTargetY(), getFundamentalDomain()));
-                Graphics2D gr = (Graphics2D)(g2.create());
-                Point2D origin = getFundamentalDomain().getOrigin(0, 0);
-                gr.translate(origin.getX(), origin.getY());
-                gr.draw(line);
+                for (int i = -1; i <= 1; i++){
+                    for (int j = -1; j <= 1; j++){
+                        Graphics2D gr = (Graphics2D)(g2.create());
+                        Point2D origin = getFundamentalDomain().getOrigin(i, j);
+                        gr.translate(origin.getX(), origin.getY());
+                        gr.draw(line);
+                    }
+                }
             }
         }
         
@@ -295,10 +306,14 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
             VertexHighlighter theHighlight = getHighlight();
             if(theHighlight!=null && theHighlight.getColorFor(vertex)!=null)
                 inner = theHighlight.getColorFor(vertex);
-            Graphics2D gr = (Graphics2D)(g2.create());
-            Point2D origin = getFundamentalDomain().getOrigin(0, 0);
-            gr.translate(origin.getX(), origin.getY());
-            paint(vertex, gr, 0, 0, vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2, outer, inner);
+                for (int i = -1; i <= 1; i++){
+                    for (int j = -1; j <= 1; j++){
+                        Graphics2D gr = (Graphics2D)(g2.create());
+                        Point2D origin = getFundamentalDomain().getOrigin(i, j);
+                        gr.translate(origin.getX(), origin.getY());
+                        paint(vertex, gr, 0, 0, vertexSize*0.001*getFundamentalDomain().getHorizontalSide()/2, outer, inner);
+                    }
+                }
         }
     }
     
@@ -330,12 +345,14 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
     public void fundamentalDomainChanged(FundamentalDomain oldDomain) {
         widthView = getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
         heightView = getFundamentalDomain().getDomainHeight();
+        clip = null;
         repaint();
     }
     
     public void fundamentalDomainShapeChanged() {
         widthView = getFundamentalDomain().getHorizontalSide() + (getFundamentalDomain().getAngle()<=Math.PI/2 ? 1 : -1)*getFundamentalDomain().getVerticalSide()*Math.cos(getFundamentalDomain().getAngle());
         heightView = getFundamentalDomain().getDomainHeight();
+        clip = null;
         repaint();
     }
       
@@ -537,5 +554,30 @@ public class PeriodicGraphEditor extends JPanel implements GraphListener, Fundam
         else
             this.transparency = transparency;
         repaint();
+    }
+    private void calculateClip(){
+        double horizontalOffset = (getFundamentalDomain().getAngle() != Math.PI/2 ? getFundamentalDomain().getDomainHeight() / (Math.tan(getFundamentalDomain().getAngle())*2) : 0);
+        
+        double[] xpoints = new double[4];
+        double[] ypoints = new double[4];
+        
+        xpoints[0] = - getFundamentalDomain().getHorizontalSide()/2 - horizontalOffset;
+        xpoints[1] =   getFundamentalDomain().getHorizontalSide()/2 - horizontalOffset;
+        xpoints[2] =   getFundamentalDomain().getHorizontalSide()/2 + horizontalOffset;
+        xpoints[3] = - getFundamentalDomain().getHorizontalSide()/2 + horizontalOffset;
+        
+        ypoints[0] = - getFundamentalDomain().getDomainHeight()/2;
+        ypoints[1] = - getFundamentalDomain().getDomainHeight()/2;
+        ypoints[2] =   getFundamentalDomain().getDomainHeight()/2;
+        ypoints[3] =   getFundamentalDomain().getDomainHeight()/2;
+        
+        GeneralPath c = new GeneralPath();
+        c.moveTo((float)xpoints[0], (float)ypoints[0]);
+        c.lineTo((float)xpoints[1], (float)ypoints[1]);
+        c.lineTo((float)xpoints[2], (float)ypoints[2]);
+        c.lineTo((float)xpoints[3], (float)ypoints[3]);
+        c.closePath();
+        
+        clip = c;
     }
 }
