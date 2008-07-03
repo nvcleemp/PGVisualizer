@@ -19,6 +19,7 @@ public class Show3DAction extends AbstractAction implements GraphListModelListen
     public Show3DAction(GraphListModel graphListModel) {
         super("Show 3D model");
         this.graphListModel = graphListModel;
+        graphListModel.addGraphModelListener(this);
         
     }
     
@@ -28,7 +29,9 @@ public class Show3DAction extends AbstractAction implements GraphListModelListen
     public void actionPerformed(ActionEvent e) {
             if(dialog==null) {
                 dialog = new MoleculeDialog();
-                dialog.showDialog(graphListModel.getSelectedGraph());
+                dialog.showDialog(graphListModel.getSelectedGraph(),
+                        ((DefaultFaceHightlighter)graphListModel.getSelectedGraphGUIData().getFaceHighlighter()).getFaces(),
+                        ((DefaultFaceHightlighter)graphListModel.getSelectedGraphGUIData().getFaceHighlighter()).getMap());
             } else {
                 dialog.setVisible(true);
             }

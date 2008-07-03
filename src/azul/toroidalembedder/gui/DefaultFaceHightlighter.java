@@ -55,4 +55,8 @@ public class DefaultFaceHightlighter implements FaceHighlighter {
     public List<Face> getFaces(){
         return new ArrayList<Face>(map.keySet());
     }
+    
+    public Map<Face,Color> getMap(){
+        return new HashMap<Face, Color>(map);
+    }
 }

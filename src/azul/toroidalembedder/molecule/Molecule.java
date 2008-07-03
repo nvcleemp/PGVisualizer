@@ -5,9 +5,13 @@
 
 package azul.toroidalembedder.molecule;
 
+import azul.toroidalembedder.graph.Face;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -17,11 +21,14 @@ public class Molecule {
     
     private int size;
     private int edgeSize;
+    private int selectedFaceCount;
     private int[][] adjacencyList;
     private int[][] edges;
     private float[][] coordinate;
     private String[] atomType;
-    
+    private int[][] selectedFaces;
+    private Color[] colors;
+
     public enum Embedding{
         PLANAR{
             public String getDescription(){
@@ -53,10 +60,18 @@ public class Molecule {
     }
     
     public Molecule(Graph graph){
-        this(graph, Embedding.PLANAR);             
+        this(graph, null, null, Embedding.PLANAR);             
     }
     
-    public Molecule(Graph graph, Embedding embedding){
+    public Molecule(Graph graph, Embedding embedding) {
+        this(graph, null, null, embedding);
+    }
+    
+    public Molecule(Graph graph, List<Face> resultFaces, Embedding embedding) {
+        this(graph, null, null, embedding);
+    }
+    
+    public Molecule(Graph graph, List<Face> resultFaces, Map<Face, Color> colors, Embedding embedding) {
         size = graph.getVertices().size();
         adjacencyList = new int[size][];
         atomType = new String[size];
@@ -76,6 +91,22 @@ public class Molecule {
             edgeSize += is.length;
         edgeSize /= 2;
         doEdges();
+        if(resultFaces!=null)
+            doFaces(resultFaces, colors);
+    }
+    
+    private void doFaces(List<Face> faces, Map<Face, Color> colors){
+        selectedFaceCount = faces.size();
+        selectedFaces = new int[selectedFaceCount][];
+        this.colors = new Color[selectedFaceCount];
+        for (int i = 0; i < faces.size(); i++) {
+            selectedFaces[i] = new int[faces.get(i).getSize()];
+            if(colors!=null)
+                this.colors[i] = colors.get(faces.get(i));
+            for (int j = 0; j < selectedFaces[i].length; j++) {
+                selectedFaces[i][j]=faces.get(i).getVertexAt(j).getIndex();
+            }
+        }
     }
     
     private void doEdges(){
@@ -275,6 +306,10 @@ public class Molecule {
         return edgeSize;
     }
     
+    public int getFaceSize() {
+        return selectedFaceCount;
+    }
+    
     public float getX(int index){
         return coordinate[index][0];
     }
@@ -293,5 +328,13 @@ public class Molecule {
     
     public int edgeTo(int edgeIndex){
         return edges[edgeIndex][1];
+    }
+    
+    public int[] getFaceAt(int index){
+        return selectedFaces[index];
+    }
+    
+    public Color getColorOfFace(int index){
+        return colors[index];
     }
 }

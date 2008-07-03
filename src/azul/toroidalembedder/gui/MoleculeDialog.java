@@ -10,12 +10,14 @@ import azul.toroidalembedder.gui.action.Show3DAction;
 import azul.toroidalembedder.graph.FundamentalDomain;
 import azul.toroidalembedder.graph.DefaultGraph;
 import azul.toroidalembedder.graph.DefaultVertex;
+import azul.toroidalembedder.graph.Face;
 import azul.toroidalembedder.graph.general.Edge;
 import azul.toroidalembedder.graph.general.Graph;
 import azul.toroidalembedder.graph.general.Vertex;
 import azul.toroidalembedder.molecule.JmolFrame;
 import azul.toroidalembedder.molecule.Molecule;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -26,6 +28,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListCellRenderer;
@@ -49,8 +55,12 @@ public class MoleculeDialog extends JDialog{
     private TorusView view = new TorusView(0, 0, 0, 0);
     private DefaultGraph result = null;
     private Graph input;
+    private List<Face> inputFaces;
+    private List<Face> resultFaces;
     private JComboBox comboBox = new JComboBox(Molecule.Embedding.values());
     private JmolFrame frame = new JmolFrame();
+    private Map<Face, Color> inputColors;
+    private Map<Face, Color> resultColors;
 
     public MoleculeDialog() {
         setLayout(new BorderLayout());
@@ -140,7 +150,7 @@ public class MoleculeDialog extends JDialog{
             public void actionPerformed(ActionEvent e) {
                 concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected());
 
-                Molecule mol = new Molecule(result, (Molecule.Embedding) comboBox.getSelectedItem());
+                Molecule mol = new Molecule(result, resultFaces, resultColors, (Molecule.Embedding) comboBox.getSelectedItem());
                 if (mol == null) {
                     return;
                 }
@@ -183,10 +193,10 @@ public class MoleculeDialog extends JDialog{
         pack();
     }
 
-    public Graph concatGraph(Graph input){
+    public Graph concatGraph(Graph input, List<Face> coloredFaces){
         this.input = input;
-        concat(1, 1, 0, 0, false);
-        view.setGraph(result);
+        inputFaces = new ArrayList<Face>(coloredFaces);
+        view.setGraph(input);
         setVisible(true);
         return result;
     }
@@ -196,6 +206,8 @@ public class MoleculeDialog extends JDialog{
             return;
         FundamentalDomain inputDomain = input.getFundamentalDomain();
         result = new DefaultGraph(new FundamentalDomain(inputDomain.getAngle(), inputDomain.getHorizontalSide()*x, inputDomain.getVerticalSide()*y));
+        resultFaces = new ArrayList<Face>();
+        resultColors = new HashMap<Face, Color>();
         DefaultVertex[] vertices = new DefaultVertex[x*y*input.getVertices().size()];
         int verticalOffset = -(y - 1);
         for (int yi = 0; yi < y; yi++) {
@@ -243,12 +255,39 @@ public class MoleculeDialog extends JDialog{
                 }
             }
         }
+        for (Face face : inputFaces) {
+            for (int yi = 0; yi < y; yi++) {
+                for (int xi = 0; xi < x; xi++) {
+                    Face newFace = new Face();
+                    int xFace = 0;
+                    int yFace = 0;
+                    for (Edge edge : face.getEdges()) {
+                        int newTargetX = (xFace+xi)/x;
+                        int internalX = ((xi+xFace)%x + x)%x;
+                        int newTargetY = (yFace+yi)/y;
+                        int internalY = ((yi+yFace)%y + y)%y;
+                        internalX += (newTargetY * shiftX);
+                        internalY += (newTargetX * shiftY);
+                        if(overflow){
+                            internalX = (internalX%x + x)%x;
+                            internalY = (internalY%y + y)%y;
+                        }
+                        newFace.add(vertices[(internalY*x + internalX)*input.getVertices().size() + edge.getStart().getIndex()]);
+                        xFace += edge.getTargetX();
+                        yFace += edge.getTargetY();
+                    }
+                    resultFaces.add(newFace);
+                    resultColors.put(newFace, inputColors.get(face));
+                }
+            }
+        }
     }
     
-    public void showDialog(Graph input){
+    public void showDialog(Graph input, List<Face> coloredFaces, Map<Face, Color> colors){
         this.input = input;
-        concat(1, 1, 0, 0, false);
-        view.setGraph(result);
+        inputFaces = new ArrayList<Face>(coloredFaces);
+        this.inputColors = new HashMap<Face, Color>(colors);
+        view.setGraph(input);
         setVisible(true);
     }
     

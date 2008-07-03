@@ -40,6 +40,10 @@ public class JmolPanel extends JPanel {
     public Dimension getPreferredSize() {
         return preferredSize;
     }
+
+    public Molecule getMolecule() {
+        return adapter.getMolecule();
+    }
     
     
 }

@@ -82,6 +82,10 @@ public class PGJmolAdapter extends JmolAdapter{
         return it;
     }
 
+    public Molecule getMolecule() {
+        return clientFile;
+    }
+
     void setMolecule(Molecule molecule) {
         clientFile = molecule;
     }
