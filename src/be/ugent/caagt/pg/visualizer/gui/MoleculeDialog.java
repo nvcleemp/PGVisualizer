@@ -65,6 +65,7 @@ public class MoleculeDialog extends JDialog{
     public MoleculeDialog() {
         setLayout(new BorderLayout());
         view.setPreferredSize(new Dimension(300, 400));
+        view.setPaintFaces(false);
         add(view, BorderLayout.SOUTH);
         JPanel controls = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
