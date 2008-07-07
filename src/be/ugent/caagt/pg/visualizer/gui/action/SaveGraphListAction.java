@@ -4,7 +4,6 @@
  */
 package be.ugent.caagt.pg.visualizer.gui.action;
 
-import be.ugent.caagt.pg.visualizer.gui.EmbedderRunner;
 import be.ugent.caagt.pg.visualizer.gui.GraphListModel;
 import be.ugent.caagt.pg.visualizer.gui.SaveDialog;
 import be.ugent.caagt.pg.preferences.PGPreferences;
@@ -42,9 +41,9 @@ public class SaveGraphListAction extends AbstractAction {
             try {
                 new SaveDialog(null, chooser.getSelectedFile(), graphListModel).save();
             } catch (FileNotFoundException ex) {
-                Logger.getLogger(EmbedderRunner.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SaveGraphListAction.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
-                Logger.getLogger(EmbedderRunner.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(SaveGraphListAction.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
