@@ -24,6 +24,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,10 +37,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
@@ -45,6 +51,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.text.JTextComponent;
 
 /**
  *
@@ -75,7 +84,7 @@ public class MoleculeDialog extends JDialog{
         controls.add(new JLabel("X :"), gbc);
         gbc.weightx = 0;
         gbc.gridx++;
-        final JFormattedTextField x = new JFormattedTextField(Integer.valueOf(1));
+        final JFormattedTextField x = new JFormattedTextField(Integer.valueOf(6));
         x.setColumns(3);
         controls.add(x, gbc);
         gbc.gridx++;
@@ -92,7 +101,7 @@ public class MoleculeDialog extends JDialog{
         controls.add(new JLabel("Y :"), gbc);
         gbc.gridx++;
         gbc.weightx = 0;
-        final JFormattedTextField y = new JFormattedTextField(Integer.valueOf(1));
+        final JFormattedTextField y = new JFormattedTextField(Integer.valueOf(6));
         y.setColumns(3);
         controls.add(y, gbc);
         gbc.gridx++;
@@ -191,6 +200,33 @@ public class MoleculeDialog extends JDialog{
         });
         controls.add(saveButton, gbc);
         add(controls, BorderLayout.NORTH);
+        
+        //Focus managment
+        FocusListener selectOnFocus = new SelectOnFocus();
+        x.addFocusListener(selectOnFocus);
+        y.addFocusListener(selectOnFocus);
+        shiftX.addFocusListener(selectOnFocus);
+        shiftY.addFocusListener(selectOnFocus);
+        Action xRequest = new RequestFocusAction(x);
+        Action yRequest = new RequestFocusAction(y);
+        Action shiftXRequest = new RequestFocusAction(shiftX);
+        Action shiftYRequest = new RequestFocusAction(shiftY);
+        x.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "down");
+        x.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "right");
+        x.getActionMap().put("down", yRequest);
+        x.getActionMap().put("right", shiftXRequest);
+        y.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "up");
+        y.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "right");
+        y.getActionMap().put("up", xRequest);
+        y.getActionMap().put("right", shiftYRequest);
+        shiftX.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "down");
+        shiftX.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "left");
+        shiftX.getActionMap().put("down", shiftYRequest);
+        shiftX.getActionMap().put("left", xRequest);
+        shiftY.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "up");
+        shiftY.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "left");
+        shiftY.getActionMap().put("up", shiftXRequest);
+        shiftY.getActionMap().put("left", yRequest);
         pack();
     }
 
@@ -291,6 +327,39 @@ public class MoleculeDialog extends JDialog{
         this.inputColors = new HashMap<Face, Color>(colors);
         view.setGraph(input);
         setVisible(true);
+    }
+    
+    private static class SelectOnFocus implements FocusListener {
+        
+        public void focusGained(FocusEvent e) {
+            if(e.getComponent()  instanceof JTextComponent){
+                final JTextComponent textComp = (JTextComponent)e.getComponent();
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        textComp.selectAll();
+                    }
+                });
+            }
+        }
+
+        public void focusLost(FocusEvent e) {
+            //
+        }
+        
+    }
+    
+    private static class RequestFocusAction extends AbstractAction {
+        
+        private JComponent comp;
+
+        public RequestFocusAction(JComponent comp) {
+            this.comp = comp;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            comp.requestFocusInWindow();
+        }
+        
     }
     
 }
