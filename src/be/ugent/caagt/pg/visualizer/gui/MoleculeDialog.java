@@ -273,7 +273,8 @@ public class MoleculeDialog extends JDialog{
                             internalX = (internalX%x + x)%x;
                             internalY = (internalY%y + y)%y;
                         }
-                        newFace.add(vertices[(internalY*x + internalX)*input.getVertices().size() + edge.getStart().getIndex()]);
+                        if(!(internalX<0 || internalX >= x || internalY < 0 || internalY >= y))
+                            newFace.add(vertices[(internalY*x + internalX)*input.getVertices().size() + edge.getStart().getIndex()]);
                         xFace += edge.getTargetX();
                         yFace += edge.getTargetY();
                     }
