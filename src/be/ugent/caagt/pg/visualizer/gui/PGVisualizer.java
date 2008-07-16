@@ -86,7 +86,12 @@ public class PGVisualizer extends JPanel{
     public PGVisualizer(GraphListModel graphListModel) {
         model = graphListModel;
         setLayout(new BorderLayout());
-        add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
+        ListSelectionNavigator nav = new ListSelectionNavigator(model.getSelectionModel(), model);
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "previous");
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "next");
+        getActionMap().put("previous", nav.getPreviousAction());
+        getActionMap().put("next", nav.getNextAction());
+        add(nav, BorderLayout.NORTH);
         view = new TorusView(model);
         view.addMouseListener(new MouseAdapter() {
             @Override
