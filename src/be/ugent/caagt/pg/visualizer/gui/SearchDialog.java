@@ -243,13 +243,16 @@ public class SearchDialog extends JDialog{
                             if(visualizer!=null)
                                 frame.remove(visualizer);
                         }
-                        visualizer = new PGVisualizer(searchList());
-                        frame.add(visualizer);
-                        frame.setJMenuBar(visualizer.getMenuBar(frame));
-                        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-                        frame.pack();
-                        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-                        frame.setVisible(true);
+                        GraphListModel filteredList = searchList();
+                        if(filteredList!=null){
+                            visualizer = new PGVisualizer(filteredList);
+                            frame.add(visualizer);
+                            frame.setJMenuBar(visualizer.getMenuBar(frame));
+                            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+                            frame.pack();
+                            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+                            frame.setVisible(true);
+                        }
                     }
                 });
                 t.start();
@@ -285,7 +288,10 @@ public class SearchDialog extends JDialog{
             progress.setValue(i+1);
         }
         progress.setString("Done");
-        return new DelegateGraphListModel(graphListModel, list);
+        if(list.size()==0)
+            return null;
+        else
+            return new DelegateGraphListModel(graphListModel, list);
     }
 
     private FaceOverview getFaceOverview(GraphGUIData data){
