@@ -8,6 +8,8 @@ package be.ugent.caagt.pg.visualizer.gui;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
@@ -27,9 +29,11 @@ public class ListSelectionNavigator extends JPanel implements ListSelectionListe
     
     private ListSelectionModel selectionModel;
     private ListModel model;
+    private Action previousAction = new MoveAction("<", -1);
+    private Action nextAction = new MoveAction(">", 1);
     private JButton start = new JButton("|<<");
-    private JButton left = new JButton("<");
-    private JButton right = new JButton(">");
+    private JButton left = new JButton(previousAction);
+    private JButton right = new JButton(nextAction);
     private JButton end = new JButton(">>|");
     private JFormattedTextField currentSelection = new JFormattedTextField(1);
     private JLabel total = new JLabel("/ ");
@@ -52,16 +56,6 @@ public class ListSelectionNavigator extends JPanel implements ListSelectionListe
         start.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 setSelection(0);
-            }
-        });
-        left.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setSelection(ListSelectionNavigator.this.selectionModel.getMinSelectionIndex()-1);
-            }
-        });
-        right.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                setSelection(ListSelectionNavigator.this.selectionModel.getMinSelectionIndex()+1);
             }
         });
         enter.addActionListener(new ActionListener() {
@@ -110,6 +104,14 @@ public class ListSelectionNavigator extends JPanel implements ListSelectionListe
         }
         selectionModel.setSelectionInterval(position, position);
     }
+
+    public Action getNextAction() {
+        return nextAction;
+    }
+
+    public Action getPreviousAction() {
+        return previousAction;
+    }
     
     public static void main(String[] args) {
         javax.swing.DefaultListModel model = new javax.swing.DefaultListModel();
@@ -125,5 +127,18 @@ public class ListSelectionNavigator extends JPanel implements ListSelectionListe
         frame.setVisible(true);
     }
 
+    private class MoveAction extends AbstractAction{
+        
+        private int step;
 
+        public MoveAction(String name, int step) {
+            super(name);
+            this.step = step;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            setSelection(ListSelectionNavigator.this.selectionModel.getMinSelectionIndex()+step);
+        }
+        
+    }
 }

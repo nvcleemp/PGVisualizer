@@ -13,16 +13,19 @@ import be.ugent.caagt.pg.visualizer.gui.action.ShowWindowAction;
 import be.ugent.caagt.pg.visualizer.gui.toggler.ClipViewToggler;
 import be.ugent.caagt.pg.visualizer.gui.toggler.FillFacesToggler;
 import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import javax.swing.BoxLayout;
+import javax.swing.InputMap;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 
 /**
  *
@@ -37,7 +40,12 @@ public class PGVisualizer extends JPanel{
     public PGVisualizer(File file) {
         model = new DefaultGraphListModel(file);
         setLayout(new BorderLayout());
-        add(new ListSelectionNavigator(model.getSelectionModel(), model), BorderLayout.NORTH);
+        ListSelectionNavigator nav = new ListSelectionNavigator(model.getSelectionModel(), model);
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "previous");
+        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "next");
+        getActionMap().put("previous", nav.getPreviousAction());
+        getActionMap().put("next", nav.getNextAction());
+        add(nav, BorderLayout.NORTH);
         view = new TorusView(model);
         view.addMouseListener(new MouseAdapter() {
             @Override
