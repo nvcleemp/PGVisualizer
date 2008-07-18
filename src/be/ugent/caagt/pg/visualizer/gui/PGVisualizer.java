@@ -39,8 +39,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import javax.swing.BoxLayout;
-import javax.swing.InputMap;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -97,16 +95,6 @@ public class PGVisualizer extends JPanel{
             }            
         });
         add(view, BorderLayout.CENTER);
-        JPanel controls = new JPanel();
-        controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
-        //controls.add(new AzulenoidInfo(model));
-        //controls.add(new FaceControl(view, model));
-        //controls.add(ToolFactory.createEmbeddedTool(new ViewController(view)));
-        //controls.add(new GraphOperations(model));
-        //controls.add(new DomainOperations(model));
-        //controls.add(new EmbedderControl(model));
-        //controls.add(ExportControl.getPanel(view, model));
-        add(controls, BorderLayout.EAST);
     }
     
     public JMenuBar getMenuBar(JFrame target){
