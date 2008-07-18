@@ -114,14 +114,14 @@ public class PGVisualizer extends JPanel{
             menuBar.add(editMenu);
             JMenu viewMenu = new JMenu("View");
             viewMenu.add(new FillFacesToggler(view).getJCheckBoxMenuItem());
-            viewMenu.add(new JMenuItem(new ShowWindowAction("Show face option", new ToolWindow(new FaceControl(view, model), target))));
+            viewMenu.add(new JMenuItem(new ShowWindowAction("Face option", new ToolWindow(new FaceControl(view, model), target))));
             viewMenu.addSeparator();
             viewMenu.add(new ClipViewToggler(view).getJCheckBoxMenuItem());
-            viewMenu.add(new JMenuItem(new ShowWindowAction("Show view option", new ToolWindow(new ViewController(view), target))));
+            viewMenu.add(new JMenuItem(new ShowWindowAction("View option", new ToolWindow(new ViewController(view), target))));
             viewMenu.addSeparator();
             viewMenu.add(new JMenuItem(new Show3DAction(model)));
             viewMenu.addSeparator();
-            viewMenu.add(new JMenuItem(new ShowWindowAction("Show info", new ToolWindow(new AzulenoidInfo(model), target))));
+            viewMenu.add(new JMenuItem(new ShowWindowAction("Info", new ToolWindow(new AzulenoidInfo(model), target))));
             menuBar.add(viewMenu);
             JMenu embedderMenu = new JMenu("Embedder");
             embedderMenu.add(new JMenuItem(new ShowWindowAction("Embedder runner", new ToolWindow(new EmbedderControl(model), target))));
