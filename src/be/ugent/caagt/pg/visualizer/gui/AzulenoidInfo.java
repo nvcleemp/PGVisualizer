@@ -58,9 +58,9 @@ public class AzulenoidInfo extends JPanel implements ListSelectionListener{
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(new JLabel("Number of azulenes per domain: "), gbc);
+        add(new JLabel("Number of vertices per domain: "), gbc);
         gbc.gridx = 1;
-        numberLabel = new JLabel("" +  model.getSelectedGraph().getVertices().size()/10);
+        numberLabel = new JLabel("" +  model.getSelectedGraph().getVertices().size());
         add(numberLabel, gbc);
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -76,7 +76,7 @@ public class AzulenoidInfo extends JPanel implements ListSelectionListener{
         });
         add(symbol, gbc);
         model.addListSelectionListener(this);
-        setName("Azulenoids info");
+        setName("Info");
     }
 
     public void valueChanged(ListSelectionEvent e) {
