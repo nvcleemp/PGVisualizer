@@ -1,8 +1,8 @@
-/* GrinvinPreferencesListener.java
+/* PGPreferencesListener.java
  * =========================================================================
- * This file is part of the GrInvIn project - http://www.grinvin.org
+ * This file is part of the PG project - http://caagt.ugent.be/azul
  * 
- * Copyright (C) 2005-2008 Universiteit Gent
+ * Copyright (C) 2008 Universiteit Gent
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
