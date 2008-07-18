@@ -60,49 +60,7 @@ public class PGVisualizer extends JPanel{
     private JMenuBar menuBar = null;
 
     public PGVisualizer(File file) {
-        model = new DefaultGraphListModel(file);
-        setLayout(new BorderLayout());
-        ListSelectionNavigator nav = new ListSelectionNavigator(model.getSelectionModel(), model);
-        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0), "previous");
-        getInputMap(WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0), "next");
-        getActionMap().put("previous", nav.getPreviousAction());
-        getActionMap().put("next", nav.getNextAction());
-        add(nav, BorderLayout.NORTH);
-        view = new TorusView(model);
-        view.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                TorusView.ViewVertex vv = view.getVertexAt(e.getX(), e.getY());
-                TorusView.ViewFace vf = view.getFaceAt(e.getX(), e.getY());
-                if(e.isShiftDown()){
-                    if(vv!=null){
-                        view.getGraphSelectionModel().toggleVertex(vv.vertex);
-                    } else if (vf!=null){
-                        view.getFaceSelectionModel().toggleFace(vf.face);
-                    }
-                } else {
-                    view.getGraphSelectionModel().clearSelection();
-                    view.getFaceSelectionModel().clearSelection();
-                    if(vv!=null){
-                        view.getGraphSelectionModel().addVertex(vv.vertex);
-                    } else if (vf!=null){
-                        view.getFaceSelectionModel().toggleFace(vf.face);
-                    }
-                }
-                //view.selectedFace = view.getFaceAt(e.getX(), e.getY());
-            }            
-        });
-        add(view, BorderLayout.CENTER);
-        JPanel controls = new JPanel();
-        controls.setLayout(new BoxLayout(controls, BoxLayout.Y_AXIS));
-        //controls.add(ToolFactory.createEmbeddedTool(new AzulenoidInfo(model)));
-        //controls.add(ToolFactory.createEmbeddedTool(new FaceControl(view, model)));
-        //controls.add(ToolFactory.createEmbeddedTool(new ViewController(view)));
-        //controls.add(ToolFactory.createEmbeddedTool(new GraphOperations(model)));
-        //controls.add(ToolFactory.createEmbeddedTool(new DomainOperations(model)));
-        //controls.add(ToolFactory.createEmbeddedTool(new EmbedderControl(model)));
-        //controls.add(ExportControl.getPanel(view, model));
-        add(controls, BorderLayout.EAST);
+        this(new DefaultGraphListModel(file));
     }
     
     public PGVisualizer(GraphListModel graphListModel) {
