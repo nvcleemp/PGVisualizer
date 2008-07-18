@@ -42,6 +42,8 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.event.ListDataEvent;
 
+//TODO: factor out common code with TorusView!!!
+
 /**
  *
  * @author nvcleemp
