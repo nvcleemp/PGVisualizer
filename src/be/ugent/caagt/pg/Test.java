@@ -10,7 +10,7 @@ import be.ugent.caagt.pg.delaney.DelaneySymbol;
 import be.ugent.caagt.pg.io.FileFormatException;
 import be.ugent.caagt.pg.io.IOManager;
 import be.ugent.caagt.pg.preferences.PGPreferences;
-import be.ugent.caagt.pg.visualizer.gui.EmbedderRunner;
+import be.ugent.caagt.pg.embedder.gui.EmbedderRunner;
 import be.ugent.caagt.pg.visualizer.gui.EmbedderWindow;
 import be.ugent.caagt.pg.visualizer.gui.PGVisualizer;
 import be.ugent.caagt.pg.visualizer.gui.TorusViewTest;

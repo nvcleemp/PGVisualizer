@@ -5,7 +5,7 @@
 
 package be.ugent.caagt.pg;
 
-import be.ugent.caagt.pg.visualizer.gui.EmbedderRunner;
+import be.ugent.caagt.pg.embedder.gui.EmbedderRunner;
 import be.ugent.caagt.pg.visualizer.gui.PGVisualizer;
 import be.ugent.caagt.pg.preferences.PGPreferences;
 import be.ugent.twijug.jclops.CLManager;

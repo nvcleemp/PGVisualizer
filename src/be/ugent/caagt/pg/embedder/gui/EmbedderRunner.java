@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package be.ugent.caagt.pg.visualizer.gui;
+package be.ugent.caagt.pg.embedder.gui;
 
 import be.ugent.caagt.pg.embedder.FastDomainAngleEmbedder;
 import be.ugent.caagt.pg.embedder.FastDomainEdgeEmbedder;
@@ -11,6 +11,9 @@ import be.ugent.caagt.pg.embedder.SpringEmbedder;
 import be.ugent.caagt.pg.embedder.SpringEmbedder2Zero;
 import be.ugent.caagt.pg.embedder.energy.AngleEnergyCalculator;
 import be.ugent.caagt.pg.embedder.energy.MeanEdgeLengthEnergyCalculator;
+import be.ugent.caagt.pg.visualizer.gui.DefaultGraphListModel;
+import be.ugent.caagt.pg.visualizer.gui.GraphListModel;
+import be.ugent.caagt.pg.visualizer.gui.SaveDialog;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
