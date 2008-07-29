@@ -43,11 +43,11 @@ public class Tiled3DStructure {
 
     protected int size;
     protected int edgeSize;
-    protected int selectedFaceCount;
+    protected int faceCount;
     protected int[][] adjacencyList;
     protected int[][] edges;
     protected float[][] coordinate;
-    protected int[][] selectedFaces;
+    protected int[][] faces;
     protected Color[] colors;
 
     public enum Embedding{
@@ -122,11 +122,11 @@ public class Tiled3DStructure {
                 targetFaces.add(currentFace);
             }
         }
-        selectedFaceCount = targetFaces.size();
-        selectedFaces = new int[selectedFaceCount][];
-        this.colors = new Color[selectedFaceCount];
-        for (int i = 0; i < selectedFaceCount; i++) {
-            selectedFaces[i] = targetFaces.get(i);
+        faceCount = targetFaces.size();
+        this.faces = new int[faceCount][];
+        this.colors = new Color[faceCount];
+        for (int i = 0; i < faceCount; i++) {
+            this.faces[i] = targetFaces.get(i);
             this.colors[i] = targetColors.get(i);
         }
     }
@@ -273,11 +273,11 @@ public class Tiled3DStructure {
     }
 
     public int[] getFaceAt(int index) {
-        return selectedFaces[index];
+        return faces[index];
     }
 
     public int getFaceSize() {
-        return selectedFaceCount;
+        return faceCount;
     }
 
     public int getSize() {
