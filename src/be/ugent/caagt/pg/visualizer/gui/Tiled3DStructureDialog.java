@@ -36,8 +36,10 @@ import be.ugent.caagt.pg.graph.Edge;
 import be.ugent.caagt.pg.graph.Graph;
 import be.ugent.caagt.pg.graph.Vertex;
 import be.ugent.caagt.pg.visualizer.gui.action.Show3DAction;
+import be.ugent.caagt.pg.visualizer.molecule.JRealityFrame;
 import be.ugent.caagt.pg.visualizer.molecule.JmolFrame;
 import be.ugent.caagt.pg.visualizer.molecule.Molecule;
+import be.ugent.caagt.pg.visualizer.molecule.Tiled3DStructure;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -90,6 +92,7 @@ public class Tiled3DStructureDialog extends JDialog{
     private List<Face> resultFaces;
     private JComboBox comboBox = new JComboBox(Molecule.Embedding.values());
     private JmolFrame frame = new JmolFrame();
+    private JRealityFrame frame3D = new JRealityFrame();
     private Map<Face, Color> inputColors;
     private Map<Face, Color> resultColors;
 
@@ -177,8 +180,22 @@ public class Tiled3DStructureDialog extends JDialog{
         });
         controls.add(comboBox, gbc);
         gbc.gridy++;
-        JButton showButton = new JButton("Show");
-        showButton.addActionListener(new ActionListener() {
+        JButton show3DButton = new JButton("Show tiled structure");
+        show3DButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected(), true);
+
+                Tiled3DStructure struc = new Tiled3DStructure(result, resultFaces, resultColors, (Molecule.Embedding) comboBox.getSelectedItem(), false);
+                if (struc == null) {
+                    return;
+                }
+                frame3D.display(struc);
+            }
+        });
+        controls.add(show3DButton, gbc);
+        gbc.gridy++;
+        JButton showMoleculeButton = new JButton("Show molecule");
+        showMoleculeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected());
 
@@ -189,7 +206,7 @@ public class Tiled3DStructureDialog extends JDialog{
                 frame.display(mol);
             }
         });
-        controls.add(showButton, gbc);
+        controls.add(showMoleculeButton, gbc);
         gbc.gridy++;
         JButton saveButton = new JButton("Save CML file");
         saveButton.addActionListener(new ActionListener() {
@@ -261,6 +278,10 @@ public class Tiled3DStructureDialog extends JDialog{
     }
     
     private void concat(int x, int y, int shiftX, int shiftY, boolean overflow){
+        concat(x, y, shiftX, shiftY, overflow, false);
+    }
+    
+    private void concat(int x, int y, int shiftX, int shiftY, boolean overflow, boolean allFaces){
         if(input==null)
             return;
         FundamentalDomain inputDomain = input.getFundamentalDomain();
@@ -315,29 +336,35 @@ public class Tiled3DStructureDialog extends JDialog{
             }
         }
         for (Face face : inputFaces) {
-            for (int yi = 0; yi < y; yi++) {
-                for (int xi = 0; xi < x; xi++) {
-                    Face newFace = new Face();
-                    int xFace = 0;
-                    int yFace = 0;
-                    for (Edge edge : face.getEdges()) {
-                        int newTargetX = (xFace+xi)/x;
-                        int internalX = ((xi+xFace)%x + x)%x;
-                        int newTargetY = (yFace+yi)/y;
-                        int internalY = ((yi+yFace)%y + y)%y;
-                        internalX += (newTargetY * shiftX);
-                        internalY += (newTargetX * shiftY);
-                        if(overflow){
-                            internalX = (internalX%x + x)%x;
-                            internalY = (internalY%y + y)%y;
+            if(allFaces || inputColors.containsKey(face)){
+                for (int yi = 0; yi < y; yi++) {
+                    for (int xi = 0; xi < x; xi++) {
+                        Face newFace = new Face();
+                        int xFace = 0;
+                        int yFace = 0;
+                        for (Edge edge : face.getEdges()) {
+                            int newTargetX = (xFace+xi)/x;
+                            int internalX = ((xi+xFace)%x + x)%x;
+                            int newTargetY = (yFace+yi)/y;
+                            int internalY = ((yi+yFace)%y + y)%y;
+                            internalX += (newTargetY * shiftX);
+                            internalY += (newTargetX * shiftY);
+                            if(overflow){
+                                internalX = (internalX%x + x)%x;
+                                internalY = (internalY%y + y)%y;
+                            }
+                            if(!(internalX<0 || internalX >= x || internalY < 0 || internalY >= y))
+                                newFace.add(vertices[(internalY*x + internalX)*input.getVertices().size() + edge.getStart().getIndex()]);
+                            xFace += edge.getTargetX();
+                            yFace += edge.getTargetY();
                         }
-                        if(!(internalX<0 || internalX >= x || internalY < 0 || internalY >= y))
-                            newFace.add(vertices[(internalY*x + internalX)*input.getVertices().size() + edge.getStart().getIndex()]);
-                        xFace += edge.getTargetX();
-                        yFace += edge.getTargetY();
+                        resultFaces.add(newFace);
+                        Color c = inputColors.get(face);
+                        if(c!=null)
+                            resultColors.put(newFace, c);
+                        else
+                            resultColors.put(newFace, FaceColorMapping.getColorFor(newFace.getSize()));
                     }
-                    resultFaces.add(newFace);
-                    resultColors.put(newFace, inputColors.get(face));
                 }
             }
         }
