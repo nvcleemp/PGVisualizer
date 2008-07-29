@@ -54,7 +54,7 @@ public class Molecule extends Tiled3DStructure {
     }
     
     public Molecule(Graph graph, List<Face> resultFaces, Map<Face, Color> colors, Embedding embedding) {
-        super(graph, resultFaces, colors, embedding, false);
+        super(graph, resultFaces, colors, embedding, true);
         atomType = new String[size];
         for (int i = 0; i < atomType.length; i++) {
             atomType[i] = "C";
