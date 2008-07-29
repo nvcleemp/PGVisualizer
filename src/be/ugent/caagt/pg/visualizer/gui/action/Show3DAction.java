@@ -28,11 +28,15 @@
 package be.ugent.caagt.pg.visualizer.gui.action;
 
 import be.ugent.caagt.pg.graph.DefaultGraph;
+import be.ugent.caagt.pg.graph.Face;
 import be.ugent.caagt.pg.visualizer.gui.Tiled3DStructureDialog;
 import be.ugent.caagt.pg.visualizer.gui.GraphListModelListener;
 import be.ugent.caagt.pg.visualizer.gui.GraphListModel;
 import be.ugent.caagt.pg.visualizer.gui.DefaultFaceHightlighter;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.AbstractAction;
 import javax.swing.event.ListDataEvent;
 
@@ -55,9 +59,16 @@ public class Show3DAction extends AbstractAction implements GraphListModelListen
     public void actionPerformed(ActionEvent e) {
             if(dialog==null) {
                 dialog = new Tiled3DStructureDialog();
+                DefaultFaceHightlighter dfh = ((DefaultFaceHightlighter)graphListModel.getSelectedGraphGUIData().getFaceHighlighter());
+                Map<Face,Color> colors;
+                if(dfh==null){
+                    colors = new HashMap<Face, Color>();
+                } else {
+                    colors = dfh.getMap();
+                }
                 dialog.showDialog(graphListModel.getSelectedGraph(),
                         ((DefaultGraph)graphListModel.getSelectedGraph()).getFaces(),
-                        ((DefaultFaceHightlighter)graphListModel.getSelectedGraphGUIData().getFaceHighlighter()).getMap());
+                        colors);
             } else {
                 dialog.setVisible(true);
             }
