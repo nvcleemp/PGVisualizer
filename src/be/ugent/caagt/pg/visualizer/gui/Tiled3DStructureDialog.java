@@ -1,4 +1,4 @@
-/* MoleculeDialog.java
+/* Tiled3DStructureDialog.java
  * =========================================================================
  * This file is part of the PG project - http://caagt.ugent.be/azul
  * 
@@ -81,7 +81,7 @@ import javax.swing.text.JTextComponent;
  *
  * @author nvcleemp
  */
-public class MoleculeDialog extends JDialog{
+public class Tiled3DStructureDialog extends JDialog{
     
     private TorusView view = new TorusView(0, 0, 0, 0);
     private DefaultGraph result = null;
@@ -93,7 +93,7 @@ public class MoleculeDialog extends JDialog{
     private Map<Face, Color> inputColors;
     private Map<Face, Color> resultColors;
 
-    public MoleculeDialog() {
+    public Tiled3DStructureDialog() {
         setLayout(new BorderLayout());
         view.setPreferredSize(new Dimension(300, 400));
         view.setPaintFaces(false);
