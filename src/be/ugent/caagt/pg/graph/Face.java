@@ -40,9 +40,11 @@ public class Face {
     
     private List<Vertex> vertices = new ArrayList<Vertex>();
     private int index = -1;
+    private List<Edge> faceEdges;
 
     public void add(Vertex v){
         vertices.add(v);
+        faceEdges = null;
     }
     
     public Vertex getVertexAt(int i){
@@ -83,7 +85,9 @@ public class Face {
     }
     
     public List<Edge> getEdges(){
-        List<Edge> faceEdges = new ArrayList<Edge>();
+        if(faceEdges!=null)
+            return faceEdges;
+        faceEdges = new ArrayList<Edge>();
         int x = 0;
         int y = 0;
         Edge lastEdge = null;
