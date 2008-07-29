@@ -1,4 +1,4 @@
-/* AzulenoidInfo.java
+/* GraphInfo.java
  * =========================================================================
  * This file is part of the PG project - http://caagt.ugent.be/azul
  * 
@@ -45,12 +45,12 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author nvcleemp
  */
-public class AzulenoidInfo extends JPanel implements ListSelectionListener{
+public class GraphInfo extends JPanel implements ListSelectionListener{
     
     private GraphListModel model;
     private JLabel numberLabel;
 
-    public AzulenoidInfo(GraphListModel model) {
+    public GraphInfo(GraphListModel model) {
         this.model = model;
         if(model.getSelectedGraph()==null)
             model.getSelectionModel().setSelectionInterval(0, 0);
@@ -70,7 +70,7 @@ public class AzulenoidInfo extends JPanel implements ListSelectionListener{
             public void actionPerformed(ActionEvent e) {
                 JDialog dialog = new JDialog((Frame)null, "Delaney symbol", true);
                 dialog.setSize(360, 360);
-                dialog.add(new JScrollPane(new JTextArea(AzulenoidInfo.this.model.getSelectedGraphGUIData().export())));
+                dialog.add(new JScrollPane(new JTextArea(GraphInfo.this.model.getSelectedGraphGUIData().export())));
                 dialog.setVisible(true);
             }
         });

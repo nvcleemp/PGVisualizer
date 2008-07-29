@@ -121,7 +121,7 @@ public class PGVisualizer extends JPanel{
             viewMenu.addSeparator();
             viewMenu.add(new JMenuItem(new Show3DAction(model)));
             viewMenu.addSeparator();
-            viewMenu.add(new JMenuItem(new ShowWindowAction("Info", new ToolWindow(new AzulenoidInfo(model), target))));
+            viewMenu.add(new JMenuItem(new ShowWindowAction("Info", new ToolWindow(new GraphInfo(model), target))));
             menuBar.add(viewMenu);
             JMenu embedderMenu = new JMenu("Embedder");
             embedderMenu.add(new JMenuItem(new ShowWindowAction("Embedder runner", new ToolWindow(new EmbedderControl(model), target))));
