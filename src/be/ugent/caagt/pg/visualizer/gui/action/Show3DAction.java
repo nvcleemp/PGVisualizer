@@ -27,6 +27,7 @@
 
 package be.ugent.caagt.pg.visualizer.gui.action;
 
+import be.ugent.caagt.pg.graph.DefaultGraph;
 import be.ugent.caagt.pg.visualizer.gui.Tiled3DStructureDialog;
 import be.ugent.caagt.pg.visualizer.gui.GraphListModelListener;
 import be.ugent.caagt.pg.visualizer.gui.GraphListModel;
@@ -55,7 +56,7 @@ public class Show3DAction extends AbstractAction implements GraphListModelListen
             if(dialog==null) {
                 dialog = new Tiled3DStructureDialog();
                 dialog.showDialog(graphListModel.getSelectedGraph(),
-                        ((DefaultFaceHightlighter)graphListModel.getSelectedGraphGUIData().getFaceHighlighter()).getFaces(),
+                        ((DefaultGraph)graphListModel.getSelectedGraph()).getFaces(),
                         ((DefaultFaceHightlighter)graphListModel.getSelectedGraphGUIData().getFaceHighlighter()).getMap());
             } else {
                 dialog.setVisible(true);
