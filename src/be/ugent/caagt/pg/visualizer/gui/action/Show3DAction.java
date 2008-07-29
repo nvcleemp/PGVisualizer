@@ -27,7 +27,7 @@
 
 package be.ugent.caagt.pg.visualizer.gui.action;
 
-import be.ugent.caagt.pg.visualizer.gui.MoleculeDialog;
+import be.ugent.caagt.pg.visualizer.gui.Tiled3DStructureDialog;
 import be.ugent.caagt.pg.visualizer.gui.GraphListModelListener;
 import be.ugent.caagt.pg.visualizer.gui.GraphListModel;
 import be.ugent.caagt.pg.visualizer.gui.DefaultFaceHightlighter;
@@ -49,11 +49,11 @@ public class Show3DAction extends AbstractAction implements GraphListModelListen
     }
     
     private GraphListModel graphListModel;
-    private MoleculeDialog dialog = null;
+    private Tiled3DStructureDialog dialog = null;
 
     public void actionPerformed(ActionEvent e) {
             if(dialog==null) {
-                dialog = new MoleculeDialog();
+                dialog = new Tiled3DStructureDialog();
                 dialog.showDialog(graphListModel.getSelectedGraph(),
                         ((DefaultFaceHightlighter)graphListModel.getSelectedGraphGUIData().getFaceHighlighter()).getFaces(),
                         ((DefaultFaceHightlighter)graphListModel.getSelectedGraphGUIData().getFaceHighlighter()).getMap());
