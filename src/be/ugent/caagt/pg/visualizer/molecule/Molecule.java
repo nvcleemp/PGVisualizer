@@ -28,10 +28,8 @@
 package be.ugent.caagt.pg.visualizer.molecule;
 
 import be.ugent.caagt.pg.graph.Face;
-import be.ugent.caagt.pg.graph.Edge;
 import be.ugent.caagt.pg.graph.Graph;
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +54,7 @@ public class Molecule extends Tiled3DStructure {
     }
     
     public Molecule(Graph graph, List<Face> resultFaces, Map<Face, Color> colors, Embedding embedding) {
-        super(graph, resultFaces, colors, embedding);
+        super(graph, resultFaces, colors, embedding, false);
         atomType = new String[size];
         for (int i = 0; i < atomType.length; i++) {
             atomType[i] = "C";

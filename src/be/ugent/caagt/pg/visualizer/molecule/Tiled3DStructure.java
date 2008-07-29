@@ -58,7 +58,7 @@ public class Tiled3DStructure {
         public abstract String getDescription();
     }
 
-    public Tiled3DStructure(Graph graph, List<Face> resultFaces, Map<Face, Color> colors, Embedding embedding) {
+    public Tiled3DStructure(Graph graph, List<Face> resultFaces, Map<Face, Color> colors, Embedding embedding, boolean allowOverflowFaces) {
         size = graph.getVertices().size();
         adjacencyList = new int[size][];
         coordinate = new float[size][3];
@@ -78,20 +78,34 @@ public class Tiled3DStructure {
         edgeSize /= 2;
         doEdges();
         if(resultFaces!=null)
-            doFaces(resultFaces, colors);
+            doFaces(resultFaces, colors, allowOverflowFaces);
     }
     
-    protected void doFaces(List<Face> faces, Map<Face, Color> colors){
-        selectedFaceCount = faces.size();
+    protected void doFaces(List<Face> faces, Map<Face, Color> colors, boolean allowOverflowFaces){
+        List<int[]> targetFaces = new ArrayList<int[]>();
+        List<Color> targetColors = new ArrayList<Color>();
+        for (int i = 0; i < faces.size(); i++) {
+            boolean overflowFace = false;
+            if(!allowOverflowFaces)
+                for (Edge edge : faces.get(i).getEdges()) {
+                    overflowFace = overflowFace || (edge.getTargetX()!=0 || edge.getTargetY()!=0);
+                }
+            if(allowOverflowFaces || !overflowFace){
+                int[] currentFace = new int[faces.get(i).getSize()];
+                if(colors!=null)
+                    targetColors.add(colors.get(faces.get(i)));
+                for (int j = 0; j < currentFace.length; j++) {
+                    currentFace[j]=faces.get(i).getVertexAt(j).getIndex();
+                }
+                targetFaces.add(currentFace);
+            }
+        }
+        selectedFaceCount = targetFaces.size();
         selectedFaces = new int[selectedFaceCount][];
         this.colors = new Color[selectedFaceCount];
-        for (int i = 0; i < faces.size(); i++) {
-            selectedFaces[i] = new int[faces.get(i).getSize()];
-            if(colors!=null)
-                this.colors[i] = colors.get(faces.get(i));
-            for (int j = 0; j < selectedFaces[i].length; j++) {
-                selectedFaces[i][j]=faces.get(i).getVertexAt(j).getIndex();
-            }
+        for (int i = 0; i < selectedFaceCount; i++) {
+            selectedFaces[i] = targetFaces.get(i);
+            this.colors[i] = targetColors.get(i);
         }
     }
     
