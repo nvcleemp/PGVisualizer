@@ -347,23 +347,34 @@ public class Tiled3DStructureDialog extends JDialog{
                             int internalX = ((xi+xFace)%x + x)%x;
                             int newTargetY = (yFace+yi)/y;
                             int internalY = ((yi+yFace)%y + y)%y;
+                            if(xFace + xi < 0){
+                                newTargetX = ((xFace+xi)- x + 1)/x;
+                                internalX = (internalX + x)%x;
+                            }
+                            if(yFace + yi < 0){
+                                newTargetY = ((yFace+yi)- y + 1)/y;
+                                internalY = (internalY + y)%y;
+                            }
                             internalX += (newTargetY * shiftX);
                             internalY += (newTargetX * shiftY);
                             if(overflow){
                                 internalX = (internalX%x + x)%x;
                                 internalY = (internalY%y + y)%y;
                             }
-                            if(!(internalX<0 || internalX >= x || internalY < 0 || internalY >= y))
+                            if(!(internalX<0 || internalX >= x || internalY < 0 || internalY >= y)){
                                 newFace.add(vertices[(internalY*x + internalX)*input.getVertices().size() + edge.getStart().getIndex()]);
+                            }
                             xFace += edge.getTargetX();
                             yFace += edge.getTargetY();
                         }
-                        resultFaces.add(newFace);
-                        Color c = inputColors.get(face);
-                        if(c!=null)
-                            resultColors.put(newFace, c);
-                        else
-                            resultColors.put(newFace, FaceColorMapping.getColorFor(newFace.getSize()));
+                        if(newFace.getSize()==face.getSize()){
+                            resultFaces.add(newFace);
+                            Color c = inputColors.get(face);
+                            if(c!=null)
+                                resultColors.put(newFace, c);
+                            else
+                                resultColors.put(newFace, FaceColorMapping.getColorFor(newFace.getSize()));
+                        }
                     }
                 }
             }
