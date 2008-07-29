@@ -30,10 +30,14 @@ package be.ugent.caagt.pg.visualizer.molecule;
 import de.jreality.geometry.IndexedFaceSetFactory;
 import de.jreality.ui.viewerapp.ViewerApp;
 import de.jreality.ui.viewerapp.ViewerAppMenu;
+import de.jreality.ui.viewerapp.actions.view.ToggleNavigator;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 
 /**
  *
@@ -84,8 +88,21 @@ public class JRealityFrame{
         if(va!=null){
             va.dispose();
         }
-        va = ViewerApp.display(ifsf.getIndexedFaceSet());
-        va.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //needed to override value set by ViewerApp.display()
+        va = new ViewerApp(ifsf.getIndexedFaceSet());
+        va.setAttachNavigator(false);
+        va.setExternalNavigator(false);
+        va.setAttachBeanShell(false);
+        va.setExternalBeanShell(false);
+        va.setShowMenu(false);
+        va.setExternalNavigator(true);
+        va.update();
+        JMenuBar menuBar = new JMenuBar();
+        JMenu optionMenu = new JMenu("Options");
+        optionMenu.add(new JCheckBoxMenuItem(new ToggleNavigator(ViewerAppMenu.TOGGLE_NAVIGATOR, va)));
+        menuBar.add(optionMenu);
+        va.getFrame().setJMenuBar(menuBar);
+        va.display();
+	va.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //needed to override value set in ViewerApp
         va.getFrame().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -93,15 +110,6 @@ public class JRealityFrame{
                 va = null;
             }
         });
-        //TODO: there doesn't seem to be a better way to do this.
-        va.getMenu().removeMenuItem(ViewerAppMenu.FILE_MENU, 0);
-        va.getMenu().removeMenuItem(ViewerAppMenu.FILE_MENU, 0);
-        va.getMenu().removeMenuItem(ViewerAppMenu.FILE_MENU, 0);
-        va.getMenu().removeMenuItem(ViewerAppMenu.FILE_MENU, 0);
-        va.getMenu().removeMenuItem(ViewerAppMenu.FILE_MENU, 0);
-        va.getMenu().removeMenuItem(ViewerAppMenu.FILE_MENU, 1);
-        va.getMenu().removeMenuItem(ViewerAppMenu.FILE_MENU, 1);
-        va.getMenu().removeMenu(ViewerAppMenu.EDIT_MENU);
     }
     
 }
