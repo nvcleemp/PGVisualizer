@@ -55,29 +55,50 @@ public class Tiled3DStructure {
             public String getDescription(){
                 return "Planar";
             }
+            
+            public boolean isOverflowEdge(Edge edge){
+                return edge.getTargetX()!=0 || edge.getTargetY()!=0;
+            }
         },
         CYLINDER_H{
             public String getDescription(){
                 return "Cylinder along X axis";
+            }
+            
+            public boolean isOverflowEdge(Edge edge){
+                return edge.getTargetX()!=0;
             }
         },
         CYLINDER_V{
             public String getDescription(){
                 return "Cylinder along Y axis";
             }
+            
+            public boolean isOverflowEdge(Edge edge){
+                return edge.getTargetY()!=0;
+            }
         },
         TORUS_X{
             public String getDescription(){
                 return "Torus: X axis as major circle";
+            }
+            
+            public boolean isOverflowEdge(Edge edge){
+                return false;
             }
         },
         TORUS_Y{
             public String getDescription(){
                 return "Torus: Y axis as major circle";
             }
+            
+            public boolean isOverflowEdge(Edge edge){
+                return false;
+            }
         };
         
         public abstract String getDescription();
+        public abstract boolean isOverflowEdge(Edge edge);
     }
 
     public Tiled3DStructure(Graph graph, List<Face> resultFaces, Map<Face, Color> colors, Embedding embedding, boolean allowOverflowFaces) {
@@ -100,17 +121,17 @@ public class Tiled3DStructure {
         edgeSize /= 2;
         doEdges();
         if(resultFaces!=null)
-            doFaces(resultFaces, colors, allowOverflowFaces);
+            doFaces(resultFaces, colors, allowOverflowFaces, embedding);
     }
     
-    protected void doFaces(List<Face> faces, Map<Face, Color> colors, boolean allowOverflowFaces){
+    protected void doFaces(List<Face> faces, Map<Face, Color> colors, boolean allowOverflowFaces, Embedding embedding){
         List<int[]> targetFaces = new ArrayList<int[]>();
         List<Color> targetColors = new ArrayList<Color>();
         for (int i = 0; i < faces.size(); i++) {
             boolean overflowFace = false;
             if(!allowOverflowFaces)
                 for (Edge edge : faces.get(i).getEdges()) {
-                    overflowFace = overflowFace || (edge.getTargetX()!=0 || edge.getTargetY()!=0);
+                    overflowFace = overflowFace || embedding.isOverflowEdge(edge);
                 }
             if(allowOverflowFaces || !overflowFace){
                 int[] currentFace = new int[faces.get(i).getSize()];
@@ -273,7 +294,9 @@ public class Tiled3DStructure {
     }
 
     public int[] getFaceAt(int index) {
-        return faces[index];
+        int[] face = new int[faces[index].length];
+        System.arraycopy(faces[index], 0, face, 0, face.length);
+        return face;
     }
 
     public int getFaceSize() {
