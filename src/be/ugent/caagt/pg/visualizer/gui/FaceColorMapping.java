@@ -27,15 +27,25 @@
 
 package be.ugent.caagt.pg.visualizer.gui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 
 /**
  *
  * @author nvcleemp
  */
 public class FaceColorMapping {
+    //TODO: make this costumizable using preferences
     private static Map<Integer, Color> faceColorMap = new HashMap<Integer, Color>();
     
     static {
@@ -50,5 +60,94 @@ public class FaceColorMapping {
     
     public static Color getColorFor(int i){
         return faceColorMap.get(i);
+    }
+    
+    public static JPanel getDefaultColorTable(){
+        JPanel panel = new JPanel(new BorderLayout());
+        JTable table = new JTable(new DefaultColorTableModel());
+        table.setDefaultRenderer(Color.class, new ColorCellRenderer());
+        table.setDefaultRenderer(Number.class, new NumberCellRenderer());
+        panel.setName("Default Color Table");
+        panel.add(new JScrollPane(table), BorderLayout.CENTER);
+        return panel;
+    }
+    
+    private static class DefaultColorTableModel extends AbstractTableModel{
+        
+        private List<Integer> keys;
+
+        public DefaultColorTableModel() {
+            keys = new ArrayList<Integer>();
+            for (Integer integer : faceColorMap.keySet()) {
+                int i = keys.size();
+                while(i>0 && integer.compareTo(keys.get(i-1)) < 0)
+                    i--;
+                keys.add(i, integer);
+            }
+        }        
+
+        public int getRowCount() {
+            return keys.size();
+        }
+
+        public int getColumnCount() {
+            return 2;
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            if(columnIndex==0)
+                return keys.get(rowIndex);
+            else if(columnIndex==1){
+                return getColorFor(keys.get(rowIndex));
+            }
+            return null;
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if(columnIndex==0)
+                return Integer.class;
+            else if(columnIndex==1){
+                return Color.class;
+            }
+            return Object.class;
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            if(column==0)
+                return "size";
+            else if(column==1)
+                return "color";
+            else
+                return null;
+        }
+    }
+    
+    private static class ColorCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if(value == null){
+                setOpaque(false);
+                setText("none");
+            } else if(value instanceof Color){
+                setOpaque(true);
+                setBackground((Color)value);
+                setText(null);
+            }
+            return this;
+        }
+        
+    }
+
+    private static class NumberCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setHorizontalAlignment(CENTER);
+            return this;
+        }
+        
     }
 }

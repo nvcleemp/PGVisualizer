@@ -115,6 +115,7 @@ public class PGVisualizer extends JPanel{
             JMenu viewMenu = new JMenu("View");
             viewMenu.add(new FillFacesToggler(view).getJCheckBoxMenuItem());
             viewMenu.add(new JMenuItem(new ShowWindowAction("Face option", new ToolWindow(new FaceControl(view, model), target))));
+            viewMenu.add(new JMenuItem(new ShowWindowAction("Default color table", new ToolWindow(FaceColorMapping.getDefaultColorTable(), target))));
             viewMenu.addSeparator();
             viewMenu.add(new ClipViewToggler(view).getJCheckBoxMenuItem());
             viewMenu.add(new JMenuItem(new ShowWindowAction("View option", new ToolWindow(new ViewController(view), target))));
