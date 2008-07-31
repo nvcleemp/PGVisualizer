@@ -28,16 +28,28 @@
 package be.ugent.caagt.pg.visualizer.molecule;
 
 import de.jreality.geometry.IndexedFaceSetFactory;
+import de.jreality.ui.viewerapp.SunflowMenu;
 import de.jreality.ui.viewerapp.ViewerApp;
 import de.jreality.ui.viewerapp.ViewerAppMenu;
+import de.jreality.ui.viewerapp.actions.file.ExportImage;
+import de.jreality.ui.viewerapp.actions.file.ExportPS;
+import de.jreality.ui.viewerapp.actions.file.ExportRIB;
+import de.jreality.ui.viewerapp.actions.file.ExportSTL;
+import de.jreality.ui.viewerapp.actions.file.ExportSVG;
+import de.jreality.ui.viewerapp.actions.file.ExportU3D;
+import de.jreality.ui.viewerapp.actions.file.ExportVRML;
 import de.jreality.ui.viewerapp.actions.view.ToggleNavigator;
+import de.jreality.util.LoggingSystem;
 import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.logging.Level;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 
 /**
  *
@@ -86,6 +98,9 @@ public class JRealityFrame{
         ifsf.setGenerateFaceNormals(true);
         ifsf.update();
         if(va!=null){
+            for (WindowListener windowListener : va.getFrame().getWindowListeners()) {
+                va.getFrame().removeWindowListener(windowListener);
+            }
             va.dispose();
         }
         va = new ViewerApp(ifsf.getIndexedFaceSet());
@@ -99,6 +114,20 @@ public class JRealityFrame{
         JMenuBar menuBar = new JMenuBar();
         JMenu optionMenu = new JMenu("Options");
         optionMenu.add(new JCheckBoxMenuItem(new ToggleNavigator(ViewerAppMenu.TOGGLE_NAVIGATOR, va)));
+        JMenu export = new JMenu(ViewerAppMenu.EXPORT);
+        try {
+                export.add(new SunflowMenu(va));
+        } catch (Exception e) {
+                LoggingSystem.getLogger(this).log(Level.CONFIG, "no sunflow", e);
+        }
+        export.add(new JMenuItem(new ExportRIB("RIB", va.getViewerSwitch(), va.getFrame())));
+        export.add(new JMenuItem(new ExportSVG("SVG", va.getViewerSwitch(), va.getFrame())));
+        export.add(new JMenuItem(new ExportPS("PS", va.getViewerSwitch(), va.getFrame())));
+        export.add(new JMenuItem(new ExportVRML("VRML", va.getViewerSwitch(), va.getFrame())));
+        export.add(new JMenuItem(new ExportSTL("STL", va.getViewerSwitch(), va.getFrame())));
+        export.add(new JMenuItem(new ExportImage("Image",va.getViewerSwitch(), va.getFrame())));
+        export.add(new JMenuItem(new ExportU3D("U3D", va.getViewerSwitch(), va.getFrame())));
+        optionMenu.add(export);
         menuBar.add(optionMenu);
         va.getFrame().setJMenuBar(menuBar);
         va.display();
@@ -106,8 +135,10 @@ public class JRealityFrame{
         va.getFrame().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                va.getFrame().removeWindowListener(this);
                 va.dispose();
                 va = null;
+                System.gc();
             }
         });
     }
