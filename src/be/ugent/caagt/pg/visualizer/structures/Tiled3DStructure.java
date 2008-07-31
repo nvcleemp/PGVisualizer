@@ -25,7 +25,7 @@
  * 02110-1301, USA.
  */
 
-package be.ugent.caagt.pg.visualizer.molecule;
+package be.ugent.caagt.pg.visualizer.structures;
 
 import be.ugent.caagt.pg.graph.Edge;
 import be.ugent.caagt.pg.graph.Face;
