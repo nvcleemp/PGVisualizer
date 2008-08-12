@@ -30,6 +30,7 @@ package be.ugent.caagt.pg.visualizer.gui;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -56,6 +57,7 @@ public class GraphInfo extends JPanel implements ListSelectionListener{
             model.getSelectionModel().setSelectionInterval(0, 0);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Number of vertices per domain: "), gbc);
