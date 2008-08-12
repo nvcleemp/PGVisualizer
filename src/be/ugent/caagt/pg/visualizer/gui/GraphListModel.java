@@ -41,6 +41,10 @@ public interface GraphListModel extends ListModel {
     public Graph getGraph(int index);
 
     public GraphGUIData getGraphGUIData(int index);
+    
+    public int getCatalogueNumber(int index);
+
+    public int getSelectedCatalogueNumber();
 
     public String exportUpdatedGraphs();
     

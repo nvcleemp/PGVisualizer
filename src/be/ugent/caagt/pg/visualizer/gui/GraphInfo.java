@@ -49,6 +49,7 @@ import javax.swing.event.ListSelectionListener;
 public class GraphInfo extends JPanel implements ListSelectionListener{
     
     private GraphListModel model;
+    private JLabel sizeLabel;
     private JLabel numberLabel;
 
     public GraphInfo(GraphListModel model) {
@@ -62,10 +63,16 @@ public class GraphInfo extends JPanel implements ListSelectionListener{
         gbc.gridy = 0;
         add(new JLabel("Number of vertices per domain: "), gbc);
         gbc.gridx = 1;
-        numberLabel = new JLabel("" +  model.getSelectedGraph().getVertices().size());
-        add(numberLabel, gbc);
+        sizeLabel = new JLabel("" +  model.getSelectedGraph().getVertices().size());
+        add(sizeLabel, gbc);
         gbc.gridx = 0;
         gbc.gridy = 1;
+        add(new JLabel("Catalogue number: "), gbc);
+        gbc.gridx = 1;
+        numberLabel = new JLabel("" +  model.getSelectedCatalogueNumber());
+        add(numberLabel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         gbc.gridwidth = 2;
         JButton symbol = new JButton("Original Delaney symbol");
         symbol.addActionListener(new ActionListener() {
@@ -82,7 +89,8 @@ public class GraphInfo extends JPanel implements ListSelectionListener{
     }
 
     public void valueChanged(ListSelectionEvent e) {
-        numberLabel.setText("" +  model.getSelectedGraph().getVertices().size()/10);
+        sizeLabel.setText("" +  model.getSelectedGraph().getVertices().size());
+        numberLabel.setText("" +  model.getSelectedCatalogueNumber());
     }
 
 }

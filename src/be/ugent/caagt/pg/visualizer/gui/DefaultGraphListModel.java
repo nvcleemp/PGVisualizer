@@ -106,6 +106,14 @@ public class DefaultGraphListModel extends AbstractListModel implements ListData
         return getGraph(index);
     }
 
+    public int getCatalogueNumber(int index) {
+        return index + 1;
+    }
+
+    public int getSelectedCatalogueNumber() {
+        return selectionModel.getMinSelectionIndex() + 1;
+    }
+
     public void intervalAdded(ListDataEvent e) {
         fireIntervalAdded(this, e.getIndex0(), e.getIndex1());
     }

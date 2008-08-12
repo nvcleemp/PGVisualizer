@@ -67,6 +67,14 @@ public class DelegateGraphListModel implements GraphListModel, ListSelectionList
         return delegate.getGraphGUIData(list.get(index));
     }
 
+    public int getCatalogueNumber(int index) {
+        return delegate.getCatalogueNumber(list.get(index));
+    }
+
+    public int getSelectedCatalogueNumber() {
+        return getCatalogueNumber(selectionModel.getMinSelectionIndex());
+    }
+
     public String exportUpdatedGraphs() {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < list.size(); i++) {
