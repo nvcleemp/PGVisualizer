@@ -66,4 +66,115 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+    <!-- Project properties -->
+    <property file="project.properties"/>
+    
+    <!-- Minimal Java version -->
+    <property name="jre.minversion" value="1.5.0"/>
+    
+    <taskdef name="launch4j"
+         classname="net.sf.launch4j.ant.Launch4jTask"
+         classpath="${ant.launch4j.classpath}/launch4j.jar:${ant.launch4j.classpath}/lib/xstream.jar" />
+
+    <taskdef resource="be/ugent/caagt/antext/tasks.properties" 
+             classpath="${ant.AntExtensions.classpath}" />
+           
+    <target name="-post-jar" depends="-forunix,-forwindows,-src-jar" />
+    
+    <target name="-forunix">
+        <tar destfile="dist/PG-${PG.version}-linux.tar.gz" compression="gzip">
+	    <tarfileset dir="dist/lib" prefix="PG/lib"/>
+	    <tarfileset file="dist/PG.jar" prefix="PG"/>
+            <tarfileset file="etc/linux/PGVisualizer.sh" prefix="PG" mode="755"/>
+	    <tarfileset file="etc/linux/PGEmbedder.sh" prefix="PG" mode="755"/>
+	    <tarfileset file="etc/azulenoids.pg" prefix="PG"/>
+        </tar>
+    </target>
+    
+    <target name="-forwindows">
+        <mkdir dir="dist/windows"/>
+        <launch4j>
+            <config outfile="dist/windows/PGVisualizer.exe"
+                    headertype="gui" 
+                    dontwrapjar="true"
+                    icon="etc/icons/visualizer.ico"
+                    errtitle="PGVisualizer ${PG.version}"
+                    cmdLine="-p visualizer">
+                <classPath mainClass="be.ugent.caagt.pg.Starter">
+                    <cp>PG.jar</cp>
+                    <cp>lib/*.jar</cp>
+                </classPath>
+                <jre minversion="${jre.minversion}"/>
+            </config>
+        </launch4j>
+        <launch4j>
+            <config outfile="dist/windows/PGEmbedder.exe"
+                    headertype="gui" 
+                    dontwrapjar="true"
+                    icon="etc/icons/embedder.ico"
+                    errtitle="PGEmbedder ${PG.version}"
+                    cmdLine="-p embedder">
+                <classPath mainClass="be.ugent.caagt.pg.Starter">
+                    <cp>PG.jar</cp>
+                    <cp>lib/*.jar</cp>
+                </classPath>
+                <jre minversion="${jre.minversion}"/>
+            </config>
+        </launch4j>
+        
+        <copy todir="dist/windows/lib">
+            <fileset dir="dist/lib"/>
+        </copy>
+        <copy file="dist/PG.jar" todir="dist/windows"/>
+        
+        <exec executable="${ant.makensis.path}">
+            <arg value="-V1"/>
+            <arg value="-XOutFile ../../dist/windows/PG-${PG.version}-installer.exe"/> <!-- must be a single value! -->
+            <arg file="etc/windows/package_windows.nsi"/>
+        </exec>
+        
+        <copy file="dist/windows/PG-${PG.version}-installer.exe" todir="dist"/>
+        
+        <delete dir="dist/windows"/>
+    </target>
+
+    <target name="license-headers" depends="init" 
+        description="Adjust file headers to contain license">
+        <replaceHeader header="etc/license_header.txt"
+                       checkOnly="false" type="java">
+            <fileset dir="${basedir}">
+                <include name="src/**/*.java"/>
+            </fileset>
+        </replaceHeader>
+        <replaceHeader header="etc/license_header.txt"
+                       checkOnly="false" type="script">
+            <fileset dir="${basedir}">
+                <include name="resources/**/*.properties"/>
+            </fileset>
+        </replaceHeader>
+        <replaceHeader header="etc/license_header.txt"
+                       checkOnly="false" type="xml">
+            <fileset dir="${basedir}">
+                <include name="resources/**/*.dtd"/>
+                <include name="resources/**/*.xml"/>
+                <include name="resources/**/*.xslt"/>
+                <include name="resources/**/*.cmds"/>
+            </fileset>
+        </replaceHeader>
+    </target>
+    
+    <target name="-src-build" depends="init,license-headers">
+        <mkdir dir="${build.dir}/src"/>
+        <copy todir="${build.dir}/src">
+            <fileset dir="${src.dir}"/>
+        </copy>
+    </target>
+    
+    <target name="-src-jar" depends="-pre-pre-jar,-src-build">
+        <jar jarfile="dist/PG-${PG.version}.src.jar" compress="${jar.compress}"
+             basedir="${build.dir}/src">
+            <metainf dir="${basedir}/etc" includes="COPYRIGHT.txt,LICENSE.txt"/>
+        </jar>
+    </target>
 </project>
