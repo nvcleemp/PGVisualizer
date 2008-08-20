@@ -86,6 +86,8 @@
         <tar destfile="dist/PG-${PG.version}-linux.tar.gz" compression="gzip">
 	    <tarfileset dir="dist/lib" prefix="PG/lib"/>
 	    <tarfileset file="dist/PG.jar" prefix="PG"/>
+	    <tarfileset file="etc/COPYRIGHT.txt" prefix="PG"/>
+	    <tarfileset file="etc/LICENSE.txt" prefix="PG"/>
             <tarfileset file="etc/linux/PGVisualizer.sh" prefix="PG" mode="755"/>
 	    <tarfileset file="etc/linux/PGEmbedder.sh" prefix="PG" mode="755"/>
 	    <tarfileset file="etc/azulenoids.pg" prefix="PG"/>
