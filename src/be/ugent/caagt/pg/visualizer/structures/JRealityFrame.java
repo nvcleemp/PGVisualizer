@@ -1,4 +1,4 @@
-/* JmolFrame.java
+/* JRealityFrame.java
  * =========================================================================
  * This file is part of the PG project - http://caagt.ugent.be/azul
  * 
