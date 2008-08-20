@@ -47,7 +47,7 @@ import javax.swing.event.ListDataEvent;
 public class FiniteStructureAction extends AbstractAction implements GraphListModelListener{
 
     public FiniteStructureAction(GraphListModel graphListModel) {
-        super("Show 3D model");
+        super("Finite structure");
         this.graphListModel = graphListModel;
         graphListModel.addGraphModelListener(this);
         
