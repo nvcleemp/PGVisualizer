@@ -49,6 +49,7 @@ public class Tiled3DStructure {
     protected float[][] coordinate;
     protected int[][] faces;
     protected Color[] colors;
+    protected int maxDegree = 0;
 
     public enum Embedding{
         PLANAR{
@@ -178,9 +179,10 @@ public class Tiled3DStructure {
                 }
             }
             adjacencyList[k] = new int[arrayList.size()];
+            if(arrayList.size()>maxDegree)
+                maxDegree = arrayList.size();
             for (int l = 0; l < arrayList.size(); l++) {
                 adjacencyList[k][l] = arrayList.get(l);
-
             }
        }
 
@@ -200,9 +202,10 @@ public class Tiled3DStructure {
                 }
             }
             adjacencyList[k] = new int[arrayList.size()];
+            if(arrayList.size()>maxDegree)
+                maxDegree = arrayList.size();
             for (int l = 0; l < arrayList.size(); l++) {
                 adjacencyList[k][l] = arrayList.get(l);
-
             }
        }
 
@@ -222,9 +225,10 @@ public class Tiled3DStructure {
                 }
             }
             adjacencyList[k] = new int[arrayList.size()];
+            if(arrayList.size()>maxDegree)
+                maxDegree = arrayList.size();
             for (int l = 0; l < arrayList.size(); l++) {
                 adjacencyList[k][l] = arrayList.get(l);
-
             }
        }
 
@@ -246,9 +250,10 @@ public class Tiled3DStructure {
                 arrayList.add(edge.getEnd().getIndex());
             }
             adjacencyList[k] = new int[arrayList.size()];
+            if(arrayList.size()>maxDegree)
+                maxDegree = arrayList.size();
             for (int l = 0; l < arrayList.size(); l++) {
                 adjacencyList[k][l] = arrayList.get(l);
-
             }
        }
 
@@ -269,10 +274,11 @@ public class Tiled3DStructure {
             for (Edge edge : graph.getVertex(k).getEdges()) {
                 arrayList.add(edge.getEnd().getIndex());
             }
+            if(arrayList.size()>maxDegree)
+                maxDegree = arrayList.size();
             adjacencyList[k] = new int[arrayList.size()];
             for (int l = 0; l < arrayList.size(); l++) {
                 adjacencyList[k][l] = arrayList.get(l);
-
             }
        }
     }
@@ -318,5 +324,16 @@ public class Tiled3DStructure {
     public float getZ(int index) {
         return coordinate[index][2];
     }
+    
+    public int getDegree(int index){
+        return adjacencyList[index].length;
+    }
 
+    public int getMaximumDegree(){
+        return maxDegree;
+    }
+    
+    public int adjacentTo(int vertex, int number){
+        return adjacencyList[vertex][number];
+    }
 }

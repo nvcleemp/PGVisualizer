@@ -93,11 +93,13 @@ public class Tiled3DStructureDialog extends JDialog{
     private JComboBox comboBox = new JComboBox(Molecule.Embedding.values());
     private JmolFrame frame = new JmolFrame();
     private JRealityFrame frame3D = new JRealityFrame();
+    private FiniteStructureTextOutputDialog textDialog;
     private Map<Face, Color> inputColors;
     private Map<Face, Color> resultColors;
 
     public Tiled3DStructureDialog() {
         setLayout(new BorderLayout());
+        textDialog = new FiniteStructureTextOutputDialog(this);
         view.setPreferredSize(new Dimension(300, 400));
         view.setPaintFaces(false);
         add(view, BorderLayout.SOUTH);
@@ -238,6 +240,20 @@ public class Tiled3DStructureDialog extends JDialog{
             }
         });
         controls.add(saveButton, gbc);
+        gbc.gridy++;
+        JButton saveTextButton = new JButton("Save text file");
+        saveTextButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                concat((Integer)x.getValue(), (Integer)y.getValue(), (Integer)shiftX.getValue(), (Integer)shiftY.getValue(), overflowCheckBox.isSelected(), true);
+
+                Tiled3DStructure struc = new Tiled3DStructure(result, resultFaces, resultColors, (Molecule.Embedding) comboBox.getSelectedItem(), false);
+                if (struc == null) {
+                    return;
+                }
+                textDialog.showDialog(struc);
+            }
+        });
+        controls.add(saveTextButton, gbc);
         add(controls, BorderLayout.NORTH);
         
         //Focus managment
