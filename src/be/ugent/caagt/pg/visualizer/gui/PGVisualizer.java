@@ -30,7 +30,7 @@ package be.ugent.caagt.pg.visualizer.gui;
 import be.ugent.caagt.pg.visualizer.gui.action.ClearFaceSelectionAction;
 import be.ugent.caagt.pg.visualizer.gui.action.FilterAction;
 import be.ugent.caagt.pg.visualizer.gui.action.GrowGraphAction;
-import be.ugent.caagt.pg.visualizer.gui.action.Show3DAction;
+import be.ugent.caagt.pg.visualizer.gui.action.FiniteStructureAction;
 import be.ugent.caagt.pg.visualizer.gui.action.ShowWindowAction;
 import be.ugent.caagt.pg.visualizer.gui.toggler.ClipViewToggler;
 import be.ugent.caagt.pg.visualizer.gui.toggler.FillFacesToggler;
@@ -120,7 +120,7 @@ public class PGVisualizer extends JPanel{
             viewMenu.add(new ClipViewToggler(view).getJCheckBoxMenuItem());
             viewMenu.add(new JMenuItem(new ShowWindowAction("View option", new ToolWindow(new ViewController(view), target))));
             viewMenu.addSeparator();
-            viewMenu.add(new JMenuItem(new Show3DAction(model)));
+            viewMenu.add(new JMenuItem(new FiniteStructureAction(model)));
             viewMenu.addSeparator();
             viewMenu.add(new JMenuItem(new ShowWindowAction("Info", new ToolWindow(new GraphInfo(model), target))));
             menuBar.add(viewMenu);

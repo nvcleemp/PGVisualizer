@@ -35,7 +35,7 @@ import be.ugent.caagt.pg.graph.Face;
 import be.ugent.caagt.pg.graph.Edge;
 import be.ugent.caagt.pg.graph.Graph;
 import be.ugent.caagt.pg.graph.Vertex;
-import be.ugent.caagt.pg.visualizer.gui.action.Show3DAction;
+import be.ugent.caagt.pg.visualizer.gui.action.FiniteStructureAction;
 import be.ugent.caagt.pg.visualizer.structures.JRealityFrame;
 import be.ugent.caagt.pg.visualizer.structures.JmolFrame;
 import be.ugent.caagt.pg.visualizer.structures.Molecule;
@@ -233,7 +233,7 @@ public class Tiled3DStructureDialog extends JDialog{
                         }
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(Show3DAction.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(Tiled3DStructureDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });

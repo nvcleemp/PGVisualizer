@@ -1,4 +1,4 @@
-/* Show3DAction.java
+/* FiniteStructureAction.java
  * =========================================================================
  * This file is part of the PG project - http://caagt.ugent.be/azul
  * 
@@ -44,9 +44,9 @@ import javax.swing.event.ListDataEvent;
  *
  * @author nvcleemp
  */
-public class Show3DAction extends AbstractAction implements GraphListModelListener{
+public class FiniteStructureAction extends AbstractAction implements GraphListModelListener{
 
-    public Show3DAction(GraphListModel graphListModel) {
+    public FiniteStructureAction(GraphListModel graphListModel) {
         super("Show 3D model");
         this.graphListModel = graphListModel;
         graphListModel.addGraphModelListener(this);
