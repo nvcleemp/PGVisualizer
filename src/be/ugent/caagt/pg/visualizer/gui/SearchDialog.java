@@ -253,9 +253,10 @@ public class SearchDialog extends JDialog{
         gbc.gridy++;
         gbc.weightx = 1;
         gbc.fill = GridBagConstraints.NONE;
-        JButton filter = new JButton("Filter");
+        final JButton filter = new JButton("Filter");
         filter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                filter.setEnabled(false);
                 Thread t = new Thread(new Runnable() {
                     public void run() {
                         if(frame==null){
@@ -275,6 +276,7 @@ public class SearchDialog extends JDialog{
                             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
                             frame.setVisible(true);
                         }
+                        filter.setEnabled(true);
                     }
                 });
                 t.start();
