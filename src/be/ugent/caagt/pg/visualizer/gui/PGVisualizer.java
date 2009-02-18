@@ -123,6 +123,7 @@ public class PGVisualizer extends JPanel{
             viewMenu.add(new JMenuItem(new FiniteStructureAction(model)));
             viewMenu.addSeparator();
             viewMenu.add(new JMenuItem(new ShowWindowAction("Info", new ToolWindow(new GraphInfo(model), target))));
+            viewMenu.add(new JMenuItem(new ShowWindowAction("Table", new ListOverviewWindow(model))));
             menuBar.add(viewMenu);
             JMenu embedderMenu = new JMenu("Embedder");
             embedderMenu.add(new JMenuItem(new ShowWindowAction("Embedder runner", new ToolWindow(new EmbedderControl(model), target))));
