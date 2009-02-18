@@ -29,6 +29,7 @@ package be.ugent.caagt.pg.visualizer.gui;
 
 import be.ugent.caagt.pg.graph.DefaultGraph;
 import be.ugent.caagt.pg.graph.Graph;
+import be.ugent.caagt.pg.visualizer.groups.WallpaperGroup;
 
 /**
  *
@@ -37,6 +38,8 @@ import be.ugent.caagt.pg.graph.Graph;
 public class GraphGUIData {
     private VertexHighlighter highlighter = null;
     private FaceHighlighter faceHighlighter = null;
+    private String symbol;
+    private WallpaperGroup group;
     private String comment;
 
     public GraphGUIData() {
@@ -66,12 +69,30 @@ public class GraphGUIData {
     public String getComment(){
         return comment;
     }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public WallpaperGroup getGroup() {
+        return group;
+    }
     
     public String export(){
         StringBuffer buf = new StringBuffer();
         if(faceHighlighter!=null){
             buf.append("facehighlight ");
             buf.append(faceHighlighter.export());
+            buf.append(" # ");
+        }
+        if(symbol!=null){
+            buf.append("symbol ");
+            buf.append(symbol);
+            buf.append(" # ");
+        }
+        if(group!=null){
+            buf.append("group ");
+            buf.append(group);
             buf.append(" # ");
         }
         buf.append(comment);
@@ -88,10 +109,20 @@ public class GraphGUIData {
                 if(g instanceof DefaultGraph)
                     faceHighlighter.importHighlighting((DefaultGraph)g, string.substring(14));
                 data.faceHighlighter = faceHighlighter;
+            } else if(string.trim().startsWith("symbol ")){
+                data.symbol = string.substring(7).trim();
+            } else if(string.trim().startsWith("group ")){
+                try {
+                    data.group = WallpaperGroup.valueOf(string.substring(6).trim());
+                } catch (IllegalArgumentException ex) {
+                    data.group = WallpaperGroup.UNKNOWN;
+                }
             } else
                 comment.append(string);
         }
         data.comment = comment.toString();
+        if(data.symbol==null)
+            System.out.println("ERROR: " + s);
         return data;
     }
 }

@@ -79,7 +79,7 @@ public class GraphInfo extends JPanel implements ListSelectionListener{
             public void actionPerformed(ActionEvent e) {
                 JDialog dialog = new JDialog((Frame)null, "Delaney symbol", true);
                 dialog.setSize(360, 360);
-                dialog.add(new JScrollPane(new JTextArea(GraphInfo.this.model.getSelectedGraphGUIData().getComment())));
+                dialog.add(new JScrollPane(new JTextArea(GraphInfo.this.model.getSelectedGraphGUIData().getSymbol())));
                 dialog.setVisible(true);
             }
         });

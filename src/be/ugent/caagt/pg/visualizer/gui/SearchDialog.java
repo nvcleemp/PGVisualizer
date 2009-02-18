@@ -319,7 +319,10 @@ public class SearchDialog extends JDialog{
     }
 
     private FaceOverview getFaceOverview(GraphGUIData data){
-        String ds = data.getComment().trim();
+        String ds = data.getSymbol();
+        if(ds==null)
+            return new FaceOverview();
+        
         if(!ds.startsWith("<") || !ds.endsWith(ds))
             throw new RuntimeException("A .ds file should start with '<' and end with '>'");
 
