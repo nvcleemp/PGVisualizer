@@ -28,20 +28,21 @@
 package be.ugent.caagt.pg.visualizer.gui;
 
 import be.ugent.caagt.pg.graph.Graph;
+import be.ugent.caagt.pg.visualizer.groups.WallpaperGroup;
+import be.ugent.caagt.pg.visualizer.gui.util.CheckBoxSelectionPanel;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -141,7 +142,7 @@ public class SearchDialog extends JDialog{
         public abstract String getDescription();
     }
 
-    private class FaceOverview {
+    private static class FaceOverview {
 
         private Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 
@@ -171,7 +172,7 @@ public class SearchDialog extends JDialog{
     }
     
     private interface SearchCriterium {
-        public boolean accept(Graph graph,FaceOverview overview);
+        public boolean accept(Graph graph, GraphGUIData graphGUIData, FaceOverview overview);
     }
 
     private class FaceSearchCriterium implements SearchCriterium {
@@ -187,7 +188,7 @@ public class SearchDialog extends JDialog{
             this.number = number;
         }
 
-        public boolean accept(Graph graph,FaceOverview overview){
+        public boolean accept(Graph graph, GraphGUIData graphGUIData, FaceOverview overview){
             return spec.accept(overview.getNumberOfFaces(size, acceptanceSpec), number);
         }
 
@@ -206,13 +207,38 @@ public class SearchDialog extends JDialog{
             this.number = number;
         }
 
-        public boolean accept(Graph graph,FaceOverview overview){
+        public boolean accept(Graph graph, GraphGUIData graphGUIData, FaceOverview overview){
             return spec.accept(graph.getVertices().size(), number);
         }
 
         @Override
         public String toString(){
             return  spec.getDescription() + " " + number + " vertices";
+        }
+    }
+
+    private class GroupSearchCriterium implements SearchCriterium {
+
+        private Set<WallpaperGroup> groups;
+        private String name;
+
+        public GroupSearchCriterium(Set<WallpaperGroup> groups) {
+            this.groups = groups;
+            StringBuilder sb = new StringBuilder();
+            for (WallpaperGroup group : groups) {
+                sb.append(group.toString());
+                sb.append(" ");
+            }
+            name = sb.toString();
+        }
+
+        public boolean accept(Graph graph, GraphGUIData graphGUIData, FaceOverview overview) {
+            return groups.contains(graphGUIData.getGroup());
+        }
+
+        @Override
+        public String toString() {
+            return name;
         }
     }
     
@@ -231,6 +257,7 @@ public class SearchDialog extends JDialog{
         JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
         tabs.addTab("Face filters", constructFaceFilterPanel());
         tabs.addTab("Vertex filters", constructVertexFilterPanel());
+        tabs.addTab("Group filter", constructGroupFilterPanel());
         GridBagConstraints gbc = new GridBagConstraints();
         setLayout(new GridBagLayout());
         gbc.gridx = 0;
@@ -305,7 +332,7 @@ public class SearchDialog extends JDialog{
             FaceOverview overview = getFaceOverview(graphListModel.getGraphGUIData(i));
             boolean allowed = true;
             for (SearchCriterium searchCriterium : criteria.getList()) {
-                allowed = allowed && searchCriterium.accept(graphListModel.getGraph(i),overview);
+                allowed = allowed && searchCriterium.accept(graphListModel.getGraph(i), graphListModel.getGraphGUIData(i), overview);
             }
             if(allowed)
                 list.add(i);
@@ -465,5 +492,41 @@ public class SearchDialog extends JDialog{
         comboBoxPanel.add(new JLabel("vertices"), gbc);
         comboBoxPanel.add(addButton, gbc);
         return comboBoxPanel;
+    }
+
+    private JComponent constructGroupFilterPanel(){
+        JPanel groupFilterPanel = new JPanel(new BorderLayout());
+        final CheckBoxSelectionPanel<WallpaperGroup> groupsPanel = new CheckBoxSelectionPanel<WallpaperGroup>();
+        groupsPanel.addElement(WallpaperGroup.CM);
+        groupsPanel.addElement(WallpaperGroup.PM);
+        groupsPanel.addElement(WallpaperGroup.PG);
+        groupsPanel.addElement(WallpaperGroup.P1);
+        groupsPanel.newLine();
+        groupsPanel.addElement(WallpaperGroup.CMM);
+        groupsPanel.addElement(WallpaperGroup.PMM);
+        groupsPanel.addElement(WallpaperGroup.PMG);
+        groupsPanel.addElement(WallpaperGroup.PGG);
+        groupsPanel.addElement(WallpaperGroup.P2);
+        groupsPanel.newLine();
+        groupsPanel.addElement(WallpaperGroup.P31M);
+        groupsPanel.addElement(WallpaperGroup.P3M1);
+        groupsPanel.addElement(WallpaperGroup.P3);
+        groupsPanel.newLine();
+        groupsPanel.addElement(WallpaperGroup.P4M);
+        groupsPanel.addElement(WallpaperGroup.P4G);
+        groupsPanel.addElement(WallpaperGroup.P4);
+        groupsPanel.newLine();
+        groupsPanel.addElement(WallpaperGroup.P6M);
+        groupsPanel.addElement(WallpaperGroup.P6);
+        groupsPanel.close();
+        groupFilterPanel.add(groupsPanel, BorderLayout.CENTER);
+        JButton addButton = new JButton(new AbstractAction("Add") {
+
+            public void actionPerformed(ActionEvent e) {
+                criteria.addElement(new GroupSearchCriterium(groupsPanel.getSelectedElements()));
+            }
+        });
+        groupFilterPanel.add(addButton, BorderLayout.SOUTH);
+        return groupFilterPanel;
     }
 }
