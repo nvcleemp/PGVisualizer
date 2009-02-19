@@ -25,7 +25,7 @@
  * 02110-1301, USA.
  */
 
-package be.ugent.caagt.pg.visualizer.gui;
+package be.ugent.caagt.pg.visualizer.gui.util;
 
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;

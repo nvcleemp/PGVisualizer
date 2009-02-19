@@ -27,6 +27,7 @@
 
 package be.ugent.caagt.pg.visualizer.gui;
 
+import be.ugent.caagt.pg.visualizer.gui.util.ListSelectionNavigator;
 import be.ugent.caagt.pg.visualizer.gui.action.ClearFaceSelectionAction;
 import be.ugent.caagt.pg.visualizer.gui.action.FilterAction;
 import be.ugent.caagt.pg.visualizer.gui.action.GrowGraphAction;
