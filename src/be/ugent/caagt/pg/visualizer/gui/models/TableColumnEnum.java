@@ -158,4 +158,9 @@ public enum TableColumnEnum {
     public boolean canGrowBeyondSetSize(){
         return true;
     }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

@@ -31,6 +31,7 @@ import be.ugent.caagt.pg.io.IOManager;
 import be.ugent.caagt.pg.graph.Graph;
 import be.ugent.caagt.pg.visualizer.gui.action.CommitGraphAction;
 import be.ugent.caagt.pg.visualizer.gui.action.ExportBitmapAction;
+import be.ugent.caagt.pg.visualizer.gui.action.ExportExcelAction;
 import be.ugent.caagt.pg.visualizer.gui.action.ExportSVGAction;
 import be.ugent.caagt.pg.visualizer.gui.action.RevertGraphAction;
 import be.ugent.caagt.pg.visualizer.gui.action.SaveGraphListAction;
@@ -79,6 +80,7 @@ public class ExportControl extends JPanel{
         JMenu panel = new JMenu("Export");
         panel.add(new JMenuItem(new ExportBitmapAction(torusView)));
         panel.add(new JMenuItem(new ExportSVGAction(graphModel)));
+        panel.add(new JMenuItem(new ExportExcelAction(graphModel)));
         panel.add(new JMenuItem(new CommitGraphAction(graphModel)));
         panel.add(new JMenuItem(new RevertGraphAction(graphModel)));
         panel.add(new JMenuItem(new SaveGraphListAction(graphModel)));
