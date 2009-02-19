@@ -5,6 +5,7 @@
 
 package be.ugent.caagt.pg.visualizer.gui.util;
 
+import be.ugent.caagt.pg.visualizer.gui.models.TableColumnEnum;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.HashMap;
@@ -65,5 +66,14 @@ public class CheckBoxSelectionPanel<E> extends JPanel{
         for (JCheckBox box : map.values()) {
             box.setSelected(state);
         }
+    }
+
+    public static <T> CheckBoxSelectionPanel<T> buildPanelFromArray(T[] array){
+        CheckBoxSelectionPanel<T> panel = new CheckBoxSelectionPanel<T>();
+        for (int i = 0; i < array.length; i++) {
+            panel.addElement(array[i]);
+            panel.newLine();
+        }
+        return panel;
     }
 }
