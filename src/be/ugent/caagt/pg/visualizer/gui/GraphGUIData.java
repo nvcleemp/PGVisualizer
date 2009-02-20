@@ -30,6 +30,9 @@ package be.ugent.caagt.pg.visualizer.gui;
 import be.ugent.caagt.pg.graph.DefaultGraph;
 import be.ugent.caagt.pg.graph.Graph;
 import be.ugent.caagt.pg.visualizer.groups.WallpaperGroup;
+import org.gavrog.joss.dsyms.basic.DSymbol;
+import org.gavrog.joss.geometry.SpaceGroupFinder;
+import org.gavrog.joss.tilings.Tiling;
 
 /**
  *
@@ -120,9 +123,21 @@ public class GraphGUIData {
             } else
                 comment.append(string);
         }
+        if(data.group == null || data.group.equals(WallpaperGroup.UNKNOWN)){
+            if(data.symbol != null){
+                DSymbol symbol = new DSymbol(data.symbol);
+                String groupName = new SpaceGroupFinder(new Tiling(symbol).getSpaceGroup()).getGroupName();
+                try {
+                    data.group = WallpaperGroup.valueOf(groupName.toUpperCase());
+                } catch (IllegalArgumentException ex) {
+                    data.group = WallpaperGroup.UNKNOWN;
+                }
+                if(data.group==WallpaperGroup.UNKNOWN) System.out.println(groupName);
+            } else {
+                data.group = WallpaperGroup.UNKNOWN;
+            }
+        }
         data.comment = comment.toString();
-        if(data.symbol==null)
-            System.out.println("ERROR: " + s);
         return data;
     }
 }
