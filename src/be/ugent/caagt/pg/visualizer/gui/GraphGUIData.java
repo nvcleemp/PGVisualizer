@@ -132,7 +132,6 @@ public class GraphGUIData {
                 } catch (IllegalArgumentException ex) {
                     data.group = WallpaperGroup.UNKNOWN;
                 }
-                if(data.group==WallpaperGroup.UNKNOWN) System.out.println(groupName);
             } else {
                 data.group = WallpaperGroup.UNKNOWN;
             }
