@@ -38,8 +38,10 @@ import be.ugent.caagt.pg.visualizer.gui.GraphGUIData;
 import be.ugent.caagt.pg.visualizer.gui.GraphListModel;
 import be.ugent.caagt.pg.visualizer.gui.TorusView;
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -147,24 +149,23 @@ public class ExportSVGAction extends AbstractAction{
                 tile.addContent(face);
             }
         }
-/*
+
         //paint edges
         for (Vertex vertex : graph.getVertices()) {
-            double x1 = vertex.getX(0, 0, getFundamentalDomain());
-            double y1 = vertex.getY(0, 0, getFundamentalDomain());
+            double x1 = vertex.getX(0, 0, graph.getFundamentalDomain());
+            double y1 = vertex.getY(0, 0, graph.getFundamentalDomain());
             for (Edge e : vertex.getEdges()) {
-                Line2D line = new Line2D.Double(x1,y1,e.getEnd().getX(e.getTargetX(), e.getTargetY(), getFundamentalDomain()), e.getEnd().getY(e.getTargetX(), e.getTargetY(), getFundamentalDomain()));
-                for (int i = minX + minTargetX; i <= maxX + maxTargetX; i++)
-                    for (int j = minY + minTargetY; j <= maxY + maxTargetY; j++){
-                        Graphics2D gr = (Graphics2D)(g2.create());
-                        Point2D origin = getFundamentalDomain().getOrigin(i, j);
-                        gr.translate(origin.getX(), origin.getY());
-
-                        gr.draw(line);
-                    }
+                Element line = new Element("line");
+                line.setAttribute("stroke", "black");
+                line.setAttribute("stroke-width", "0.001");
+                line.setAttribute("x1", Double.toString(x1));
+                line.setAttribute("x2", Double.toString(e.getEnd().getX(e.getTargetX(), e.getTargetY(), graph.getFundamentalDomain())));
+                line.setAttribute("y1", Double.toString(y1));
+                line.setAttribute("y2", Double.toString(e.getEnd().getY(e.getTargetX(), e.getTargetY(), graph.getFundamentalDomain())));
+                tile.addContent(line);
             }
         }
-        
+/*        
         //paint vertices
         for (Vertex vertex : graph.getVertices()) {
             Color outer = vertexEdge;
