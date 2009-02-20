@@ -317,6 +317,8 @@ public class IOManager {
         if(!ds.startsWith("<") || !ds.endsWith(ds))
             throw new FileFormatException("A .ds file should start with '<' and end with '>'");
         
+        ds = ds.split("#")[0];
+        
         String[] parts = ds.substring(1, ds.length()-1).split(":");
         if(parts.length!=4)
             throw new FileFormatException("Illegal number of sections in file: expected 4, found " + parts.length);
