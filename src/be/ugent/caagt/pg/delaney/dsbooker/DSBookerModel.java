@@ -81,6 +81,7 @@ public class DSBookerModel {
         //load library files
         DelaneySymbolLibrary library = new DelaneySymbolLibrary(libraryType);
         for (File file : libraries) {
+            System.err.println("Reading library file " + libraries);
             for (DelaneySymbol symbol : IOManager.readDS(file))
                 library.add(symbol);
             
@@ -91,27 +92,33 @@ public class DSBookerModel {
         }
         if(singleLibrary)
             libraryList.add(library);
+        System.err.println("Read library files");
         
         //create main library
         mainLibrary = new DelaneySymbolLibrary(libraryType);
         
         fireConfigured(); //method returns when all listeners are ready
+        System.err.println("Configuration done");
         read();
     }
     
     public void read(){
-        
+        if(mainScanner==null)//read all symbols from stdin
+            System.err.println("Reading symbols from stdin.");
         if(mainScanner==null)//read all symbols from stdin
             mainScanner = new Scanner(System.in);
         while(mainScanner.hasNextLine()){
             try {
                 String line = mainScanner.nextLine().trim();
+                System.err.print(".");
                 if (!line.startsWith("#") && line.length()!=0)
                     addToMain(IOManager.readDS(line));
             } catch (FileFormatException ex) {
                 Logger.getLogger(DSBookerModel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        System.err.println();
+        System.err.println("Read main library");
         fireFinish();
     }
     
@@ -152,6 +159,21 @@ public class DSBookerModel {
             list.addAll(lib.getList());
         
         list.removeAll(mainLibrary.getList());
+        return list;
+    }
+    
+    /**
+     * 
+     * @return a list of Delaney symbols in the main library that are not minimal.
+     */
+    public List<DelaneySymbol> mainLibraryNotMinimal(){
+        List<DelaneySymbol> list = new ArrayList<DelaneySymbol>();
+        for (DelaneySymbol delaneySymbol : mainLibrary.getList()) {
+            DelaneySymbol minimalSymbol = delaneySymbol.getMinimal();
+            if(!delaneySymbol.tilingEquals(minimalSymbol))
+                list.add(delaneySymbol);
+        }
+
         return list;
     }
     

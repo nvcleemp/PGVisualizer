@@ -108,6 +108,11 @@ public class DSBooker {
         headlessView.setOutputType(DSBookerHeadlessView.OutputType.MINUS);
     }
     
+    @Option(usageRank=4, description="Output the symbols in the main library that are not minimal.")
+    public void setNotMinimal(){
+        headlessView.setOutputType(DSBookerHeadlessView.OutputType.NOT_MINIMAL);
+    }
+    
     public void setAsIs(){
         model.setLibraryType(DelaneySymbolLibrary.LibraryType.AS_IS);
     }

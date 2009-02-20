@@ -57,6 +57,7 @@ public class DSBookerHeadlessView implements DSBookerModelListener {
     }
 
     public void newGraphInLibrary(DelaneySymbolLibrary library, DelaneySymbol originalSymbol) {
+        err.print(".");
         if(verbosity<2)
             return;
         err.println("Added symbol to library.");
@@ -77,6 +78,7 @@ public class DSBookerHeadlessView implements DSBookerModelListener {
     }
 
     public void finish() {
+        err.println("Finished");
         if(outputType!=null)
             for (DelaneySymbol symbol : outputType.getList(model))
                 if(readableOutput)
@@ -90,7 +92,8 @@ public class DSBookerHeadlessView implements DSBookerModelListener {
         ALL{public List<DelaneySymbol> getList(DSBookerModel model){return model.getUnion();}},
         FINAL{public List<DelaneySymbol> getList(DSBookerModel model){return model.getMainLibrary().getList();}},
         PLUS{public List<DelaneySymbol> getList(DSBookerModel model){return model.mainLibraryPlus();}},
-        MINUS{public List<DelaneySymbol> getList(DSBookerModel model){return model.mainLibraryMinus();}};
+        MINUS{public List<DelaneySymbol> getList(DSBookerModel model){return model.mainLibraryMinus();}},
+        NOT_MINIMAL{public List<DelaneySymbol> getList(DSBookerModel model){return model.mainLibraryNotMinimal();}};
         
         public abstract List<DelaneySymbol> getList(DSBookerModel model);
     }
