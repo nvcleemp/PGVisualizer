@@ -103,7 +103,7 @@ public enum TableColumnEnum {
         }
 
         public Object getValue(int i, GraphListModel graphListModel) {
-            return graphListModel.getGraphGUIData(i).getGroup();
+            return graphListModel.getGraphGUIData(i).getGroup() != null ? graphListModel.getGraphGUIData(i).getGroup() : WallpaperGroup.UNKNOWN;
         }
 
         public Class<?> getColumnClass(){
