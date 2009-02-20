@@ -516,8 +516,10 @@ public class SearchDialog extends JDialog{
         groupsPanel.addElement(WallpaperGroup.P4GM);
         groupsPanel.addElement(WallpaperGroup.P4);
         groupsPanel.newLine();
-        groupsPanel.addElement(WallpaperGroup.P6M);
+        groupsPanel.addElement(WallpaperGroup.P6MM);
         groupsPanel.addElement(WallpaperGroup.P6);
+        groupsPanel.newLine();
+        groupsPanel.addElement(WallpaperGroup.UNKNOWN);
         groupsPanel.close();
         groupFilterPanel.add(groupsPanel, BorderLayout.CENTER);
         JButton addButton = new JButton(new AbstractAction("Add") {
