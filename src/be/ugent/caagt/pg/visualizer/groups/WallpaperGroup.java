@@ -32,5 +32,5 @@ package be.ugent.caagt.pg.visualizer.groups;
  * @author nvcleemp
  */
 public enum WallpaperGroup {
-    P6M, P6, P4M, P4G, P4, P31M, P3M1, P3, CMM, PMM, PMG, PGG, P2, CM, PM, PG, P1, UNKNOWN;
+    P6M, P6, P4MM, P4GM, P4, P31M, P3M1, P3, C2MM, P2MM, P2MG, P2GG, P2, CM, PM, PG, P1, UNKNOWN;
 }
