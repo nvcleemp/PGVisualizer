@@ -29,6 +29,7 @@ package be.ugent.caagt.pg.visualizer.gui;
 
 import be.ugent.caagt.pg.visualizer.gui.models.GraphListTableModel;
 import be.ugent.caagt.pg.visualizer.gui.models.TableColumnEnum;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import javax.swing.JFrame;
@@ -45,6 +46,7 @@ public class ListOverviewWindow extends JFrame{
     public ListOverviewWindow(GraphListModel graphListModel){
         JTable table = new JTable(new GraphListTableModel(graphListModel));
         table.setSelectionModel(graphListModel.getSelectionModel());
+        table.setGridColor(Color.LIGHT_GRAY);
         TableColumnEnum[] tableColumns = TableColumnEnum.values();
         for (int i = 0; i < tableColumns.length; i++) {
             TableCellRenderer cr = table.getCellRenderer(1, i);
