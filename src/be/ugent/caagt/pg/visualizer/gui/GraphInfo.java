@@ -51,6 +51,7 @@ public class GraphInfo extends JPanel implements ListSelectionListener{
     private GraphListModel model;
     private JLabel sizeLabel;
     private JLabel numberLabel;
+    private JLabel groupLabel;
 
     public GraphInfo(GraphListModel model) {
         this.model = model;
@@ -73,6 +74,12 @@ public class GraphInfo extends JPanel implements ListSelectionListener{
         add(numberLabel, gbc);
         gbc.gridx = 0;
         gbc.gridy = 2;
+        add(new JLabel("Wallpaper group: "), gbc);
+        gbc.gridx = 1;
+        groupLabel = new JLabel("" +  model.getSelectedGraphGUIData().getGroup());
+        add(groupLabel, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         JButton symbol = new JButton("Original Delaney symbol");
         symbol.addActionListener(new ActionListener() {
@@ -91,6 +98,7 @@ public class GraphInfo extends JPanel implements ListSelectionListener{
     public void valueChanged(ListSelectionEvent e) {
         sizeLabel.setText("" +  model.getSelectedGraph().getVertices().size());
         numberLabel.setText("" +  model.getSelectedCatalogueNumber());
+        groupLabel.setText("" +  model.getSelectedGraphGUIData().getGroup());
     }
 
 }
