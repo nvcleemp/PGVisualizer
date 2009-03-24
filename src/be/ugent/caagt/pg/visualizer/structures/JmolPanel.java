@@ -2,7 +2,7 @@
  * =========================================================================
  * This file is part of the PG project - http://caagt.ugent.be/azul
  * 
- * Copyright (C) 2008 Universiteit Gent
+ * Copyright (C) 2008-2009 Universiteit Gent
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,24 +31,27 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import javax.swing.JPanel;
-import org.jmol.api.JmolSimpleViewer;
+
+import org.jmol.api.JmolViewer;
 
 public class JmolPanel extends JPanel {
 
-    private JmolSimpleViewer viewer;
+    private JmolViewer viewer;
     private PGJmolAdapter adapter;
 
     public JmolPanel() {
         super();
         adapter = new PGJmolAdapter();
-        viewer = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
+        //viewer = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
+        viewer = JmolViewer.allocateViewer(this, adapter);
+
     }
 
     public void setMolecule(Molecule molecule){
         adapter.setMolecule(molecule);
     }
     
-    public JmolSimpleViewer getViewer() {
+    public JmolViewer getViewer() {
         return viewer;
     }
     
