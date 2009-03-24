@@ -27,9 +27,11 @@
 
 package be.ugent.caagt.pg.visualizer.structures;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.text.MessageFormat;
 import javax.swing.JPanel;
 
 import org.jmol.api.JmolViewer;
@@ -44,7 +46,6 @@ public class JmolPanel extends JPanel {
         adapter = new PGJmolAdapter();
         //viewer = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
         viewer = JmolViewer.allocateViewer(this, adapter);
-
     }
 
     public void setMolecule(Molecule molecule){
@@ -75,5 +76,14 @@ public class JmolPanel extends JPanel {
         return adapter.getMolecule();
     }
     
-    
+    public void setBackgroundColor(Color c){
+        String red = MessageFormat.format("00{0}", Integer.toHexString(c.getRed()));
+        String green = MessageFormat.format("00{0}", Integer.toHexString(c.getGreen()));
+        String blue = MessageFormat.format("00{0}", Integer.toHexString(c.getBlue()));
+        String colorString = MessageFormat.format("[x{0}{1}{2}]",
+                red.substring(red.length()-2),
+                green.substring(green.length()-2),
+                blue.substring(blue.length()-2));
+        viewer.setColorBackground(colorString);
+    }
 }
