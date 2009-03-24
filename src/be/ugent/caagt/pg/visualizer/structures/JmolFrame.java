@@ -2,7 +2,7 @@
  * =========================================================================
  * This file is part of the PG project - http://caagt.ugent.be/azul
  * 
- * Copyright (C) 2008 Universiteit Gent
+ * Copyright (C) 2008-2009 Universiteit Gent
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,8 +50,6 @@ public class JmolFrame extends JFrame{
         setLayout(new BorderLayout());
         add(panel, BorderLayout.CENTER);
         panel.getViewer().evalString("zap");
-        //TODO: is there a way in Jmol to disable prints to System.out ?
-        //panel.getViewer().evalString("set systemOutEnabled false");
         JPanel controls = new JPanel();
         showColoring = new JCheckBox(new AbstractAction("Show colouring") {
             public void actionPerformed(ActionEvent e) {

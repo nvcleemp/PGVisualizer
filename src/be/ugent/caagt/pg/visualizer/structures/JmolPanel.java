@@ -46,6 +46,7 @@ public class JmolPanel extends JPanel {
         adapter = new PGJmolAdapter();
         //viewer = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
         viewer = JmolViewer.allocateViewer(this, adapter);
+        viewer.setIntProperty("logLevel", 2);
     }
 
     public void setMolecule(Molecule molecule){
