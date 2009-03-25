@@ -56,11 +56,16 @@ public class ToolWindow extends JFrame {
     private class ParentWindowListener extends WindowAdapter{
 
         @Override
+        public void windowClosing(WindowEvent e) {
+            ToolWindow.this.setVisible(false);
+        }
+
+        @Override
         public void windowClosed(WindowEvent e) {
             ToolWindow.this.setVisible(false);
             ToolWindow.this.dispose();
         }
-        
+
     }
 
 }
