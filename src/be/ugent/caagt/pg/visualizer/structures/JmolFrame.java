@@ -24,61 +24,75 @@
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
-
 package be.ugent.caagt.pg.visualizer.structures;
+
+import be.ugent.caagt.pg.visualizer.structures.jmol.JmolData;
+import be.ugent.caagt.pg.visualizer.structures.jmol.JmolMenu;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import javax.swing.AbstractAction;
-import javax.swing.JCheckBox;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.JMenu;
 
 /**
  *
  * @author nvcleemp
  */
-public class JmolFrame extends JFrame{
-    
+public class JmolFrame extends JFrame {
+
     private JmolPanel panel = new JmolPanel();
-    private JCheckBox showColoring;
+    private JCheckBoxMenuItem pgColoringBox;
+    private JmolData data;
 
     public JmolFrame() {
         super("3D model");
         setLayout(new BorderLayout());
         add(panel, BorderLayout.CENTER);
         panel.getViewer().evalString("zap");
-        JPanel controls = new JPanel();
-        showColoring = new JCheckBox(new AbstractAction("Show colouring") {
+        data = new JmolData(panel.getViewer());
+        setJMenuBar(JmolMenu.getJMenuBar(panel, data, this));
+        JMenu pgColorings = new JMenu("PG Colorings");
+        pgColoringBox = new JCheckBoxMenuItem(new AbstractAction("Show PG Coloring") {
+
             public void actionPerformed(ActionEvent e) {
-                showColoring(showColoring.isSelected());
+                showColoring(pgColoringBox.isSelected());
             }
         });
-        controls.add(showColoring);
-        add(controls, BorderLayout.EAST);
+        pgColorings.add(pgColoringBox);
+        getJMenuBar().add(pgColorings);
         pack();
     }
 
     public void setMolecule(Molecule molecule) {
         panel.setMolecule(molecule);
     }
-    
-    public void display(){
-        panel.getViewer().openDOM(null);
-        panel.getViewer().evalString("delay;");
+
+    public void display() {
+        data.getViewer().openDOM(null);
+        data.getViewer().evalString("delay;");
         if(!isVisible())
             setVisible(true);
-        panel.getViewer().evalString("color BONDS gray");
-        showColoring(showColoring.isSelected());
+        data.getViewer().evalString("select *");
+        if (data.areBondsTranslucent())
+            data.getViewer().evalString("color BONDS TRANSLUCENT gray");
+        else
+            data.getViewer().evalString("color BONDS gray");
+        if (data.areAtomsTranslucent())
+            data.getViewer().evalString("color ATOMS TRANSLUCENT gray");
+        else
+            data.getViewer().evalString("color ATOMS gray");
+        showColoring(pgColoringBox.isSelected());
     }
 
     public void display(Molecule molecule){
         setMolecule(molecule);
         display();
     }
-    
+
     private void showColoring(boolean value){
         if(value){
             for (int i = 0; i < panel.getMolecule().getFaceSize(); i++) {
@@ -90,13 +104,30 @@ public class JmolFrame extends JFrame{
                     if(glue.equals("select "))
                         glue = " or ";
                 }
-                panel.getViewer().evalString(buf.toString());
+                data.getViewer().evalString(buf.toString());
                 Color c = panel.getMolecule().getColorOfFace(i);
-                panel.getViewer().evalString(MessageFormat.format("color BONDS [{0},{1},{2}]", c.getRed(), c.getGreen(), c.getBlue()));
+                if (data.areBondsTranslucent())
+                    data.getViewer().evalString(MessageFormat.format("color BONDS TRANSLUCENT [{0},{1},{2}]", c.getRed(), c.getGreen(), c.getBlue()));
+                else
+                    data.getViewer().evalString(MessageFormat.format("color BONDS [{0},{1},{2}]", c.getRed(), c.getGreen(), c.getBlue()));
+                if (data.areAtomsTranslucent())
+                    panel.getViewer().evalString(MessageFormat.format("color ATOMS TRANSLUCENT [{0},{1},{2}]", c.getRed(), c.getGreen(), c.getBlue()));
+                else
+                    panel.getViewer().evalString(MessageFormat.format("color ATOMS [{0},{1},{2}]", c.getRed(), c.getGreen(), c.getBlue()));
+                //in the end we select all the atoms to make. Otherwise any menu option chosen by the user
+                //will only be performed on the last face.
+                panel.getViewer().evalString("select *");
             }
         } else {
-            panel.getViewer().evalString("select *");
-            panel.getViewer().evalString("color BONDS gray");
+            data.getViewer().evalString("select *");
+            if (data.areBondsTranslucent())
+                data.getViewer().evalString("color BONDS TRANSLUCENT gray");
+            else
+                data.getViewer().evalString("color BONDS gray");
+            if (data.areAtomsTranslucent())
+                data.getViewer().evalString("color ATOMS TRANSLUCENT gray");
+            else
+                data.getViewer().evalString("color ATOMS gray");
         }
     }
 }

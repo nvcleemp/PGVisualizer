@@ -31,10 +31,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.MessageFormat;
 import javax.swing.JPanel;
 
 import org.jmol.api.JmolViewer;
+import org.jmol.popup.JmolPopupSwing;
 
 public class JmolPanel extends JPanel {
 
@@ -47,6 +51,17 @@ public class JmolPanel extends JPanel {
         //viewer = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
         viewer = JmolViewer.allocateViewer(this, adapter);
         viewer.setIntProperty("logLevel", 2);
+        final JmolPopupSwing popup = new JmolPopupSwing(viewer);
+        addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getButton()==MouseEvent.BUTTON3){
+                    popup.show(e.getX(), e.getY());
+                }
+            }
+
+        });
     }
 
     public void setMolecule(Molecule molecule){
@@ -86,5 +101,6 @@ public class JmolPanel extends JPanel {
                 green.substring(green.length()-2),
                 blue.substring(blue.length()-2));
         viewer.setColorBackground(colorString);
+        repaint();
     }
 }

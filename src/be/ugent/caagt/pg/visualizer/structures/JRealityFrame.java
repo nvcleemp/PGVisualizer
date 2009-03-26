@@ -2,7 +2,7 @@
  * =========================================================================
  * This file is part of the PG project - http://caagt.ugent.be/azul
  * 
- * Copyright (C) 2008 Universiteit Gent
+ * Copyright (C) 2008-2009 Universiteit Gent
  * 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,12 +41,17 @@ import de.jreality.ui.viewerapp.actions.file.ExportVRML;
 import de.jreality.ui.viewerapp.actions.view.ToggleNavigator;
 import de.jreality.util.LoggingSystem;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.logging.Level;
+import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -129,6 +134,16 @@ public class JRealityFrame{
         export.add(new JMenuItem(new ExportU3D("U3D", va.getViewerSwitch(), va.getFrame())));
         optionMenu.add(export);
         menuBar.add(optionMenu);
+        menuBar.add(new JMenuItem(new AbstractAction("Snapshot") {
+
+            public void actionPerformed(ActionEvent e) {
+                Image im = va.getViewingComponent().createVolatileImage(va.getViewingComponent().getWidth(), va.getViewingComponent().getHeight());
+                JFrame f = new JFrame("Snapshot");
+                f.add(new JLabel(new ImageIcon(im)));
+                f.pack();
+                f.setVisible(true);
+            }
+        }));
         va.getFrame().setJMenuBar(menuBar);
         va.display();
 	va.getFrame().setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); //needed to override value set in ViewerApp
