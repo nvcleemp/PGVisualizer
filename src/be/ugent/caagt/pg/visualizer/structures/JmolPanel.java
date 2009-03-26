@@ -51,17 +51,6 @@ public class JmolPanel extends JPanel {
         //viewer = JmolSimpleViewer.allocateSimpleViewer(this, adapter);
         viewer = JmolViewer.allocateViewer(this, adapter);
         viewer.setIntProperty("logLevel", 2);
-        final JmolPopupSwing popup = new JmolPopupSwing(viewer);
-        addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if(e.getButton()==MouseEvent.BUTTON3){
-                    popup.show(e.getX(), e.getY());
-                }
-            }
-
-        });
     }
 
     public void setMolecule(Molecule molecule){
