@@ -32,6 +32,7 @@ import be.ugent.caagt.pg.visualizer.gui.models.TableColumnEnum;
 import be.ugent.caagt.pg.visualizer.gui.util.CheckBoxSelectionPanel;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +40,6 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -61,7 +61,18 @@ public class ExportExcelAction extends AbstractAction{
 //        }
 
         chooser.setAcceptAllFileFilterUsed(false);
-        chooser.addChoosableFileFilter(new FileNameExtensionFilter("Excel file", "xls"));
+        chooser.addChoosableFileFilter(new javax.swing.filechooser.FileFilter() {
+
+            @Override
+            public boolean accept(File f) {
+                return f.getName().endsWith(".xls");
+            }
+
+            @Override
+            public String getDescription() {
+                return "Excel file";
+            }
+        });
     }
 
     private void exportToFile(GraphListModel graphListModel, List<TableColumnEnum> columns, File file) throws IOException {
