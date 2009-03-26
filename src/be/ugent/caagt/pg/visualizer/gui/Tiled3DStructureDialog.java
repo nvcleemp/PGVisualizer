@@ -35,7 +35,6 @@ import be.ugent.caagt.pg.graph.Face;
 import be.ugent.caagt.pg.graph.Edge;
 import be.ugent.caagt.pg.graph.Graph;
 import be.ugent.caagt.pg.graph.Vertex;
-import be.ugent.caagt.pg.visualizer.gui.action.FiniteStructureAction;
 import be.ugent.caagt.pg.visualizer.structures.JRealityFrame;
 import be.ugent.caagt.pg.visualizer.structures.JmolFrame;
 import be.ugent.caagt.pg.visualizer.structures.Molecule;
