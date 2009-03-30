@@ -31,14 +31,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.text.MessageFormat;
 import javax.swing.JPanel;
 
 import org.jmol.api.JmolViewer;
-import org.jmol.popup.JmolPopupSwing;
 
 public class JmolPanel extends JPanel {
 
